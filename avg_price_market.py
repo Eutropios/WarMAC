@@ -1,17 +1,18 @@
 """
 Author: Noah J (Eutropios; Sink Cat)
 Date of Creation: January 22, 2023
-Date Last Modified: February 12, 2023
-Version 1.0.0
+Date Last Modified: February 13, 2023
+Version 1.1.0
 Version of Python built with: 3.11.2 (Not required, I believe 3.6 will suffice)
 
 THIS PROJECT IS STILL IN DEVELOPMENT. Additional error handling, expansion of time lookups,
-as well as crossover to other platform prices coming soon. I recognize that this isn't the most
-efficient method of obtaining prices. Warframe.market has an API that can be accessed.
+and deleting lowest/highest sell prices to keep average in line are coming soon.
+I recognize that this isn't the most efficient method of obtaining prices. Warframe.market has
+an API that can be accessed, which would increase efficiency.
 Packages required: urllib3, colorama, beautifulsoup4
 
-Scrapes the sell price from all listings of a given item from https://ps4.warframe.market, discards
-lowest and highest sell price (if applicable), then finds the average of the remaining listings.
+Scrapes the sell price from all listings of a given item from https://warframe.market,
+then finds the average of the remaining listings.
 
 ***I am NOT affiliated with Warframe, Digital Extremes and its subsidaries, Warframe.market, 
 Playstation, Sony and its subsidaries, XBOX, or Microsoft its subsidaries.***
