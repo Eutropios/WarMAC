@@ -25,20 +25,29 @@ from colorama import Fore
 from colorama import Style
 from bs4 import BeautifulSoup as bs
 
+def get_platform():
+    colorama_init()
+    print(f"What platform are you on? {Fore.YELLOW}PC{Style.RESET_ALL}, " +
+            f"{Fore.GREEN}XBOX{Style.RESET_ALL}, {Fore.BLUE}PS4{Style.RESET_ALL}, " +
+            f"or {Fore.RED}Switch{Style.RESET_ALL}?")
+    platform = str(input()).lower().strip()
+    if platform != "pc":
+        return platform + "."
+    else:
+        return ""
 
 def get_input():
     """Gets item user wants in a colourful way."""
-    colorama_init()
     print("What part would you like to find the price of? " +
             f"Please use the form of {Fore.GREEN}\"Braton Prime Set\"{Style.RESET_ALL}: ")
     name_of_item = str(input()).lower().strip()
     return name_of_item
 
-def url_of_item(name_of_item):
+def url_of_item(platform, name_of_item):
     """Fixes the string of a user input so it can be used in a URL."""
     name_of_item = name_of_item.replace("&", "and")
     name_of_item = name_of_item.replace(" ", "_")
-    url_to_scrape = "https://ps4.warframe.market/items/" + name_of_item
+    url_to_scrape = "https://" + platform + "warframe.market/items/" + name_of_item
     return url_to_scrape
 
 def output_message(item, avg):
@@ -48,8 +57,8 @@ def output_message(item, avg):
 
 def main():
     """Main function"""
-    get_item = get_input()
-    url_to_scrape = url_of_item(get_item)
+    platform, get_item = get_platform(), get_input()
+    url_to_scrape = url_of_item(platform, get_item)
     page = urlopen(Request(url_to_scrape, headers={'User-Agent': 'Mozilla'}))
     page_decoded = bs(page.read().decode('utf-8'), "lxml")
     found_em = page_decoded.find("script", attrs = {"id": "application-state"})
