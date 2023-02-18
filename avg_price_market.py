@@ -1,18 +1,19 @@
 """
 Author: Noah J (Eutropios; Sink Cat)
 Date of Creation: January 22, 2023
-Date Last Modified: February 13, 2023
-Version 1.1.0
+Date Last Modified: February 17, 2023
+Version 1.2.0
 Version of Python built with: 3.11.2 (Not required, I believe 3.6 will suffice)
-
-THIS PROJECT IS STILL IN DEVELOPMENT. Additional error handling, expansion of time lookups,
-and deleting lowest/highest sell prices to keep average in line are coming soon.
-I recognize that this isn't the most efficient method of obtaining prices. Warframe.market has
-an API that can be accessed, which would increase efficiency.
-Packages required: urllib3, colorama, beautifulsoup4
+Built in packages required: json, datetime
+External packages required: urllib3, colorama, beautifulsoup4
 
 Scrapes the sell price from all listings of a given item from https://warframe.market,
 then finds the average of the remaining listings.
+
+THIS PROJECT IS STILL IN DEVELOPMENT. Additional error handling, expansion of time lookup dates,
+and deleting lowest/highest sell prices to keep average in line are coming soon.
+I recognize that this isn't the most efficient method of obtaining prices. Warframe.market has
+an API that can be accessed, which would increase efficiency.
 
 ***I am NOT affiliated with Warframe, Digital Extremes and its subsidaries, Warframe.market, 
 Playstation, Sony and its subsidaries, XBOX, or Microsoft its subsidaries.***
@@ -22,16 +23,29 @@ import json
 from datetime import datetime, timezone
 from urllib.request import urlopen, Request
 from colorama import init as colorama_init
-from colorama import Fore
-from colorama import Style
+from colorama import Fore, Style
 from bs4 import BeautifulSoup as bs
+
+PLATFORMS = {"xbox", "switch", "ps4", "pc"}
+PLATFORM_DICT = {"xbox one":"xbox", "xbox series x":"xbox", "xbox series s":"xbox",
+            "nintendo switch":"switch", "oled switch":"switch", "switch lite":"switch",
+            "playstation":"ps4", "playstation 4":"ps4", "playstation 5":"ps4", "ps5":"ps4"}
 
 def get_platform():
     colorama_init()
-    print(f"What platform are you on? {Fore.YELLOW}PC{Style.RESET_ALL}, " +
+    platform = ""
+    while True:
+        print(f"What platform are you on? {Fore.YELLOW}PC{Style.RESET_ALL}, " +
             f"{Fore.GREEN}XBOX{Style.RESET_ALL}, {Fore.BLUE}PS4{Style.RESET_ALL}, " +
             f"or {Fore.RED}Switch{Style.RESET_ALL}?")
-    platform = str(input()).lower().strip()
+        platform = str(input()).lower().strip()
+        if platform in PLATFORMS:
+            break
+        elif platform in PLATFORM_DICT:
+            platform = platform.replace(platform, PLATFORM_DICT[platform])
+            break
+        print(f"Sorry, {platform} is not a valid entry.")
+
     if platform != "pc":
         return platform + "."
     else:
@@ -56,8 +70,8 @@ def output_message(item, avg):
     print(f"The going rate for a {Fore.GREEN}{item}{Style.RESET_ALL} " +
             f"is {Fore.GREEN}{avg}{Style.RESET_ALL}.")
 
-def main():
-    """Main function"""
+def logic():
+    """Logic of the program"""
     platform, get_item = get_platform(), get_input()
     url_to_scrape = url_of_item(platform, get_item)
     page = urlopen(Request(url_to_scrape, headers={'User-Agent': 'Mozilla'}))
@@ -88,12 +102,19 @@ def main():
     else:
         output_message(get_item, round(avg_cost, 1))
 
-if __name__ == "__main__":
-    main()
-    print("Would you like to find the average price of another item? (Y/N)")
-    user_inp = str(input()).lower()
-    while(user_inp == "yes") or user_inp == "y":
-        main()
+def main():
+    """Main function that is looped."""
+    while True:
+        logic()
         print("Would you like to find the average price of another item? (Y/N)")
         user_inp = str(input()).lower()
+        if user_inp == "no" or user_inp == "n":
+            break
     print("Thanks for using this script!")
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        #prevents errors if ctrl+c is used
+        pass
