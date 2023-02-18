@@ -2,7 +2,7 @@
 Author: Noah J (Eutropios; Sink Cat)
 Date of Creation: January 22, 2023
 Date Last Modified: February 17, 2023
-Version 1.2.0
+Version 1.2.1
 Version of Python built with: 3.11.2 (Not required, I believe 3.6 will suffice)
 Built in packages required: json, datetime
 External packages required: urllib3, colorama, beautifulsoup4
@@ -22,7 +22,7 @@ Playstation, Sony and its subsidaries, XBOX, or Microsoft its subsidaries.***
 import json
 from datetime import datetime, timezone
 from urllib.request import urlopen, Request
-from colorama import init as colorama_init
+from colorama import init as colorama_init, deinit as colorama_deinit
 from colorama import Fore, Style
 from bs4 import BeautifulSoup as bs
 
@@ -111,6 +111,7 @@ def main():
         if user_inp == "no" or user_inp == "n":
             break
     print("Thanks for using this script!")
+    colorama_deinit()
 
 if __name__ == "__main__":
     try:
