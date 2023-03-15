@@ -9,6 +9,3 @@ WarMAC
 |
 | **This project is NOT affiliated with Warframe, Digital Extremes, or the Warframe Market.**
 | *For licensing information, please see LICENSES.txt*
-
-.. note::
-   This project is under active development.
