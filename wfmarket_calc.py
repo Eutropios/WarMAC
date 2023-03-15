@@ -9,8 +9,8 @@ Retrieves the sell price from all listings of a given item from https://warframe
 specific platform, then finds the average price in platinum of the listings.
 
 Date of Creation: January 22, 2023
-Date Last Modified: March 9, 2023
-Version 1.3.1
+Date Last Modified: March 14, 2023
+Version 1.3.3
 Version of Python required: 3.6
 Built in packages required: json, datetime
 External packages required: requests, colorama
