@@ -10,3 +10,7 @@ WarMAC
 | 
 | Help with Project Name: gke and mile gepek on Discord
 | Minor technical help with Project: "The Programmer's Hangout" Discord Server
+
+.. note::
+
+   This project is under active development.
