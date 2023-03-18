@@ -10,21 +10,29 @@ specific platform, then finds the average price in platinum of the listings.
 
 Date of Creation: January 22, 2023
 Date Last Modified: March 14, 2023
-Version 1.3.3
+Version 1.3.5
 Version of Python required: 3.6
 Built in packages required: json, datetime
 External packages required: requests, colorama
 
+IN PROGRESS:
+    Adding error handling for failed requests.
+    Addng error handling for no listings
+    Switching script to STRICTLY command line (maybe keep this one as an alternative for less
+    technically inclined users?)
 TO ADD:
-    THIS PROJECT IS STILL IN DEVELOPMENT. Additional error handling, expansion of time lookup dates,
-    and deleting lowest/highest sell prices to keep average in line are coming soon.
+    THIS PROJECT IS STILL IN DEVELOPMENT. Additional error handling, expansion of time lookup
+    dates, and deleting lowest/highest sell prices to keep average in line are coming soon.
+IDEAS:
+    Graph functionality for listing prices over time?
+    List top most expensive items? (Might be extremely hard given the amount of items within db)
 """
 
 import json
 from datetime import datetime, timezone
 import requests as rq
-from colorama import init as colorama_init, deinit as colorama_deinit
-from colorama import Fore, Style
+from colorama import Fore, Style, init as c_init, deinit as c_deinit
+#importing init as c_init to avoid confusion with object init
 
 PLATFORMS = {"xbox", "switch", "ps4", "pc"}
 PLATFORM_DICT = {"xbox one":"xbox", "xbox series x":"xbox", "xbox series s":"xbox",
@@ -39,7 +47,7 @@ def get_platform():
     """
     Gets the platform of the user and adds it to the HTTP request header
     """
-    colorama_init()
+    c_init()
     platform = ""
     while True:
         print(f"What platform are you on? {Fore.YELLOW}PC{Style.RESET_ALL}, " +
@@ -141,7 +149,7 @@ def main():
         if user_inp in ("no", "n"):
             break
     print("Thanks for using this script!")
-    colorama_deinit()
+    c_deinit()
 
 if __name__ == "__main__":
     try:
