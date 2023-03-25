@@ -18,7 +18,8 @@ UPCOMING:
     Switching script to STRICTLY command line (maybe keep mixed one as an alternative for less
     technically inclined users?)
 TO ADD:
-    Expansion of time lookup dates, and deleting lowest/highest sell prices to keep average in line are coming soon.
+    Expansion of time lookup dates, and deleting lowest/highest sell prices to keep average in line
+    are coming soon.
 NOTABLE IDEAS:
     Graph functionality for listing prices over time?
     List top most expensive items? (Might be extremely hard given the amount of items within db)
