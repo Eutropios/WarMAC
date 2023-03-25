@@ -9,26 +9,24 @@ Retrieves the sell price from all listings of a given item from https://warframe
 specific platform, then finds the average price in platinum of the listings.
 
 Date of Creation: January 22, 2023
-Date Last Modified: March 14, 2023
-Version 1.3.5
-Version of Python required: 3.6
-Built in packages required: json, datetime
+Date Last Modified: April 6, 2023
+Version 1.3.8
+Version of Python required: 3.10
 External packages required: requests, colorama
 
-IN PROGRESS:
-    Adding error handling for failed requests.
-    Addng error handling for no listings
-    Switching script to STRICTLY command line (maybe keep this one as an alternative for less
+UPCOMING:
+    Switching script to STRICTLY command line (maybe keep mixed one as an alternative for less
     technically inclined users?)
 TO ADD:
-    THIS PROJECT IS STILL IN DEVELOPMENT. Additional error handling, expansion of time lookup
-    dates, and deleting lowest/highest sell prices to keep average in line are coming soon.
-IDEAS:
+    Expansion of time lookup dates, and deleting lowest/highest sell prices to keep average in line
+    are coming soon.
+NOTABLE IDEAS:
     Graph functionality for listing prices over time?
     List top most expensive items? (Might be extremely hard given the amount of items within db)
 """
 
 import json
+#import argparse
 from datetime import datetime, timezone
 import requests as rq
 from colorama import Fore, Style, init as c_init, deinit as c_deinit
@@ -43,11 +41,47 @@ PLATFORM_DICT = {"xbox one":"xbox", "xbox series x":"xbox", "xbox series s":"xbo
 API_ROOT_LINK = "https://api.warframe.market/v1/items"
 headers={'User-Agent': 'Mozilla', 'Content-Type': 'application/json'}
 
-def get_platform():
+def net_error_checking(http_code: int) -> bool:
+    """Uses a switch statement to check the server's response code.
+
+    :param http_code: the status code returned by the GET request sent to the server
+    :type http_code: integer
+    :return: boolean indicating if the GET request was succesful. True if 200, False otherwise
+    :rtype: bool
+    """
+
+    match http_code:
+        case 200:
+            return True
+        case 404:
+            #when the requested item doesnt exist within the db
+            print("This item does not exist! Please check your spelling\n")
+            return False
+        case _:
+            with open("errorLog.txt", "a", encoding="UTF-8") as log_file:
+                print(log_file.write(http_code))
+            return False
+
+def is_api_up() -> bool:
+    """Gets a complete database of all items in the game from the root link
+
+    :return: returns a json object containing all items
+    :rtype: dict
+    """
+
+    page = rq.get(API_ROOT_LINK + "/bite/orders", headers=headers, timeout=5)
+    #arbitrary check to see if API is working
+    if page.status_code == 200:
+        return True
+    print("Database error. Please report issue on the Github page " +
+                    "(link in README.rst file)")
+    return False
+
+def get_platform() -> any:
     """
     Gets the platform of the user and adds it to the HTTP request header
     """
-    c_init()
+
     platform = ""
     while True:
         print(f"What platform are you on? {Fore.YELLOW}PC{Style.RESET_ALL}, " +
@@ -62,23 +96,7 @@ def get_platform():
         print(f"Sorry, {platform} is not a valid entry.")
     headers['Platform'] = platform
 
-def get_input():
-    """
-    Gets item user wants in a colourful way. Name of the item that the user wants
-    to find the average price of. Suggested to run through :func:`~url_of_item()`
-
-    :return: User input, unparsed. Contains spaces, not fixed for URLs
-    :rtype: string
-    """
-    print("What part would you like to find the price of? " +
-            f"Please use the form of {Fore.CYAN}\"Braton Prime Set\"{Style.RESET_ALL}: ")
-    #we need some exception handling here.
-    #IDEA: what if we download the entire list of weapons, and then use the user input
-    #to see if it exists? That way we can check the validity of input
-    name_of_item = str(input()).lower().strip()
-    return name_of_item
-
-def url_of_item(name_of_item):
+def url_of_item(name_of_item: str) -> str:
     """
     Fixes the string of a user input so it can be used in the APIs URL.
 
@@ -92,68 +110,77 @@ def url_of_item(name_of_item):
     listings_url = API_ROOT_LINK + "/" + name_of_item + "/orders"
     return listings_url
 
-def output_message(item, avg):
-    """
-    Outputs the average platinum for the specified item in a colourful way.
-    :param item: item that user requested price of
-    :type item: string
-    :param avg: average price of the item that user requested
-    :type avg: integer
-    """
-    print(f"The going rate for a {Fore.CYAN}{item}{Style.RESET_ALL} " +
-            f"is {Fore.CYAN}{avg}{Style.RESET_ALL}.")
+def find_avg(orders_list: dict, year: str, month: str) -> float:
+    """function that calculates the avg price of the item
 
-#I think I was trying to put some exception handling in here for the page requests?
+    :param item: the name of the requested item
+    :type item: string
+    :param orders_list: json dictionary of all of the listings of the requested item
+    :type orders_list: dictionary
+    :param year: year of bounds for search
+    :type year: string
+    :param month: month of bounds for search
+    :type month: string
+    """
+
+    num_orders, plat_count = 0, 0
+    for i in orders_list:
+        if i['order_type'] == 'sell':
+            creatn_date = i['last_update']
+            #IDEA: if no orders found, ask user if they want to expand their date bounds
+            #I should build a datetime object out of the creation date and subtracts
+            listing_y, listing_m = creatn_date[0:4], creatn_date[5:7]
+            if listing_y == year and int(month) - int(listing_m) <= 2:
+                num_orders += 1
+                plat_count += i['platinum']
+
+    avg_cost = plat_count/num_orders
+    return round(avg_cost, 1)
 
 def logic():
     """
     Logic of the program
     """
     get_platform()
-    get_item = get_input()
-    listings_url = url_of_item(get_item)
+    print("What part would you like to find the price of? " +
+            f"Please use the form of {Fore.CYAN}\"Braton Prime Set\"{Style.RESET_ALL}: ")
+    name_of_item = str(input()).lower().strip()
+    listings_url = url_of_item(name_of_item)
     page = rq.get(listings_url, headers=headers, timeout=5)
-    pulled_listings = json.loads(page.text)
-    #when there are no listings found, the program throws an error. Let's catch it!
-    item_list = pulled_listings['payload']['orders']
-    now = datetime.now(timezone.utc)
-    year, month = now.strftime("%Y"), now.strftime("%m")
-
-    num_orders, plat_count = 0, 0
-    for i in item_list:
-        if i['order_type'] == 'sell':
-            creatn_date = i['last_update']
-            #IDEA: if no orders found, ask user if they want to expand their date bounds
-            listing_y, listing_m = creatn_date[0:4], creatn_date[5:7]
-            if listing_y == year and int(month) - int(listing_m) <= 2:
-                num_orders += 1
-                plat_count += i['platinum']
-
-    try:
-        avg_cost = plat_count/num_orders
-
-    except ArithmeticError:
-        print("There were no listings of this item within the past 2 months found.")
-
-    else:
-        output_message(get_item, round(avg_cost, 1))
+    if net_error_checking(page.status_code):
+        pulled_listings = json.loads(page.text) #creates json dictionary
+        #when there are no listings found, the program throws an error. Let's catch it!
+        item_list = pulled_listings['payload']['orders']
+        now = datetime.now(timezone.utc)
+        year, month = now.strftime("%Y"), now.strftime("%m")
+        try:
+            print(f"The going rate for a {Fore.CYAN}{name_of_item}{Style.RESET_ALL} " +
+                f"is {Fore.CYAN}{find_avg(item_list, year, month)}{Style.RESET_ALL}.")
+        except ArithmeticError:
+            print("There were no listings of this item within the past 2 months found.")
 
 def main():
     """
-    Main function that is looped.
+    Main function that is looped to acompany for repeated user requests.
     """
-    while True:
-        logic()
-        print("Would you like to find the average price of another item? (Y/N)")
-        user_inp = str(input()).lower()
-        if user_inp in ("no", "n"):
-            break
-    print("Thanks for using this script!")
-    c_deinit()
+    try:
+        api_status = is_api_up()
+        if bool(api_status): #erroneous check to see if the database is up
+            c_init()
+            while True:
+                logic()
+                print("Would you like to find the average price of another item? (Y/N)")
+                user_inp = str(input()).lower()
+                if user_inp in ("no", "n"):
+                    break
+            print("Thanks for using this script!")
+            c_deinit()
+    except rq.exceptions.ConnectionError:
+        print("You're not connected to the internet.")
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
         #prevents errors if ctrl+c is used
-        pass
+        print("")
