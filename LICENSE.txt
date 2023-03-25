@@ -54,7 +54,7 @@ Dependency Licenses:
 
     ~
 
-    requests.get is a part of Requests
+    requests.get and requests.exceptions are a part of Requests
     https://github.com/psf/requests
 
 
