@@ -1,4 +1,4 @@
-WarMAC Version 1.3.7
+WarMAC Version 1.3.8
 =======
 
 | **WarMAC** is a Python script that calculates the mean price of platinum for a specific item in Warframe.

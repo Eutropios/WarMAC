@@ -9,8 +9,8 @@ Retrieves the sell price from all listings of a given item from https://warframe
 specific platform, then finds the average price in platinum of the listings.
 
 Date of Creation: January 22, 2023
-Date Last Modified: March 24, 2023
-Version 1.3.7
+Date Last Modified: April 6, 2023
+Version 1.3.8
 Version of Python required: 3.10
 External packages required: requests, colorama
 
@@ -26,7 +26,7 @@ NOTABLE IDEAS:
 """
 
 import json
-import sys
+#import argparse
 from datetime import datetime, timezone
 import requests as rq
 from colorama import Fore, Style, init as c_init, deinit as c_deinit
@@ -55,26 +55,27 @@ def net_error_checking(http_code: int) -> bool:
             return True
         case 404:
             #when the requested item doesnt exist within the db
-            sys.stderr.write("This item does not exist! Please check your spelling\n")
+            print("This item does not exist! Please check your spelling\n")
             return False
         case _:
             with open("errorLog.txt", "a", encoding="UTF-8") as log_file:
                 print(log_file.write(http_code))
             return False
 
-def get_db() -> dict:
+def is_api_up() -> bool:
     """Gets a complete database of all items in the game from the root link
 
     :return: returns a json object containing all items
     :rtype: dict
     """
 
-    page = rq.get(API_ROOT_LINK, headers=headers, timeout=5)
+    page = rq.get(API_ROOT_LINK + "/bite/orders", headers=headers, timeout=5)
+    #arbitrary check to see if API is working
     if page.status_code == 200:
-        return json.loads(page.text)
-    sys.stderr.write("Database error. Please report issue on the Github page " +
+        return True
+    print("Database error. Please report issue on the Github page " +
                     "(link in README.rst file)")
-    return {}
+    return False
 
 def get_platform() -> any:
     """
@@ -92,23 +93,8 @@ def get_platform() -> any:
         if platform in PLATFORM_DICT:
             platform = platform.replace(platform, PLATFORM_DICT[platform])
             break
-        sys.stderr.write(f"Sorry, {platform} is not a valid entry.")
+        print(f"Sorry, {platform} is not a valid entry.")
     headers['Platform'] = platform
-
-def get_input() -> str:
-    """
-    Gets the name of the item user wants to find the average price of. Prints messages in a
-    colourful way and verifies that it exists within the API database. Suggested to run
-    through url_of_item().
-
-    :return: User input, unparsed. Contains spaces, not fixed for URLs
-    :rtype: string
-    """
-
-    print("What part would you like to find the price of? " +
-            f"Please use the form of {Fore.CYAN}\"Braton Prime Set\"{Style.RESET_ALL}: ")
-    name_of_item = str(input()).lower().strip()
-    return name_of_item
 
 def url_of_item(name_of_item: str) -> str:
     """
@@ -142,22 +128,24 @@ def find_avg(orders_list: dict, year: str, month: str) -> float:
         if i['order_type'] == 'sell':
             creatn_date = i['last_update']
             #IDEA: if no orders found, ask user if they want to expand their date bounds
+            #I should build a datetime object out of the creation date and subtracts
             listing_y, listing_m = creatn_date[0:4], creatn_date[5:7]
             if listing_y == year and int(month) - int(listing_m) <= 2:
                 num_orders += 1
                 plat_count += i['platinum']
 
-
     avg_cost = plat_count/num_orders
     return round(avg_cost, 1)
 
-def logic() -> any:
+def logic():
     """
     Logic of the program
     """
     get_platform()
-    get_item = get_input()
-    listings_url = url_of_item(get_item)
+    print("What part would you like to find the price of? " +
+            f"Please use the form of {Fore.CYAN}\"Braton Prime Set\"{Style.RESET_ALL}: ")
+    name_of_item = str(input()).lower().strip()
+    listings_url = url_of_item(name_of_item)
     page = rq.get(listings_url, headers=headers, timeout=5)
     if net_error_checking(page.status_code):
         pulled_listings = json.loads(page.text) #creates json dictionary
@@ -166,18 +154,18 @@ def logic() -> any:
         now = datetime.now(timezone.utc)
         year, month = now.strftime("%Y"), now.strftime("%m")
         try:
-            print(f"The going rate for a {Fore.CYAN}{get_item}{Style.RESET_ALL} " +
+            print(f"The going rate for a {Fore.CYAN}{name_of_item}{Style.RESET_ALL} " +
                 f"is {Fore.CYAN}{find_avg(item_list, year, month)}{Style.RESET_ALL}.")
         except ArithmeticError:
-            sys.stderr.write("There were no listings of this item within the past 2 months found.")
+            print("There were no listings of this item within the past 2 months found.")
 
-def main() -> any:
+def main():
     """
     Main function that is looped to acompany for repeated user requests.
     """
     try:
-        item_db = get_db()
-        if bool(item_db): #erroneous check to see if the database is up
+        api_status = is_api_up()
+        if bool(api_status): #erroneous check to see if the database is up
             c_init()
             while True:
                 logic()
@@ -188,11 +176,11 @@ def main() -> any:
             print("Thanks for using this script!")
             c_deinit()
     except rq.exceptions.ConnectionError:
-        sys.stderr.write("You're not connected to the internet.")
+        print("You're not connected to the internet.")
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
         #prevents errors if ctrl+c is used
-        sys.stderr.write("")
+        print("")
