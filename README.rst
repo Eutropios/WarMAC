@@ -1,4 +1,4 @@
-WarMAC Version 1.3.8
+WarMAC Version 1.3.9
 =======
 
 | **WarMAC** is a Python script that calculates the mean price of platinum for a specific item in Warframe.
@@ -21,4 +21,5 @@ WarMAC Version 1.3.8
 |    List top most expensive items? (Might be extremely hard given the amount of items within db)
 |
 | **This project is NOT affiliated with Warframe, Digital Extremes, or the Warframe Market.**
-| *For licensing information, please see LICENSE.txt*
+| *Copyright (c) 2023 Noah Jenner under MIT License*
+| *For additional licensing information, please see LICENSE.txt*
