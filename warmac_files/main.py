@@ -23,11 +23,11 @@ NOTABLE IDEAS:
     List top most expensive items? (Might be extremely hard given the amount of items within db)
 """
 
-#import argparse
 from datetime import datetime, timezone
 from requests import api as rq, exceptions as rq_except
 from colorama import Fore, Style, init as c_init, deinit as c_deinit
 #importing init as c_init to avoid confusion with object init
+from . import _arguments
 
 PLATFORMS = {"xbox", "switch", "ps4", "pc"}
 PLATFORM_DICT = {"xbox one":"xbox", "xbox series x":"xbox", "xbox series s":"xbox",
@@ -130,6 +130,8 @@ def main():
     Main function that is looped to acompany for repeated user requests.
     """
     try:
+        parser = _arguments.create_parser()
+        args = parser.parse_args()
         if rq.head(API_ROOT, headers=headers, timeout=5).status_code == 200:
             #erroneous check to see if the website is up
             c_init()
