@@ -63,7 +63,7 @@ def get_platform():
     Gets the platform of the user and adds it to the HTTP request header
     """
 
-    platform = ""
+    platform: str
     while True:
         print(f"What platform are you on? {Fore.YELLOW}PC{Style.RESET_ALL}, " +
             f"{Fore.GREEN}XBOX{Style.RESET_ALL}, {Fore.BLUE}PS4{Style.RESET_ALL}, " +

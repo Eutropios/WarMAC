@@ -5,7 +5,7 @@ Detailed program introduction found in main.py
 Formal documentation WIP
 """
 
-from WarMAC import main
+from programFiles import main
 if __name__ == "__main__":
     try:
         main.main()
