@@ -4,7 +4,8 @@ File that contains function to add command line functionality
 import argparse
 
 def create_parser() -> argparse.ArgumentParser:
-    """_summary_
+    """Returns ArgumentParser withthe appropriate documentation and
+    functionality
 
     :return: ArgumentParser with appropriate documentation and functionality
     :rtype: argparse.ArgumentParser
