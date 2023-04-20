@@ -16,9 +16,6 @@ External packages required: requests, colorama
 UPCOMING:
     Expansion of time lookup dates, and deleting lowest/highest sell prices to keep average in line
     are coming soon.
-NOTABLE IDEAS:
-    * Graph functionality for listing prices over time?
-    * List top most expensive items? (Might be extremely hard given the amount of items within db)
 """
 import typing
 if typing.TYPE_CHECKING:
@@ -79,16 +76,15 @@ def logic(args: "ArgumentParser"):
     """
     Logic of the program
     """
-    headers['Platform'] = (args.platform).lower()
-    name_of_item = args.item_to_find.strip().lower()
+    headers['Platform'] = args.platform
     # replace problematic characters that would cause issues in a URL
-    char_fixes = name_of_item.replace(' ', '_').replace('&', 'and')
+    char_fixes = args.item.replace(' ', '_').replace('&', 'and')
 
     page = rq.get(f"{API_ROOT}/{char_fixes}/orders", headers=headers, timeout=5)
     if net_error_checking(page.status_code):
         item_list = page.json()['payload']['orders']  # creates json dictionary
         try:
-            print(f"The going rate for a {Fore.CYAN}{name_of_item}{Style.RESET_ALL} is "
+            print(f"The going rate for a {Fore.CYAN}{args.item}{Style.RESET_ALL} is "
                   f"{Fore.CYAN}{find_avg(item_list)}{Style.RESET_ALL}.")
         except ArithmeticError:
             _arguments.err_handling(2)
@@ -104,9 +100,12 @@ def main():
         args = parser.parse_args()
         if rq.head(API_ROOT, headers=headers, timeout=5).status_code == 200:
             # erroneous check to see if the website is up
-            c_init()
-            logic(args)
-            c_deinit()
+            if args.no_colour:
+                logic(args)
+            else:
+                c_init()
+                logic(args)
+                c_deinit()
         else:
             _arguments.err_handling(4)
     except rq_except.ConnectionError:

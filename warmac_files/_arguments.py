@@ -22,11 +22,19 @@ def create_parser() -> AP:
     """
     parser = AP(description="A program to fetch the average cost of an item in Warframe.",
                 formatter_class=SpecialParser)
-    parser.add_argument('-p', "--platform", default="pc", type=str, choices=PLATFORMS, metavar="",
-                        help="specifies which platform to fetch listings for; can be\neither ps4, "
-                        "xbox, pc, or switch")
-    parser.add_argument("item_to_find", type=str, help="the item to search for")
-    # Many more arguments
+
+    # Optional Arguments
+    parser.add_argument('-p', "--platform", default="pc", type=str.lower, choices=PLATFORMS,
+                        metavar="", help="specifies which platform to fetch listings for; can be"
+                        "\neither ps4, xbox, pc, or switch")
+    parser.add_argument("-l", "--list", action="store_true", help="Listing mode. Shows "
+                        "each listing that is being used to\ncalculate the average price.")
+    parser.add_argument("--no-colour", action="store_true", help="No colour mode. Removes colour "
+                        "from script output; Ideal for script command-line piping or terminals "
+                        "incompatible with ANSI colouring.", dest="no_colour")
+
+    # Positional Arguments
+    parser.add_argument("item", type=lambda s: s.lower().strip(), help="the item to search for")
     return parser
 
 def err_handling(err_code: int):
@@ -35,6 +43,7 @@ def err_handling(err_code: int):
     :param err_code: integer corresponding to a partciular error code.
     :type err_code: int
     """
+
     match err_code:
         case 1:
             print("You're not connected to the internet. Please check your internet connection and"
