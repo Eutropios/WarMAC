@@ -13,9 +13,6 @@ WarMAC Version 1.4.0
 | UPCOMING:
 |     Expansion of time lookup dates, and deleting lowest/highest sell prices to keep average in line
 |     are coming soon.
-| NOTABLE IDEAS:
-|     * Graph functionality for listing prices over time?
-|     * List top most expensive items? (Might be extremely hard given the amount of items within db)
 |
 | **This project is NOT affiliated with Warframe, Digital Extremes, or the Warframe Market.**
 | *Copyright (c) 2023 Noah Jenner under MIT License*
