@@ -5,7 +5,7 @@ Detailed program introduction found in main.py
 Formal documentation WIP
 """
 
-from warmac_files import main as warmac
+from src.warmac import main as warmac
 if __name__ == "__main__":
     try:
         warmac.main()

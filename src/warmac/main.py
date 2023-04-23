@@ -8,8 +8,8 @@ Retrieves the sell price from all listings of a given item from https://warframe
 specific platform, then finds the average price in platinum of the listings.
 
 Date of Creation: January 22, 2023
-Date Last Modified: April 14, 2023
-Version 1.4.0
+Date Last Modified: April 22, 2023
+Version 1.4.2
 Version of Python required: 3.10
 External packages required: requests, colorama
 
@@ -17,13 +17,13 @@ UPCOMING:
     Expansion of time lookup dates, and deleting lowest/highest sell prices to keep average in line
     are coming soon.
 """
+
 import typing
 if typing.TYPE_CHECKING:
     from argparse import ArgumentParser
 from datetime import datetime as dt, timezone as tz
 from requests import api as rq, exceptions as rq_except
-from colorama import Fore, Style, init as c_init, deinit as c_deinit
-from warmac_files import _arguments
+from src.warmac import _arguments
 
 API_ROOT = "https://api.warframe.market/v1/items"
 headers = {'User-Agent': 'Mozilla', 'Content-Type': 'application/json'}
@@ -55,8 +55,6 @@ def find_avg(orders_list: dict) -> float:
 
     :param orders_list: list of all orders of the specified item
     :type orders_list: dict
-    :param now: the date and time that it is currently
-    :type now: datetime
     :return: the average price of all listings of the specified item
     :rtype: float
     """
@@ -65,7 +63,8 @@ def find_avg(orders_list: dict) -> float:
     num_orders, plat_count = 0, 0
     for i in orders_list:
         if i['order_type'] == 'sell':
-            time_difference = now - dt.fromisoformat(i['last_update'])
+            listing_date = dt.fromisoformat(i['last_update'])
+            time_difference = now - listing_date
             if time_difference.days <= 60:
                 num_orders += 1
                 plat_count += i['platinum']
@@ -84,8 +83,14 @@ def logic(args: "ArgumentParser"):
     if net_error_checking(page.status_code):
         item_list = page.json()['payload']['orders']  # creates json dictionary
         try:
-            print(f"The going rate for a {Fore.CYAN}{args.item}{Style.RESET_ALL} is "
-                  f"{Fore.CYAN}{find_avg(item_list)}{Style.RESET_ALL}.")
+            if args.no_colour:
+                print(f"The going rate for a {args.item} is {find_avg(item_list)}.")
+            else:
+                from colorama import Fore, Style, init as c_init, deinit as c_deinit
+                c_init()
+                print(f"The going rate for a {Fore.CYAN}{args.item}{Style.RESET_ALL} is "
+                      f"{Fore.CYAN}{find_avg(item_list)}{Style.RESET_ALL}.")
+                c_deinit()
         except ArithmeticError:
             _arguments.err_handling(2)
 
@@ -100,12 +105,7 @@ def main():
         args = parser.parse_args()
         if rq.head(API_ROOT, headers=headers, timeout=5).status_code == 200:
             # erroneous check to see if the website is up
-            if args.no_colour:
-                logic(args)
-            else:
-                c_init()
-                logic(args)
-                c_deinit()
+            logic(args)
         else:
             _arguments.err_handling(4)
     except rq_except.ConnectionError:
