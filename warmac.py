@@ -1,4 +1,4 @@
-# !/usr/bin/env python
+#!/usr/bin/env python
 """
 Allows for program execution without calling python3
 Detailed program introduction found in main.py
