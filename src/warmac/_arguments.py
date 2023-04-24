@@ -26,12 +26,16 @@ def create_parser() -> AP:
 
     # Optional Arguments
     parser.add_argument('-p', "--platform", default="pc", type=str.lower, choices=PLATFORMS,
-                        metavar="", help="specifies which platform to fetch listings for; can be"
+                        metavar="", help="Specifies which platform to fetch listings for; can be"
                         " either\nps4, xbox, pc, or switch")
     # parser.add_argument("-l", "--list", action="store_true", help="Listing mode. Shows "
     #                     "each listing that is being used to\ncalculate the average price.")
-    parser.add_argument("--add-colour", action="store_true", help="Colour mode. Removes colour "
-                        "from script output; Ideal for terminals that are incompatible with ANSI"
+    group1 = parser.add_mutually_exclusive_group()
+    group1.add_argument("-m", "--minimal", action="store_true", help="Minimal ouptut mode. Removes"
+                        " execessive text and instead only shows\nthe average price; No colour is "
+                        "present in the output.", dest="minimal")
+    group1.add_argument("--no-colour", action="store_true", help="No colour mode. Removes colour "
+                        "from script output; Ideal for\nterminals that are incompatible with ANSI"
                         " colouring.", dest="no_colour")
 
     # Positional Arguments

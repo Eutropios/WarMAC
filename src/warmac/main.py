@@ -8,8 +8,8 @@ Retrieves the sell price from all listings of a given item from https://warframe
 specific platform, then finds the average price in platinum of the listings.
 
 Date of Creation: January 22, 2023
-Date Last Modified: April 22, 2023
-Version 1.4.2
+Date Last Modified: April 24, 2023
+Version 1.4.3
 Version of Python required: 3.10
 External packages required: requests, colorama
 
@@ -63,9 +63,8 @@ def find_avg(orders_list: dict) -> float:
     num_orders, plat_count = 0, 0
     for i in orders_list:
         if i['order_type'] == 'sell':
-            listing_date = dt.fromisoformat(i['last_update'])
-            time_difference = now - listing_date
-            if time_difference.days <= 60:
+            time_diff = (now - dt.fromisoformat(i['last_update'])).days
+            if time_diff <= 60:
                 num_orders += 1
                 plat_count += i['platinum']
     avg_cost = plat_count/num_orders
@@ -85,6 +84,8 @@ def logic(args: "ArgumentParser"):
         try:
             if args.no_colour:
                 print(f"The going rate for a {args.item} is {find_avg(item_list)}.")
+            elif args.minimal:
+                print(find_avg(item_list))
             else:
                 from colorama import Fore, Style, init as c_init, deinit as c_deinit
                 c_init()
