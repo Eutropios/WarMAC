@@ -59,6 +59,7 @@ def find_avg(orders_list: dict, verbose: bool) -> float:
     :rtype: float
     """
 
+    # <-<***OPTIMIZE CODE WITH GENERATORS AND LIST COMPREHENSION***>->
     num_orders = plat_count = 0
     now = dt.now(tz.utc)
     if verbose:
