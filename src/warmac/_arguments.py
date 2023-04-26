@@ -2,13 +2,14 @@
 Files that contains argument handling and error handling
 """
 
-from argparse import ArgumentParser as AP, ArgumentDefaultsHelpFormatter as DefHelpFormat
+import shutil
+from argparse import ArgumentParser as AP, ArgumentDefaultsHelpFormatter as DefaultHelpFormat
 from argparse import RawTextHelpFormatter as RawHelpFormat
 
 PLATFORMS = ("pc", "ps4", "xbox", "switch")
 # PARSER_DESCRIPTION
 
-class SpecialParser(DefHelpFormat, RawHelpFormat):
+class SpecialParser(DefaultHelpFormat, RawHelpFormat):
     """
     Extends argparse.ArgumentDefaultsHelpFormatter and argparse.RawTextHelpFormatter
     """
@@ -21,15 +22,17 @@ def create_parser() -> AP:
     :return: ArgumentParser with appropriate documentation and functionality
     :rtype: argparse.ArgumentParser
     """
+    width = min(90, shutil.get_terminal_size().columns - 2)
     parser = AP(description="A program to fetch the average cost of an item in Warframe.",
-                formatter_class=SpecialParser)
+                formatter_class=lambda prog: SpecialParser(prog, max_help_position=width))
 
     # Optional Arguments
-    parser.add_argument('-p', "--platform", default="pc", type=str.lower, choices=PLATFORMS,
-                        metavar="", help="Specifies which platform to fetch listings for; can be"
-                        " either\nps4, xbox, pc, or switch")
-    # parser.add_argument("-l", "--list", action="store_true", help="Listing mode. Shows "
-    #                     "each listing that is being used to\ncalculate the average price.")
+    parser.add_argument('-p', "--platform", default="pc", type=lambda s: s.lower().strip(),
+                        choices=PLATFORMS, metavar="", help="Specifies which platform to fetch"
+                        " listings for; can be either\nps4, xbox, pc, or switch")
+    parser.add_argument("-l", "-v", "--listings", "--verbose", action="store_true", help="Listing"
+                        " mode. Shows each listing that is being used to\ncalculate the average "
+                        "price; Highest level of verbosity.", dest="listings")
     group1 = parser.add_mutually_exclusive_group()
     group1.add_argument("-m", "--minimal", action="store_true", help="Minimal ouptut mode. Removes"
                         " execessive text and instead only shows\nthe average price; No colour is "

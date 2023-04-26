@@ -50,7 +50,7 @@ def net_error_checking(http_code: int) -> bool:
                 print(log_file.write(http_code))
             return False
 
-def find_avg(orders_list: dict) -> float:
+def find_avg(orders_list: dict, verbose: bool) -> float:
     """function that calculates the avg price of the item
 
     :param orders_list: list of all orders of the specified item
@@ -59,16 +59,26 @@ def find_avg(orders_list: dict) -> float:
     :rtype: float
     """
 
+    num_orders = plat_count = 0
     now = dt.now(tz.utc)
-    num_orders, plat_count = 0, 0
-    for i in orders_list:
-        if i['order_type'] == 'sell':
-            time_diff = (now - dt.fromisoformat(i['last_update'])).days
-            if time_diff <= 60:
+    if verbose:
+        for order in orders_list:
+            if order['order_type'] == 'sell':
+                days_ago = (now - dt.fromisoformat(order['last_update'])).days
+                if days_ago <= 60:
+                    num_orders += 1
+                    plat_count += order['platinum']
+                    print(f"Listing's Sell Price: {order['platinum']}\tDays Since"
+                          f" Last Listing Update: {days_ago}")
+    else:
+        for order in orders_list:
+            if (
+                order['order_type'] == 'sell'
+                and (now - dt.fromisoformat(order['last_update'])).days <= 60
+            ):
                 num_orders += 1
-                plat_count += i['platinum']
-    avg_cost = plat_count/num_orders
-    return round(avg_cost, 1)
+                plat_count += order['platinum']
+    return round(plat_count/num_orders, 1)
 
 def logic(args: "ArgumentParser"):
     """
@@ -89,8 +99,8 @@ def logic(args: "ArgumentParser"):
             else:
                 from colorama import Fore, Style, init as c_init, deinit as c_deinit
                 c_init()
-                print(f"The going rate for a {Fore.CYAN}{args.item}{Style.RESET_ALL} is "
-                      f"{Fore.CYAN}{find_avg(item_list)}{Style.RESET_ALL}.")
+                print(f"The going rate for a(n) {Fore.CYAN}{args.item}{Style.RESET_ALL} is "
+                      f"{Fore.CYAN}{find_avg(item_list, args.listings)}{Style.RESET_ALL}.")
                 c_deinit()
         except ArithmeticError:
             _arguments.err_handling(2)
