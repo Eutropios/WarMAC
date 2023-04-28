@@ -50,7 +50,7 @@ def net_error_checking(http_code: int) -> bool:
                 print(log_file.write(http_code))
             return False
 
-def find_avg(orders_list: dict, verbose: bool) -> float:
+def find_avg(orders_list: dict, args: "ArgumentParser") -> float:
     """function that calculates the avg price of the item
 
     :param orders_list: list of all orders of the specified item
@@ -59,25 +59,22 @@ def find_avg(orders_list: dict, verbose: bool) -> float:
     :rtype: float
     """
 
-    num_orders = plat_count = 0
+    num_orders = plat_count = highest = 0
+    lowest = 999999  # ARBITRARY NUMBER. If an item sells for this ever, I'd be surprised
     now = dt.now(tz.utc)
-    if verbose:
-        for order in orders_list:
-            if order['order_type'] == 'sell':
-                days_ago = (now - dt.fromisoformat(order['last_update'])).days
-                if days_ago <= 60:
-                    num_orders += 1
-                    plat_count += order['platinum']
-                    print(f"Listing's Sell Price: {order['platinum']}\tDays Since"
-                          f" Last Listing Update: {days_ago}")
-    else:
-        for order in orders_list:
-            if (
-                order['order_type'] == 'sell'
-                and (now - dt.fromisoformat(order['last_update'])).days <= 60
-            ):
-                num_orders += 1
-                plat_count += order['platinum']
+    for order in orders_list:
+        if (
+            order['order_type'] == 'sell'
+            and (now - dt.fromisoformat(order['last_update'])).days <= 60
+        ):
+            num_orders += 1
+            plat_count += order['platinum']
+            if order["platinum"] > highest:
+                highest = order["platinum"]
+            elif order["platinum"] < lowest:
+                lowest = order["platinum"]
+    if args.extra:
+        print(f"Highest: {highest}\tLowest: {lowest}\tNumber of orders: {num_orders}")
     return round(plat_count/num_orders, 1)
 
 def logic(args: "ArgumentParser"):
@@ -87,21 +84,14 @@ def logic(args: "ArgumentParser"):
     headers['Platform'] = args.platform
     # replace problematic characters that would cause issues in a URL
     char_fixes = args.item.replace(' ', '_').replace('&', 'and')
-
     page = rq.get(f"{API_ROOT}/{char_fixes}/orders", headers=headers, timeout=5)
     if net_error_checking(page.status_code):
         item_list = page.json()['payload']['orders']  # creates json dictionary
         try:
-            if args.no_colour:
-                print(f"The going rate for a {args.item} is {find_avg(item_list)}.")
-            elif args.minimal:
-                print(find_avg(item_list))
+            if args.verbose:
+                print(f"The going rate for a {args.item} is {find_avg(item_list, args)}.")
             else:
-                from colorama import Fore, Style, init as c_init, deinit as c_deinit
-                c_init()
-                print(f"The going rate for a(n) {Fore.CYAN}{args.item}{Style.RESET_ALL} is "
-                      f"{Fore.CYAN}{find_avg(item_list, args.listings)}{Style.RESET_ALL}.")
-                c_deinit()
+                print(find_avg(item_list, args))
         except ArithmeticError:
             _arguments.err_handling(2)
 
