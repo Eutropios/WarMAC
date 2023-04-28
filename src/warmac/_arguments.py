@@ -3,15 +3,11 @@ Files that contains argument handling and error handling
 """
 
 import shutil
-from argparse import (
-    ArgumentParser as ArgP,
-    ArgumentDefaultsHelpFormatter as DefaultHelpFormat,
-    RawTextHelpFormatter as RawHelpFormat
-)
+from argparse import ArgumentParser as AP, ArgumentDefaultsHelpFormatter as DefaultHelpFormat
+from argparse import RawTextHelpFormatter as RawHelpFormat
 
 PLATFORMS = ("pc", "ps4", "xbox", "switch")
 # PARSER_DESCRIPTION
-HELP_MIN_WIDTH = 90
 
 class SpecialParser(DefaultHelpFormat, RawHelpFormat):
     """
@@ -19,30 +15,31 @@ class SpecialParser(DefaultHelpFormat, RawHelpFormat):
     """
     pass
 
-def create_parser() -> ArgP:
-    """Returns ArgumentParser with the appropriate documentation and
+def create_parser() -> AP:
+    """Returns ArgumentParser withthe appropriate documentation and
     functionality
 
     :return: ArgumentParser with appropriate documentation and functionality
     :rtype: argparse.ArgumentParser
     """
-    width = min(HELP_MIN_WIDTH, shutil.get_terminal_size().columns - 2)
-    parser = ArgP(description="A program to fetch the average cost of an item in Warframe.",
-                  formatter_class=lambda prog: SpecialParser(prog, max_help_position=width))
+    width = min(90, shutil.get_terminal_size().columns - 2)
+    parser = AP(description="A program to fetch the average cost of an item in Warframe.",
+                formatter_class=lambda prog: SpecialParser(prog, max_help_position=width))
 
     # Optional Arguments
     parser.add_argument('-p', "--platform", default="pc", type=lambda s: s.lower().strip(),
                         choices=PLATFORMS, metavar="", help="Specifies which platform to fetch"
                         " listings for; can be either\nps4, xbox, pc, or switch")
-    # separate verbose and listings, make minimal the default
-    parser.add_argument("-v", "--verbose", action="store_true", help="Prints the average price of"
-                        " the item, alongside a short\nmessage for the user.", dest="verbose")
-    parser.add_argument("-e", "--extra-info", action="store_true", help="Prints the highest and"
-                        " lowest prices in the order list, as well\nas the number of orders that"
-                        " were fetched.", dest="extra")
-    # parser.add_argument("--no-colour", action="store_true", help="No colour mode. Removes colour "
-    #                    "from script output; Ideal for\nterminals that are incompatible with ANSI"
-    #                    " colouring.", dest="no_colour")
+    parser.add_argument("-l", "-v", "--listings", "--verbose", action="store_true", help="Listing"
+                        " mode. Shows each listing that is being used to\ncalculate the average "
+                        "price; Highest level of verbosity.", dest="listings")
+    group1 = parser.add_mutually_exclusive_group()
+    group1.add_argument("-m", "--minimal", action="store_true", help="Minimal ouptut mode. Removes"
+                        " execessive text and instead only shows\nthe average price; No colour is "
+                        "present in the output.", dest="minimal")
+    group1.add_argument("--no-colour", action="store_true", help="No colour mode. Removes colour "
+                        "from script output; Ideal for\nterminals that are incompatible with ANSI"
+                        " colouring.", dest="no_colour")
 
     # Positional Arguments
     parser.add_argument("item", type=lambda s: s.lower().strip(), help="the item to search for")
