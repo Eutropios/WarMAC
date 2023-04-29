@@ -59,13 +59,8 @@ def find_avg(orders_list: dict, args: "ArgumentParser") -> float:
     :rtype: float
     """
 
-<<<<<<< HEAD
-    # <-<***OPTIMIZE CODE WITH GENERATORS AND LIST COMPREHENSION***>->
-    num_orders = plat_count = 0
-=======
     num_orders = plat_count = highest = 0
     lowest = 999999  # ARBITRARY NUMBER. If an item sells for this ever, I'd be surprised
->>>>>>> add-commands
     now = dt.now(tz.utc)
     for order in orders_list:
         if (
