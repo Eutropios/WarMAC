@@ -1,23 +1,30 @@
 """
-Files that contains argument handling and error handling
+warmac._arguments
+~~~~~~~~~~~~~~~~~
+File that contains argument handling and error handling
 """
 
 import shutil
 from argparse import (
     ArgumentParser as ArgP,
+    RawDescriptionHelpFormatter as DescHelpFormat,
     ArgumentDefaultsHelpFormatter as DefaultHelpFormat,
     RawTextHelpFormatter as RawHelpFormat
 )
 
 PLATFORMS = ("pc", "ps4", "xbox", "switch")
-# PARSER_DESCRIPTION
 HELP_MIN_WIDTH = 90
 
-class SpecialParser(DefaultHelpFormat, RawHelpFormat):
+class SpecialParser(DefaultHelpFormat, RawHelpFormat, DescHelpFormat):
     """
     Extends argparse.ArgumentDefaultsHelpFormatter and argparse.RawTextHelpFormatter
     """
     pass
+
+class DatabaseError(Exception):
+    def __init__(self, message="Database Error."):
+        self.message = message
+        super().__init__(self.message)
 
 def create_parser() -> ArgP:
     """Returns ArgumentParser with the appropriate documentation and
@@ -34,12 +41,12 @@ def create_parser() -> ArgP:
     parser.add_argument('-p', "--platform", default="pc", type=lambda s: s.lower().strip(),
                         choices=PLATFORMS, metavar="", help="Specifies which platform to fetch"
                         " listings for; can be either\nps4, xbox, pc, or switch")
-    # separate verbose and listings, make minimal the default
     parser.add_argument("-v", "--verbose", action="store_true", help="Prints the average price of"
                         " the item, alongside a short\nmessage for the user.", dest="verbose")
     parser.add_argument("-e", "--extra-info", action="store_true", help="Prints the highest and"
                         " lowest prices in the order list, as well\nas the number of orders that"
                         " were fetched.", dest="extra")
+    # parser.add_argument("-r", "--range", default=60, type=int, help="", metavar="\b", dest="time_range")
     # parser.add_argument("--no-colour", action="store_true", help="No colour mode. Removes colour "
     #                    "from script output; Ideal for\nterminals that are incompatible with ANSI"
     #                    " colouring.", dest="no_colour")

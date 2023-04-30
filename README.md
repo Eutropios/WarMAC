@@ -7,7 +7,7 @@ The script uses listings from the fan website *<https://warframe.market/>*.
 This project is incomplete, and is mainly just an exercise for myself.
 
 **Version of Python required: 3.10**  
-**External packages required: requests, colorama**  
+**External packages required: urllib3**  
 
 *TO REPORT AN ISSUE, PLEASE OPEN AN ISSUE AT <https://github.com/Eutropios/wfmarket-calc/issues>*  
 This project is currently not available on PyPi. However, I am diligently working on adding functionality before the first official release.  

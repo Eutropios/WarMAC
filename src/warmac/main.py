@@ -8,21 +8,19 @@ Retrieves the sell price from all listings of a given item from https://warframe
 specific platform, then finds the average price in platinum of the listings.
 
 Date of Creation: January 22, 2023
-Date Last Modified: April 28, 2023
+Date Last Modified: April 30, 2023
 Version 1.4.3
 Version of Python required: 3.10
-External packages required: requests
+External packages required: urllib3
 
 UPCOMING:
     Expansion of time lookup dates, and deleting lowest/highest sell prices to keep average in line
     are coming soon.
 """
 
-import typing
-if typing.TYPE_CHECKING:
-    from argparse import ArgumentParser
 from datetime import datetime as dt, timezone as tz
-from requests import api as rq, exceptions as rq_except
+from statistics import mean
+import urllib3 as rq
 from src.warmac import _arguments
 
 API_ROOT = "https://api.warframe.market/v1/items"
@@ -48,50 +46,39 @@ def net_error_checking(http_code: int) -> bool:
             _arguments.err_handling(100)
             with open("errorLog.txt", "a", encoding="UTF-8") as log_file:
                 print(log_file.write(http_code))
-            return False
+            raise _arguments.DatabaseError
 
-def find_avg(orders_list: dict, extra: bool) -> float:
-    """function that calculates the avg price of the item
+def find_avg(plat_list: list, extra: bool) -> float:
+    """Calculates the average price of an item
 
-    :param orders_list: list of all orders of the specified item
-    :type orders_list: dict
+    :param plat_list: list of the prices in platinum of each order
+    :type plat_list: list
+    :param extra: flag that indicates whether or not to print extra information
+    :type extra: bool
     :return: the average price of all listings of the specified item
     :rtype: float
     """
 
-    num_orders = plat_count = highest = 0
-    lowest = float('inf')  # ARBITRARY NUMBER. If an item sells for this ever, I'd be surprised
-    now = dt.now(tz.utc)
-    for order in orders_list:
-        if (
-            order['order_type'] == 'sell'
-            and (now - dt.fromisoformat(order['last_update'])).days <= 60
-        ):
-            num_orders += 1
-            plat_count += order['platinum']
-            if order["platinum"] > highest:
-                highest = order["platinum"]
-            elif order["platinum"] < lowest:
-                lowest = order["platinum"]
     if extra:
-        print(f"Highest: {highest}\tLowest: {lowest}\tNumber of orders: {num_orders}")
-    return round(plat_count/num_orders, 1)
+        print(f"Highest: {max(plat_list)}\tLowest: {min(plat_list)}\t"
+              f"Number of orders found: {len(plat_list)}")
+    return round(mean(plat_list), 1)
 
-def logic(args: "ArgumentParser"):
+def recent_sale(item: dict) -> bool:
     """
-    Logic of the program
+    Helper function that determines if the order listing is a sale, and if it was made or
+    updated within the last 60 days.
+
+    :param item: Information about a listing
+    :type item: dict
+    :return: True is the listing was created or modified in the last 60 days is of sell type.
+    False if the listing was a buy type or older than 60 days.
+    :rtype: bool
     """
-    headers['Platform'] = args.platform
-    # replace problematic characters that would cause issues in a URL
-    page = rq.get(f"{API_ROOT}/{args.item.replace(' ', '_').replace('&', 'and')}/orders",
-                  headers=headers, timeout=5)
-    if net_error_checking(page.status_code):
-        item_list = page.json()['payload']['orders']  # creates json dictionary
-        try:
-            result = find_avg(item_list, args.extra)
-            print(f"The going rate for a {args.item} is {result}." if args.verbose else result)
-        except ArithmeticError:
-            _arguments.err_handling(2)
+    return (
+        item["order_type"] == "sell"
+        and (dt.now(tz.utc) - dt.fromisoformat(item['last_update'])).days <= 60
+    )
 
 def main():
     """
@@ -100,12 +87,24 @@ def main():
     """
 
     try:
-        parser = _arguments.create_parser()
-        args = parser.parse_args()
-        if rq.head(API_ROOT, headers=headers, timeout=5).status_code == 200:
-            # erroneous check to see if the website is up
-            logic(args)
-        else:
-            _arguments.err_handling(4)
-    except rq_except.ConnectionError:
+        args = _arguments.create_parser().parse_args()
+        headers['Platform'] = args.platform
+        page = rq.request("GET", f"{API_ROOT}/{args.item.replace(' ', '_').replace('&', 'and')}"
+                          "/orders", headers=headers, timeout=5)
+        if net_error_checking(page.status):
+            order_list = [
+                order["platinum"]
+                for order in page.json()['payload']['orders'] if recent_sale(order)
+            ]
+            result = find_avg(order_list, args.extra)
+            print(f"The going rate for a {args.item} is {result}." if args.verbose else result)
+
+    except rq.exceptions.ProtocolError:
+        # connection error
         _arguments.err_handling(1)
+    except ArithmeticError:
+        # no orders of that item found
+        _arguments.err_handling(2)
+    except _arguments.DatabaseError:
+        # 404 not found
+        _arguments.err_handling(4)
