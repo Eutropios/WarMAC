@@ -7,24 +7,60 @@ File that contains argument handling and error handling
 import shutil
 from argparse import (
     ArgumentParser as ArgP,
+    ArgumentTypeError,
     RawDescriptionHelpFormatter as DescHelpFormat,
-    ArgumentDefaultsHelpFormatter as DefaultHelpFormat,
     RawTextHelpFormatter as RawHelpFormat
 )
+from typing import Self
+from src.warmac import VERSION
 
-PLATFORMS = ("pc", "ps4", "xbox", "switch")
-HELP_MIN_WIDTH = 90
+PLATFORMS = ('pc', 'ps4', 'xbox', 'switch')
+AVG_MODES = ('mean', 'median', 'mode')
+HELP_MIN_WIDTH = 100
 
-class SpecialParser(DefaultHelpFormat, RawHelpFormat, DescHelpFormat):
+
+class SpecialParser(RawHelpFormat, DescHelpFormat):
     """
-    Extends argparse.ArgumentDefaultsHelpFormatter and argparse.RawTextHelpFormatter
+    Extends argparse.RawDescriptionHelpFormatter and argparse.RawTextHelpFormatter
     """
     pass
 
-class DatabaseError(Exception):
-    def __init__(self, message="Database Error."):
+
+class WarMACError(Exception):
+    """
+    Custom exception that is thrown in specific cases throughout WarMAC
+    """
+
+    def __init__(self: Self, message: str = 'WarMAC Error.') -> None:
+        """Constructor for WarMAC exception
+
+        :param self: The object itself
+        :type self: Self
+        :param message: The message to be printed with the exception, defaults to 'WarMAC Error.'
+        :type message: str, optional
+        """
         self.message = message
         super().__init__(self.message)
+
+
+def int_checking(inp: int | str) -> int:
+    """Takes integer as checks if it's less than 0
+
+    :param inp: input integer
+    :type inp: int
+    :raises ArgumentTypeError: throw exception if inp <= 0
+    :return: returns inp if inp > 0
+    :rtype: int
+    """
+
+    try:
+        inp = int(inp)
+    except ValueError:
+        raise ArgumentTypeError('Input mismatch error. Please use an integer greater than 0.')
+    if inp < 0:
+        raise ArgumentTypeError('Invalid integer. Please use an integer greater than 0.')
+    return inp
+
 
 def create_parser() -> ArgP:
     """Returns ArgumentParser with the appropriate documentation and
@@ -33,47 +69,34 @@ def create_parser() -> ArgP:
     :return: ArgumentParser with appropriate documentation and functionality
     :rtype: argparse.ArgumentParser
     """
+
     width = min(HELP_MIN_WIDTH, shutil.get_terminal_size().columns - 2)
-    parser = ArgP(description="A program to fetch the average cost of an item in Warframe.",
-                  formatter_class=lambda prog: SpecialParser(prog, max_help_position=width))
+    parser = ArgP(description='A program to fetch the average cost of an item in Warframe.',
+                  formatter_class=lambda prog: SpecialParser(prog, max_help_position=width),
+                  add_help=False)
+
+    parser.add_argument('-h', '--help', action='help', help='Show this message and exit.')
+    parser.add_argument('--version', action='version', help="Show the program's version number"
+                        " and exit.", version='%(prog)s' f' {VERSION}')
 
     # Optional Arguments
-    parser.add_argument('-p', "--platform", default="pc", type=lambda s: s.lower().strip(),
-                        choices=PLATFORMS, metavar="", help="Specifies which platform to fetch"
-                        " listings for; can be either\nps4, xbox, pc, or switch")
-    parser.add_argument("-v", "--verbose", action="store_true", help="Prints the average price of"
-                        " the item, alongside a short\nmessage for the user.", dest="verbose")
-    parser.add_argument("-e", "--extra-info", action="store_true", help="Prints the highest and"
-                        " lowest prices in the order list, as well\nas the number of orders that"
-                        " were fetched.", dest="extra")
-    # parser.add_argument("-r", "--range", default=60, type=int, help="", metavar="\b", dest="time_range")
-    # parser.add_argument("--no-colour", action="store_true", help="No colour mode. Removes colour "
-    #                    "from script output; Ideal for\nterminals that are incompatible with ANSI"
-    #                    " colouring.", dest="no_colour")
+    parser.add_argument('-a', '--avg_type', default='mean', type=lambda s: s.lower().strip(),
+                        choices=AVG_MODES, metavar='', help="Specifies the type of average to"
+                        f" return; Can be one of {', '.join(AVG_MODES)}. (Default: mean)",
+                        dest='avg_type')
+    parser.add_argument('-e', '--extra-info', action='store_true', help='Prints the highest and'
+                        ' lowest prices in the order list, as well as the number of orders that'
+                        ' were fetched.', dest='extra')
+    parser.add_argument('-p', '--platform', default='pc', type=lambda s: s.lower().strip(),
+                        choices=PLATFORMS, metavar='', help="Specifies which platform to fetch"
+                        f" listings for; Can be one of {', '.join(PLATFORMS)}. (Default: pc)")
+    parser.add_argument('-r', '--range', default=60, type=int_checking, help='Specifies in days'
+                        ' the oldest a listing can be in order to be added to the calculation. Must'
+                        ' be greater than 0 and less than 750. (Default: 60)', metavar='',
+                        dest='time_r')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Prints the average price of'
+                        ' the item, alongside a short message for the user.', dest='verbose')
 
     # Positional Arguments
-    parser.add_argument("item", type=lambda s: s.lower().strip(), help="the item to search for")
+    parser.add_argument('item', type=lambda s: s.lower().strip(), help='the item to search for')
     return parser
-
-def err_handling(err_code: int):
-    """Function that handles self-generated error codes within the program
-
-    :param err_code: integer corresponding to a partciular error code.
-    :type err_code: int
-    """
-
-    match err_code:
-        case 1:
-            print("You're not connected to the internet. Please check your internet connection and"
-                  " try again.")
-        case 2:
-            print("There were no listings of this item within the past 2 months found.")
-        case 3:
-            print("This item does not exist. Please check your spelling, and remember to use "
-                  "parenthesis in the command line if the item is multiple words.")
-        case 4:
-            print("Database error. Please open a new issue on the Github/Gitlab page (link in "
-                  "README.rst file).")
-        case _:
-            print("Unknown error, writing to errorLog.txt file. Please open a new issue on the "
-                  "Github/Gitlab page (link in README.rst file).")

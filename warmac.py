@@ -6,9 +6,9 @@ Formal documentation WIP
 """
 
 from src.warmac import main as warmac
-if __name__ == "__main__":
+if __name__ == '__main__':
     try:
         warmac.main()
     except KeyboardInterrupt:
         # prevents errors if ctrl+c is used
-        print("Exiting program.")
+        print('Exiting program.')
