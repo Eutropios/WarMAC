@@ -87,6 +87,7 @@ def find_avg(plat_list: list, avg_type: str, extra: bool) -> float:
     :rtype: float
     """
 
+    print(plat_list)
     if extra:
         print(f'Highest: {max(plat_list)}\tLowest: {min(plat_list)}\t'
               f'Number of orders found: {len(plat_list)}')

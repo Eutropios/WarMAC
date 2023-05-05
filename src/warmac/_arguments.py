@@ -11,7 +11,6 @@ from argparse import (
     RawDescriptionHelpFormatter as DescHelpFormat,
     RawTextHelpFormatter as RawHelpFormat
 )
-from typing import Self
 from src.warmac import VERSION
 
 PLATFORMS = ('pc', 'ps4', 'xbox', 'switch')
@@ -31,7 +30,7 @@ class WarMACError(Exception):
     Custom exception that is thrown in specific cases throughout WarMAC
     """
 
-    def __init__(self: Self, message: str = 'WarMAC Error.') -> None:
+    def __init__(self, message: str = 'WarMAC Error.') -> None:
         """Constructor for WarMAC exception
 
         :param self: The object itself
