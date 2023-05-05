@@ -15,7 +15,7 @@ from typing import Self
 from src.warmac import VERSION
 
 PLATFORMS = ('pc', 'ps4', 'xbox', 'switch')
-AVG_MODES = ('mean', 'median', 'mode')
+AVG_MODES = ('mean', 'median', 'mode', 'harmonic')
 HELP_MIN_WIDTH = 100
 
 

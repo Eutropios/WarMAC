@@ -1,5 +1,5 @@
 """
-Warframe Market Average Calculator (WarMAC)
+Warframe Market Average Calculator (WarMAC) 1.5.1
 ~~~~~~~~~~~~~~~~~~~
 Copyright (c) 2023 Noah Jenner under MIT License
 Please see LICENSE.txt for additional licensing information
@@ -9,7 +9,6 @@ specific platform, then finds the average price in platinum of the listings.
 
 Date of Creation: January 22, 2023
 Date Last Modified: May 5, 2023
-Version 1.5
 Version of Python required: 3.10
 External packages required: urllib3
 
@@ -20,7 +19,7 @@ UPCOMING:
 """
 
 from datetime import datetime as dt, timezone as tz
-from statistics import mean, median, mode
+from statistics import mean, median, mode, harmonic_mean
 import urllib3 as rq
 from src.warmac import _arguments
 
@@ -88,6 +87,7 @@ def find_avg(plat_list: list, avg_type: str, extra: bool) -> float:
     :rtype: float
     """
 
+    print(plat_list)
     if extra:
         print(f'Highest: {max(plat_list)}\tLowest: {min(plat_list)}\t'
               f'Number of orders found: {len(plat_list)}')
@@ -95,7 +95,8 @@ def find_avg(plat_list: list, avg_type: str, extra: bool) -> float:
         raise _arguments.WarMACError(message='Not an acceptable average type.')
     return (
         round(mean(plat_list), 1) if avg_type == 'mean' else round(median(plat_list), 1)
-        if avg_type == 'median' else round(mode(plat_list), 1) if avg_type == 'mode' else -1
+        if avg_type == 'median' else round(mode(plat_list), 1) if avg_type == 'mode' else
+        round(harmonic_mean(plat_list), 1) if avg_type == 'harmonic' else -1
     )
 
 
