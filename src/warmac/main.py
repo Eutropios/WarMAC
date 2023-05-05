@@ -1,5 +1,5 @@
 """
-Warframe Market Average Calculator (WarMAC) 1.5.1
+Warframe Market Average Calculator (WarMAC) 1.5.2
 ~~~~~~~~~~~~~~~~~~~
 Copyright (c) 2023 Noah Jenner under MIT License
 Please see LICENSE.txt for additional licensing information
@@ -87,7 +87,6 @@ def find_avg(plat_list: list, avg_type: str, extra: bool) -> float:
     :rtype: float
     """
 
-    print(plat_list)
     if extra:
         print(f'Highest: {max(plat_list)}\tLowest: {min(plat_list)}\t'
               f'Number of orders found: {len(plat_list)}')
