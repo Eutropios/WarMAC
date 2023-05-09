@@ -1,0 +1,10 @@
+[tool.ruff]
+line-length = 100
+select = [
+    "COM", "D", "E", "F", "ANN", "UP", "N", "SIM", "C4",
+    "Q", "ARG", "PLR", "B"
+]
+ignore = ["ANN101"]
+
+[tool.ruff.pydocstyle]
+convention = "pep257"
