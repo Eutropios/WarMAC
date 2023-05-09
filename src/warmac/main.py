@@ -1,149 +1,211 @@
 """
-Warframe Market Average Calculator (WarMAC) 1.5.2
-~~~~~~~~~~~~~~~~~~~
-Copyright (c) 2023 Noah Jenner under MIT License
-Please see LICENSE.txt for additional licensing information
+Warframe Market Average Calculator (WarMAC) 1.5.8
+~~~~~~~~~~~~~~~
 
-Retrieves the sell price from all listings of a given item from https://warframe.market for a
-specific platform, then finds the average price in platinum of the listings.
+Copyright (c) 2023 Noah Jenner under MIT License
+Please see LICENSE.txt for additional licensing information.
+
+Retrieves the sell price from all orders of a given item from https://warframe.market for a
+specific platform, then finds the average price in platinum of the orders.
 
 Date of Creation: January 22, 2023
-Date Last Modified: May 5, 2023
-Version of Python required: 3.10
+Date Last Modified: May 13, 2023
+Version of Python required: >=3.9.0
 External packages required: urllib3
+""" # noqa: D205,D400
 
-UPCOMING:
-    Mod rank and Arcane rank handling, show average from buy orders instead of sell orders,
-    add drop sources tag, and deleting lowest/highest sell prices to keep average in line
-    are coming soon. Possibly adding more average types.
-"""
+from __future__ import annotations
+import sys
+import typing
+from datetime import datetime, timezone
+import urllib3
 
-from datetime import datetime as dt, timezone as tz
-from statistics import mean, median, mode, harmonic_mean
-import urllib3 as rq
-from src.warmac import _arguments
+try:
+    from src.warmac import _arguments
+except ImportError:
+    import _arguments
+if typing.TYPE_CHECKING:
+    import argparse
 
-API_ROOT = 'https://api.warframe.market/v1/items'
-headers = {'User-Agent': 'Mozilla', 'Content-Type': 'application/json'}
+_API_ROOT = "https://api.warframe.market/v1/items"
+_CURR_TIME = datetime.now(timezone.utc)
 
+class _WarMACError(Exception):
+    """Base exception thrown in WarMAC."""
 
-def err_handling(err_code: int) -> None:
-    """Function that handles self-generated error codes within the program
+    def __init__(self, message: str = "WarMAC Error.") -> None:
+        """Construct a WarMAC exception.
 
-    :param err_code: integer corresponding to a partciular error code.
-    :type err_code: int
+        :param message: The message to be printed with the exception; defaults to 'WarMAC Error.'
+        :type message: str, optional
+        """
+        self.message = message
+        super().__init__(self.message)
+
+class _AverageTypeError(_WarMACError):
+    """Thrown if average type given is not mean, median, mode, or harmonic."""
+
+    def __init__(self) -> None:
+        """Construct a _AverageTypeError exception."""
+        super().__init__("Not an acceptable average type.")
+
+class _MalformedURLError(_WarMACError):
+    """Thrown if there the item name given to WarMAC doesn't exist."""
+
+    def __init__(self) -> None:
+        """Construct a _MalformedURLError exception."""
+        super().__init__("This item does not exist. Please check your spelling, and remember to use"
+                         " parenthesis in the command line if the item is multiple words.")
+
+class _UnknownError(_WarMACError):
+    """Thrown if the error is unknown."""
+
+    def __init__(self) -> None:
+        """Construct a UnknownError exception."""
+        super().__init__("Unknown error, writing to errorLog.txt file. Please open a new issue on"
+                         " the Github/Gitlab page (link in README.rst file).")
+
+def _net_error_checking(http_code: int) -> bool:
     """
+    Check the server's http response code.
 
-    match err_code:
-        case 1:
-            print("You're not connected to the internet. Please check your internet connection and"
-                  " try again.")
-        case 2:
-            print('There were no listings of this item found in your specified time range.')
-        case 3:
-            print('This item does not exist. Please check your spelling, and remember to use '
-                  'parenthesis in the command line if the item is multiple words.')
-        case 4:
-            print('Database error. Please open a new issue on the Github/Gitlab page (link in '
-                  'README.rst file).')
-        case _:
-            print('Unknown error, writing to errorLog.txt file. Please open a new issue on the '
-                  'Github/Gitlab page (link in README.rst file).')
-
-
-def net_error_checking(http_code: int) -> bool:
-    """Uses a switch statement to check the server's response code.
+    Check the server's http response code and returns True if it's equal to 200. Function raises
+    errors if the http code isn't 200.
 
     :param http_code: the status code returned by the GET request
-    :type http_code: integer
-    :return: boolean indicating if the GET request was succesful. Returns True if https_code
-    is 200, False otherwise
+    :type http_code: int
+    :raises _MalformedURLError: raised if https_code is 404
+    :raises _UnknownError: raised if https_Code is not 200 or 404
+    :return: boolean indicating if the GET request was successful. Returns True if https_code
+    is 200, raises _MalformedURLError if https_code is 404, raises _UnknownError otherwise.
     :rtype: bool
     """
-
-    match http_code:
-        case 200:
+    if http_code == 200:  # noqa: PLR2004
             return True
-        case 404:
-            err_handling(3)
-            return False
-        case _:
-            err_handling(100)
-            with open('./errorLog.txt', 'a', encoding='UTF-8') as log_file:
-                print(log_file.write(f'{http_code}'))
-            raise _arguments.WarMACError(message=f'Database Error. HTTP Code {http_code}')
+    if http_code == 404:  # noqa: PLR2004
+            raise _MalformedURLError
+    with open("./errorLog.txt", "a", encoding="UTF-8") as log_file:
+        print(log_file.write(f"Unknown Error; HTTP Code {http_code}"))
+    raise _UnknownError
 
+def _calc_avg(plat_list: list[int], avg_type: str = "mean", *, extra: int = 0) -> float:
+    """
+    Calculate the average platinum price of a list of orders using a specific avg_type.
 
-def find_avg(plat_list: list, avg_type: str, extra: bool) -> float:
-    """Calculates the average price of an item
+    Given a list, calculate and return the average price in platinum of an item. Extra output can
+    be requested by setting extra to True. avg_type must be one of "mean", "median",
+    "mode", or "harmonic".
 
     :param plat_list: list of the prices in platinum of each order
-    :type plat_list: list
-    :param avg_type: The type of average that the user wants to find. Can be mean, median, or mode
-    :type avg_type: str
-    :param extra: flag that indicates whether or not to print extra information
-    :type extra: bool
-    :return: the average price of all listings of the specified item
+    :type plat_list: list[int]
+    :param avg_type: The type of average that the user wants to find. Can be mean, median, mode,
+    or harmonic; defaults to 'mean'
+    :type avg_type: str, optional
+    :param extra: option that indicates whether or not to print extra information. If extra is
+    0 or 1, do nothing. If extra is 2, print out extra information. defaults to 0
+    :type extra: int, optional
+    :raises ArithmeticError: If given list is empty
+    :raises _AverageTypeError: If given average type isn't mean, median, mode, or harmonic
+    :return: the average price of all orders of the specified item
     :rtype: float
     """
+    # Handle errors
+    if not plat_list:
+        msg = "List cannot be empty!"
+        raise ArithmeticError(msg)
+    if avg_type not in _arguments._AVG_FUNCTIONS:
+        raise _AverageTypeError
 
-    print(plat_list)
-    if extra:
-        print(f'Highest: {max(plat_list)}\tLowest: {min(plat_list)}\t'
-              f'Number of orders found: {len(plat_list)}')
-    if avg_type not in _arguments.AVG_MODES:
-        raise _arguments.WarMACError(message='Not an acceptable average type.')
-    return (
-        round(mean(plat_list), 1) if avg_type == 'mean' else round(median(plat_list), 1)
-        if avg_type == 'median' else round(mode(plat_list), 1) if avg_type == 'mode' else
-        round(harmonic_mean(plat_list), 1) if avg_type == 'harmonic' else -1
-    )
+    # Handle input
+    if extra >= 2:  # noqa: PLR2004
+        print(f"Highest: {max(plat_list)}\tLowest: {min(plat_list)}\tNumber of"
+              f" orders: {len(plat_list)}")
+    return round(_arguments._AVG_FUNCTIONS[avg_type](plat_list), 1)
 
-
-def recent_sale(item: dict, time_range: int) -> bool:
+def _correct_order_type(item: dict[str, str], *, use_buyers: bool = False) -> bool:
     """
-    Helper function that determines if the order listing is a sale, and if it was made or
-    updated within the last 60 days.
+    Check if a specific order's order type matches the user-specified order type.
 
-    :param item: Information about a listing
-    :type item: dict
-    :return: True is the listing was created or modified in the last 60 days is of sell type.
-    False if the listing was a buy type or older than 60 days.
+    Check the "other_type" field of the specific order against the parameter use_buyers to determine
+    if the order type is correct.
+
+    :param item: Information about a order. Order must include field "order_type".
+    :type item: dict[str, str]
+    :param use_buyers: Flag to indicate whether to check for "sell" types or "buy" types,
+    defaults to False
+    :type use_buyers: bool, optional
+    :return: True if the order matched the desired order type. False if did not match.
     :rtype: bool
     """
+    return item["order_type"] == ("buy" if use_buyers else "sell")
 
-    return (
-        item['order_type'] == 'sell'
-        and (dt.now(tz.utc) - dt.fromisoformat(item['last_update'])).days <= time_range
-    )
+def _in_time_range(item: dict[str, str], time_range: int = 60) -> bool:
+    """
+    Check if a specific order's latest modification date was within the past time_range days.
 
+    Use the "last_update" field of the specific order and the current day to find the date
+    difference. Returns true if date difference is less than the time_range parameter.
+
+    :param item: Information about a order. Order must include the field "last_update".
+    :type item: dict[str, str]
+    :param time_range: The oldest a order can be to return True; defaults to 60
+    :type time_range: int, optional
+    :return: True if the order was created or modified in the last time_range days. False if the
+    order was older than time_range days.
+    :rtype: bool
+    """
+    return  (_CURR_TIME - datetime.fromisoformat(item["last_update"])).days <= time_range
+
+def find_avg(args: argparse.Namespace) -> None:
+    """
+    Run logic of WarMAC.
+
+    Creates argparse parser object and parses the arguments. Appends the user's platform to the
+    request header variable ("pc" if not specified). Requests json file of orders of user-given
+    item from warframe.market and check if the response code is 200. If it is 200, loop through the
+    JSON, appending values that return true from _valid_sale() to a list. Pass that list along
+    with a few other optional arguments from the command line to function _find_avg().
+    """
+    headers = {"User-Agent": "Mozilla", "Content-Type": "application/json",
+               "platform": f"{args.platform}"}       # add platform to header
+    fixed_url = f"{_API_ROOT}/{args.item.replace(' ', '_').replace('&', 'and')}/orders"
+    page = urllib3.request("GET", fixed_url, headers=headers, timeout=5)
+    if _net_error_checking(page.status):
+        order_list: list[int] = [
+            order["platinum"]
+            for order in page.json()["payload"]["orders"]
+            if (_in_time_range(order, args.time_range)
+            and _correct_order_type(order, use_buyers=args.use_buyers))
+        ]
+        result = _calc_avg(order_list, args.avg_type, extra=args.verbosity)
+        print(f"The {args.avg_type} rate for a {args.item} on {args.platform} is {result:.1f}."
+              if args.verbosity else f"{result:.1f}")
 
 def main() -> None:
     """
-    Main function that is called which handles colorama init and deinit, as well as connection
-    errors and setting up the argument parser."
+    Run WarMAC. ***MUST BE INVOKED FROM COMMAND LINE***.
+
+    Handles the errors throughout WarMAC. While the program can be run through find_avg() alone,
+    it is recommended that those who use this program's functions implement their own exceptions.
     """
-
     try:
-        args = _arguments.create_parser().parse_args()
-        headers['Platform'] = args.platform
-        page = rq.request('GET', f"{API_ROOT}/{args.item.replace(' ', '_').replace('&', 'and')}"
-                          "/orders", headers=headers, timeout=5)
-        if net_error_checking(page.status):
-            order_list = [
-                order['platinum']
-                for order in page.json()['payload']['orders'] if recent_sale(order, args.time_r)
-            ]
-            result = find_avg(order_list, args.avg_type, args.extra)
-            print(f'The going rate for a {args.item} on {args.platform} is {result:.1f}.'
-                  if args.verbose else f'{result:.1f}')
-
-    except rq.exceptions.ProtocolError:
-        # connection error
-        err_handling(1)
+        args = _arguments._create_parser().parse_args() # create parser
+        #setup drop source if statement here
+        find_avg(args)
+    except urllib3.exceptions.HTTPError as e:
+        if isinstance(e, urllib3.exceptions.MaxRetryError):
+            print("You're not connected to the internet. Please check your internet connection and"
+                  " try again.")
+        elif isinstance(e, urllib3.exceptions.TimeoutError):
+            print("The connection timed out. Please try again later.")
+        else:
+            print("An error occurred while connecting to the server. Please try again later.")
     except ArithmeticError:
-        # no orders of that item found
-        err_handling(2)
-    except _arguments.WarMACError:
-        # 404 not found
-        err_handling(4)
+        print("There were no orders of this item found in your specified time range.")
+    except _WarMACError as e:
+        print(e.message)
+    except KeyboardInterrupt:
+        print("Exiting program.")
+
+if __name__ == "__main__":
+    sys.exit(main())
