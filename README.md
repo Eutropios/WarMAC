@@ -12,23 +12,21 @@ WarMAC compiles seller listings from the fan website *<https://warframe.market/>
 * Python 3.10+ (Python 3.11 recommended)
 * urllib3 package  
 
-If you already have Python 3.10.x or 3.11.x installed, `git clone` the repo into a directory, and run
+If you already have Python 3.10.x or 3.11.x installed, `git clone` the repo into a directory or download it as a zip. If you're on Windows, run:
 
 ```cmd
 python .\wfmarket-calc.py
 ```
 
-if you're on Windows, or
+If you're on MacOS or Linux, run:
 
 ```bash
 ./wfmarket-calc/warmac.py
 ```
 
-if you're on MacOS or Linux.
-
 <h2><b>🐍Installing Python and urllib3</b></h2>
 
-Please download Python 3.10 or 3.11 for your appropriate CPU and OS.
+Please download Python 3.10 or 3.11 for your appropriate CPU and OS.  
 Python download link: <https://www.python.org/downloads/>.
 
 <h3>🪟On Windows</h3>
