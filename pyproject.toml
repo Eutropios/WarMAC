@@ -1,8 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "WarMAC_Eutropios"
+version = "0.0.1"
+authors = [
+    {name="Noah Jenner", email="noah.jenner@proton.me"}
+]
+description = "Warframe Market Average Calculator"
+requires-python = ">=3.10"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Eutropios/wfmarket-calc"
+"Bug Tracker" = "https://github.com/Eutropios/wfmarket-calc/issues"
+
 [tool.ruff]
 line-length = 100
 select = [
-    "COM", "D", "E", "F", "ANN", "UP", "N", "SIM", "C4",
-    "Q", "ARG", "PLR", "B"
+    "F", "E", "W", "C90", "N", "D", "UP", "ANN", "S112", "S110", "BLE", "FBT", "B",
+    "A", "COM", "C4", "DTZ", "EM", "EXE", "INP", "PIE", "PYI", "Q", "RSE", "RET",
+    "SIM", "TID", "INT", "ARG", "ERA", "PL", "TRY", "RUF"
 ]
 ignore = ["ANN101"]
 
