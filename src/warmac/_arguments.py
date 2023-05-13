@@ -1,52 +1,57 @@
 """
-warmac._arguments
+warmac._arguments 1.5.7
 ~~~~~~~~~~~~~~~~~
-File that contains argument handling and error handling.
-""" # noqa
+
+Copyright (c) 2023 Noah Jenner under MIT License
+Please see LICENSE.txt for additional licensing information.
+
+File that contains the argument parser for WarMac.
+For information on the main program, please see main.py
+
+Date of Creation: January 22, 2023
+Date Last Modified: May 13, 2023
+Version of Python required for module: >=3.6.0
+""" # noqa: D205,D400
 
 import shutil
 from argparse import ArgumentParser as ArgParser
-from argparse import ArgumentTypeError as ArgTypeError
-from argparse import RawDescriptionHelpFormatter as DescHelpFormat
-from argparse import RawTextHelpFormatter as RawHelpFormat
-from statistics import geometric_mean as geometric
-from statistics import harmonic_mean as harmonic
-from statistics import mean, median, mode
+from argparse import ArgumentTypeError, RawDescriptionHelpFormatter, RawTextHelpFormatter
+from statistics import harmonic_mean, mean, median, mode
+
 from src.warmac import _VERSION
 
 _AVG_FUNCTIONS = {
     "mean": mean,
     "median": median,
     "mode": mode,
-    "harmonic": harmonic,
-    "geometric": geometric,
+    "harmonic": harmonic_mean,
 }
 _HELP_MIN_WIDTH = 100
 _PLATFORMS = ("pc", "ps4", "xbox", "switch")
 _UPPER_BOUNDS = 750
 
-class _SpecialParser(RawHelpFormat, DescHelpFormat):
+class _SpecialParser(RawTextHelpFormatter, RawDescriptionHelpFormatter):
     """Extends argparse.RawDescriptionHelpFormatter and argparse.RawTextHelpFormatter."""
 
-def _int_checking(inp: int | str) -> int:
+def _int_checking(inp: str) -> int:
     """
-    Take string or integer and check if it's greater than 0 and less than 750.
+    Take string and check if it's an integer greater than 0 and less than 750.
 
     :param inp: argument parser's time range value to be checked against
-    :type inp: int | str
-    :raises ArgTypeError: if input is a string, or if inp <= 0, or if input >= _UPPER_BOUNDS
+    :type inp: str
+    :raises ArgumentTypeError : if input is a string, or if inp <= 0, or if input >= _UPPER_BOUNDS
     :return: returns inp if inp > 0 and if inp < _UPPER_BOUNDS
     :rtype: int
     """
     try:
-        inp = int(inp)
+        new_inp = int(inp)
     except ValueError:
         msg = "Input mismatch error. Please use an integer greater than 0."
-        raise ArgTypeError(msg) from None
-    if inp <= 0 or inp >= _UPPER_BOUNDS:
+        raise ArgumentTypeError (msg) from None
+    if new_inp <= 0 or new_inp >= _UPPER_BOUNDS:
         msg = "Invalid integer. Please use an integer greater than 0."
-        raise ArgTypeError(msg)
-    return inp
+        raise ArgumentTypeError (msg)
+    return new_inp
 
 def _create_parser() -> ArgParser:
     """

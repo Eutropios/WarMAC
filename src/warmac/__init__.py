@@ -6,4 +6,5 @@ Main warmac files
 Please do not use these to build your own tools, as they will likely break in the future.
 """ # noqa: D205,D400
 
-_VERSION = "1.5.6"
+#Here for metadata and packaging purposes
+_VERSION = "1.5.7"

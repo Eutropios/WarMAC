@@ -1,5 +1,5 @@
 """
-Warframe Market Average Calculator (WarMAC) 1.5.6
+Warframe Market Average Calculator (WarMAC) 1.5.7
 ~~~~~~~~~~~~~~~
 
 Copyright (c) 2023 Noah Jenner under MIT License
@@ -10,17 +10,16 @@ specific platform, then finds the average price in platinum of the listings.
 
 Date of Creation: January 22, 2023
 Date Last Modified: May 13, 2023
-Version of Python required: >=3.10.0
+Version of Python required: >=3.7.0
 External packages required: urllib3
 """ # noqa: D205,D400
 
-from datetime import datetime as dt
-from datetime import timezone as tz
-import urllib3 as rq
+from datetime import datetime, timezone
+import urllib3
 from src.warmac import _arguments
 
 _API_ROOT = "https://api.warframe.market/v1/items"
-_CURR_TIME = dt.now(tz.utc)
+_CURR_TIME = datetime.now(timezone.utc)
 
 class _WarMACError(Exception):
     """Base exception thrown in WarMAC."""
@@ -59,7 +58,9 @@ class _UnknownError(_WarMACError):
 
 def _net_error_checking(http_code: int) -> bool:
     """
-    Use a switch statement to check the server's response code.
+    Check the server's http response code.
+
+    Raises errors if the http code isn't 200.
 
     :param http_code: the status code returned by the GET request
     :type http_code: int
@@ -69,15 +70,13 @@ def _net_error_checking(http_code: int) -> bool:
     is 200, raises _MalformedURLError if https_code is 404, raises _UnknownError otherwise.
     :rtype: bool
     """
-    match http_code:
-        case 200:
+    if http_code == 200:  # noqa: PLR2004
             return True
-        case 404:
+    if http_code == 404:  # noqa: PLR2004
             raise _MalformedURLError
-        case _:
-            with open("./errorLog.txt", "a", encoding="UTF-8") as log_file:
-                print(log_file.write(f"Unknown Error; HTTP Code {http_code}"))
-            raise _UnknownError
+    with open("./errorLog.txt", "a", encoding="UTF-8") as log_file:
+        print(log_file.write(f"Unknown Error; HTTP Code {http_code}"))
+    raise _UnknownError
 
 def _find_avg(plat_list: list, avg_type: str = "mean", *, extra: bool = False) -> float:
     """
@@ -85,7 +84,7 @@ def _find_avg(plat_list: list, avg_type: str = "mean", *, extra: bool = False) -
 
     Given a list, calculate and return the average price in platinum of an item. Extra output can
     be requested by setting extra to True. avg_type must be one of "mean", "median",
-    "mode", "harmonic", or "geometric".
+    "mode", or "harmonic".
 
     :param plat_list: list of the prices in platinum of each order
     :type plat_list: list
@@ -135,7 +134,7 @@ def _valid_sale(item: dict, time_range: int = 60, *, use_buyers: bool = False) -
     :rtype: bool
     """
     correct_type = item["order_type"] == ("buy" if use_buyers else "sell")
-    in_time_range = (_CURR_TIME - dt.fromisoformat(item["last_update"])).days <= time_range
+    in_time_range = (_CURR_TIME - datetime.fromisoformat(item["last_update"])).days <= time_range
     return correct_type and in_time_range
 
 def main() -> None:
@@ -152,9 +151,8 @@ def main() -> None:
         args = _arguments._create_parser().parse_args()
         headers = {"User-Agent": "Mozilla", "Content-Type": "application/json",
                    "platform": f"{args.platform}"}
-
-        page = rq.request("GET", f"{_API_ROOT}/{args.item.replace(' ', '_').replace('&', 'and')}"
-                          "/orders", headers=headers, timeout=5)
+        fixed_url = f"{_API_ROOT}/{args.item.replace(' ', '_').replace('&', 'and')}/orders"
+        page = urllib3.request("GET", fixed_url, headers=headers, timeout=5)
         if _net_error_checking(page.status):
             order_list = [
                 order["platinum"]
@@ -165,11 +163,11 @@ def main() -> None:
             print(f"The going rate for a {args.item} on {args.platform} is {result:.1f}."
                   if args.verbose else f"{result:.1f}")
 
-    except rq.exceptions.HTTPError as e:
-        if isinstance(e, rq.exceptions.MaxRetryError):
+    except urllib3.exceptions.HTTPError as e:
+        if isinstance(e, urllib3.exceptions.MaxRetryError):
             print("You're not connected to the internet. Please check your internet connection and"
                   " try again.")
-        elif isinstance(e, rq.exceptions.TimeoutError):
+        elif isinstance(e, urllib3.exceptions.TimeoutError):
             print("The connection timed out. Please try again later.")
         else:
             print("An error occurred while connecting to the server. Please try again later.")

@@ -1,19 +1,20 @@
 
-# **WarMAC Beta Version 1.5.6**
+# **WarMAC Beta Version 1.5.7**
 
 **WarMAC** is a command-line Python script that can calculate the average market price of items in Warframe.  
 WarMAC compiles seller listings from the fan website *<https://warframe.market/>*, and has the option to target specific platforms, pull data from specific time frames, and find the mean, median, mode, or harmonic mean averages.  
 
 ***
 
-## **⚙️To Setup**
+## **⚙️Quick-start**
 
 ### *You will need:*
 
-* Python 3.10.x or 3.11.x
+* Python >=3.7.0
 * urllib3 package  
 
-If you already have Python 3.10.x or 3.11.x installed, `git clone` the repo into a directory or download it as a zip. If you're on Windows, run:
+If you already have Python installed, `git clone` the repo into a directory or download it as a zip.  
+If you're on Windows, run:
 
 ```cmd
 python .\wfmarket-calc.py
@@ -26,14 +27,14 @@ If you're on MacOS or Linux, run:
 ```
 
 **WarMAC currently requires end-users to install the dependency library themselves, as this project is not on PyPi.**
-If you do not have Python 3.10.x or 3.11.x already on your system, please download it from the following link:  
+If you do not have Python already on your system, please download the latest version from the following link:  
 Python download link: <https://www.python.org/downloads/>.
 
 ### 🪟On Windows
 
 After downloading and installing the appropriate Python interpreter for your system, open up `cmd`, `PowerShell`, or `Windows Terminal`, and run the following command:
 
-```PowerShell
+```ps
 python -m pip install urllib3
 ```
 
@@ -69,7 +70,7 @@ git clone <this repository URL>.git <your directory>
 
 This project is currently not available on PyPi. However, I am diligently working on adding functionality before the first official release.  
 Upcoming features:  
-> Mod rank and Arcane rank handling, show average from buy orders instead of sell orders, add drop sources tag, and deleting lowest/highest sell prices to keep average in line are coming soon. Possibly adding more average types.  
+> Mod rank and Arcane rank handling,, add drop sources tag, and deleting lowest/highest sell prices to keep average in line are coming soon.
 
 ## **⚖️Licensing and Disclaimers**
 
