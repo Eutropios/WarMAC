@@ -62,15 +62,15 @@ git clone <this repository URL>.git <your directory>
 
 ***
 
-## **💽Reporting Issues**
-
-*To report an issue, please open an Issue report on GitHub or GitLab respectively.*  
-
 ## **🔮Upcoming/The Future of WarMAC**
 
 This project is currently not available on PyPi. However, I am diligently working on adding functionality before the first official release.  
 Upcoming features:  
-> Mod rank and Arcane rank handling,, add drop sources tag, and deleting lowest/highest sell prices to keep average in line are coming soon.
+> Mod rank and Arcane rank handling, and deleting lowest/highest sell prices to keep average in line are coming soon.
+
+## **💽Reporting Issues**
+
+*To report an issue, please open an Issue report on GitHub or GitLab respectively.*  
 
 ## **⚖️Licensing and Disclaimers**
 
