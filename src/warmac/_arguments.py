@@ -14,8 +14,7 @@ Version of Python required for module: >=3.6.0
 """ # noqa: D205,D400
 
 import shutil
-from argparse import ArgumentParser as ArgParser
-from argparse import ArgumentTypeError, RawDescriptionHelpFormatter, RawTextHelpFormatter
+import argparse as argp
 from statistics import harmonic_mean, mean, median, mode
 
 from src.warmac import _VERSION
@@ -26,11 +25,12 @@ _AVG_FUNCTIONS = {
     "mode": mode,
     "harmonic": harmonic_mean,
 }
+_DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
 _HELP_MIN_WIDTH = 100
 _PLATFORMS = ("pc", "ps4", "xbox", "switch")
 _UPPER_BOUNDS = 750
 
-class _SpecialParser(RawTextHelpFormatter, RawDescriptionHelpFormatter):
+class _WarMACParser(argp.RawTextHelpFormatter, argp.RawDescriptionHelpFormatter):
     """Extends argparse.RawDescriptionHelpFormatter and argparse.RawTextHelpFormatter."""
 
 def _int_checking(inp: str) -> int:
@@ -39,7 +39,7 @@ def _int_checking(inp: str) -> int:
 
     :param inp: argument parser's time range value to be checked against
     :type inp: str
-    :raises ArgumentTypeError : if input is a string, or if inp <= 0, or if input >= _UPPER_BOUNDS
+    :raises ArgumentTypeError: if input is a string, or if inp <= 0, or if input >= _UPPER_BOUNDS
     :return: returns inp if inp > 0 and if inp < _UPPER_BOUNDS
     :rtype: int
     """
@@ -47,13 +47,13 @@ def _int_checking(inp: str) -> int:
         new_inp = int(inp)
     except ValueError:
         msg = "Input mismatch error. Please use an integer greater than 0."
-        raise ArgumentTypeError (msg) from None
+        raise argp.ArgumentTypeError (msg) from None
     if new_inp <= 0 or new_inp >= _UPPER_BOUNDS:
         msg = "Invalid integer. Please use an integer greater than 0."
-        raise ArgumentTypeError (msg)
+        raise argp.ArgumentTypeError (msg)
     return new_inp
 
-def _create_parser() -> ArgParser:
+def _create_parser() -> argp.ArgumentParser:
     """
     Return ArgumentParser with the appropriate documentation and functionality.
 
@@ -61,9 +61,9 @@ def _create_parser() -> ArgParser:
     :rtype: argparse.ArgumentParser
     """
     width = min(_HELP_MIN_WIDTH, shutil.get_terminal_size().columns - 2)
-    parser = ArgParser(description="A program to fetch the average cost of an item in Warframe.",
-                       formatter_class=lambda prog: _SpecialParser(prog, max_help_position=width),
-                       add_help=False)
+    parser = argp.ArgumentParser(formatter_class=lambda prog:
+                                 _WarMACParser(prog, max_help_position=width),
+                                 description=_DESCRIPTION, add_help=False)
 
     parser.add_argument("-h", "--help", action="help", help="Show this message and exit.")
     parser.add_argument("--version", action="version", help="Show the program's version number"

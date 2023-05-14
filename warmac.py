@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Warframe Market Average Calculator (WarMAC) 1.5.7
 ~~~~~~~~~~~~~~~
