@@ -1,8 +1,8 @@
 
-# **WarMAC Beta Version 1.5.7**
+# **WarMAC Beta Version 1.5.8**
 
 **WarMAC** is a command-line Python script that can calculate the average market price of items in Warframe.  
-WarMAC compiles seller listings from the fan website *<https://warframe.market/>*, and has the option to target specific platforms, pull data from specific time frames, and find the mean, median, mode, or harmonic mean averages.  
+WarMAC compiles seller orders from the fan website *<https://warframe.market/>*, and has the option to target specific platforms, pull data from specific time frames, and find the mean, median, mode, or harmonic mean averages.  
 
 ***
 
