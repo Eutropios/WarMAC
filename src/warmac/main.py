@@ -84,7 +84,7 @@ def _net_error_checking(http_code: int) -> bool:
         print(log_file.write(f"Unknown Error; HTTP Code {http_code}"))
     raise _UnknownError
 
-def _calc_avg(plat_list: List[int], avg_type: str = "mean", *, extra: bool = False) -> float:
+def _calc_avg(plat_list: List[int], avg_type: str = "mean", *, extra: int = 0) -> float:
     """
     Calculate the average platinum price of a list of orders using a specific avg_type.
 
@@ -97,8 +97,9 @@ def _calc_avg(plat_list: List[int], avg_type: str = "mean", *, extra: bool = Fal
     :param avg_type: The type of average that the user wants to find. Can be mean, median, mode,
     or harmonic; defaults to 'mean'
     :type avg_type: str, optional
-    :param extra: flag that indicates whether or not to print extra information, defaults to False
-    :type extra: bool, optional
+    :param extra: option that indicates whether or not to print extra information. If extra is
+    0 or 1, do nothing. If extra is 2, print out extra information. defaults to 0
+    :type extra: int, optional
     :raises ArithmeticError: If given list is empty
     :raises _AverageTypeError: If given average type isn't mean, median, mode, or harmonic
     :return: the average price of all orders of the specified item
@@ -112,7 +113,7 @@ def _calc_avg(plat_list: List[int], avg_type: str = "mean", *, extra: bool = Fal
         raise _AverageTypeError
 
     # Handle input
-    if extra:
+    if extra >= 2:  # noqa: PLR2004
         print(f"Highest: {max(plat_list)}\tLowest: {min(plat_list)}\tNumber of"
               f" orders: {len(plat_list)}")
     return round(_arguments._AVG_FUNCTIONS[avg_type](plat_list), 1)
@@ -167,9 +168,9 @@ def find_avg() -> None:
             if (_in_time_range(order, args.time_range)
             and _correct_order_type(order, use_buyers=args.use_buyers))
         ]
-        result = _calc_avg(order_list, args.avg_type, extra=args.extra)
-        print(f"The going rate for a {args.item} on {args.platform} is {result:.1f}."
-              if args.verbose else f"{result:.1f}")
+        result = _calc_avg(order_list, args.avg_type, extra=args.verbosity)
+        print(f"The {args.avg_type} rate for a {args.item} on {args.platform} is {result:.1f}."
+              if args.verbosity else f"{result:.1f}")
 
 def main() -> None:
     """

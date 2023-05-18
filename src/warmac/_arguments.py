@@ -29,9 +29,6 @@ _PLATFORMS = ("pc", "ps4", "xbox", "switch")
 _UPPER_TIME_BOUNDS = 750
 _VERSION = "1.5.8"
 
-class _WarMACParser(argp.RawTextHelpFormatter, argp.RawDescriptionHelpFormatter):
-    """Extends argparse.RawDescriptionHelpFormatter and argparse.RawTextHelpFormatter."""
-
 def _int_checking(inp: str) -> int:
     """
     Take string and check if it's an integer greater than 0 and less than 750.
@@ -61,7 +58,7 @@ def _create_parser() -> argp.ArgumentParser:
     """
     width = min(_HELP_MIN_WIDTH, shutil.get_terminal_size().columns - 2)
     parser = argp.ArgumentParser(formatter_class=lambda prog:
-                                 _WarMACParser(prog, max_help_position=width),
+                                 argp.HelpFormatter(prog=prog, max_help_position=width),
                                  description=_DESCRIPTION, add_help=False)
 
     parser.add_argument("-h", "--help", action="help", help="Show this message and exit.")
@@ -76,20 +73,16 @@ def _create_parser() -> argp.ArgumentParser:
     parser.add_argument("-b", "--buyers", action="store_true", help="Take the average platinum"
                         " price from buyer orders instead of seller orders.", dest="use_buyers")
 
-    parser.add_argument("-e", "--extra-info", action="store_true", help="Prints the highest and"
-                        " lowest prices in the order list, as well as the number of orders that"
-                        " were fetched.", dest="extra")
-
     parser.add_argument("-p", "--platform", default="pc", type=lambda s: s.lower().strip(),
                         choices=_PLATFORMS, metavar="", help="Specifies which platform to fetch"
                         f" orders for; Can be one of {', '.join(_PLATFORMS)}. (Default: pc)")
 
-    parser.add_argument("-r", "--range", default=60, type=_int_checking, help="Specifies in days"
-                        " how old the retrieved orders can be. Must be greater than 0 and less"
-                        " than 750. (Default: 60)", metavar="", dest="time_range")
+    parser.add_argument("-r", "--range", default=60, type=_int_checking, help="Specifies in days "
+                        "how old the orders can be. Must be >=0 and <=750. (Default: 60)",
+                        metavar="", dest="time_range")
 
-    parser.add_argument("-v", "--verbose", action="store_true", help="Prints the average price of"
-                        " the item, alongside a short message for the user.", dest="verbose")
+    parser.add_argument("-v", "--verbosity", action="count", help="Increases output verbosity. "
+                        "Can be -v or -vv", dest="verbosity")
 
     # Positional Arguments
     parser.add_argument("item", type=lambda s: s.lower().strip(), help="the item to search for")

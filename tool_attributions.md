@@ -1,4 +1,4 @@
-# Code Attributions
+# Tool Attributions
 
 The following is a list of the tools I used in the creation and modification of my program, along with each tool's license type and GitHub link:
 
