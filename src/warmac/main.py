@@ -15,13 +15,15 @@ External packages required: urllib3
 """ # noqa: D205,D400
 
 import sys
-from typing import Any, List, Dict  # REMOVE List AND Dict WHEN 3.7 AND 3.8 SUPPORT ENDS
+from typing import Any, List, Dict, TYPE_CHECKING  # REMOVE List AND Dict WHEN 3.7 AND 3.8 SUPPORT ENDS
 from datetime import datetime, timezone
 import urllib3
 try:
     from src.warmac import _arguments
 except ImportError:
     import _arguments
+if TYPE_CHECKING:
+    from argparse import Namespace
 
 
 _API_ROOT = "https://api.warframe.market/v1/items"
@@ -146,7 +148,7 @@ def _in_time_range(item: Dict[str, Any], time_range: int = 60) -> bool:
     """
     return  (_CURR_TIME - datetime.fromisoformat(item["last_update"])).days <= time_range
 
-def find_avg() -> None:
+def find_avg(args: Namespace) -> None:
     """
     Run logic of WarMAC.
 
@@ -156,7 +158,6 @@ def find_avg() -> None:
     JSON, appending values that return true from _valid_sale() to a list. Pass that list along
     with a few other optional arguments from the command line to function _find_avg().
     """
-    args = _arguments._create_parser().parse_args()  # create parser
     headers = {"User-Agent": "Mozilla", "Content-Type": "application/json",
                "platform": f"{args.platform}"}       # add platform to header
     fixed_url = f"{_API_ROOT}/{args.item.replace(' ', '_').replace('&', 'and')}/orders"
@@ -180,7 +181,9 @@ def main() -> None:
     it is recommended that those who use this program's functions implement their own exceptions.
     """
     try:
-        find_avg()
+        args = _arguments._create_parser().parse_args() # create parser
+        #setup drop source if statement here
+        find_avg(args)
     except urllib3.exceptions.HTTPError as e:
         if isinstance(e, urllib3.exceptions.MaxRetryError):
             print("You're not connected to the internet. Please check your internet connection and"
