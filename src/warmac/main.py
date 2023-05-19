@@ -10,21 +10,22 @@ specific platform, then finds the average price in platinum of the orders.
 
 Date of Creation: January 22, 2023
 Date Last Modified: May 13, 2023
-Version of Python required: >=3.7.0
+Version of Python required: >=3.9.0
 External packages required: urllib3
 """ # noqa: D205,D400
 
+from __future__ import annotations
 import sys
-from typing import Any, List, Dict, TYPE_CHECKING  # REMOVE List AND Dict WHEN 3.7 AND 3.8 SUPPORT ENDS
+import typing
 from datetime import datetime, timezone
 import urllib3
+
 try:
     from src.warmac import _arguments
 except ImportError:
     import _arguments
-if TYPE_CHECKING:
-    from argparse import Namespace
-
+if typing.TYPE_CHECKING:
+    import argparse
 
 _API_ROOT = "https://api.warframe.market/v1/items"
 _CURR_TIME = datetime.now(timezone.utc)
@@ -35,7 +36,7 @@ class _WarMACError(Exception):
     def __init__(self, message: str = "WarMAC Error.") -> None:
         """Construct a WarMAC exception.
 
-        :param message: The message to be printed with the exception, defaults to 'WarMAC Error.'
+        :param message: The message to be printed with the exception; defaults to 'WarMAC Error.'
         :type message: str, optional
         """
         self.message = message
@@ -68,7 +69,8 @@ def _net_error_checking(http_code: int) -> bool:
     """
     Check the server's http response code.
 
-    Raises errors if the http code isn't 200.
+    Check the server's http response code and returns True if it's equal to 200. Function raises
+    errors if the http code isn't 200.
 
     :param http_code: the status code returned by the GET request
     :type http_code: int
@@ -86,7 +88,7 @@ def _net_error_checking(http_code: int) -> bool:
         print(log_file.write(f"Unknown Error; HTTP Code {http_code}"))
     raise _UnknownError
 
-def _calc_avg(plat_list: List[int], avg_type: str = "mean", *, extra: int = 0) -> float:
+def _calc_avg(plat_list: list[int], avg_type: str = "mean", *, extra: int = 0) -> float:
     """
     Calculate the average platinum price of a list of orders using a specific avg_type.
 
@@ -95,7 +97,7 @@ def _calc_avg(plat_list: List[int], avg_type: str = "mean", *, extra: int = 0) -
     "mode", or "harmonic".
 
     :param plat_list: list of the prices in platinum of each order
-    :type plat_list: list
+    :type plat_list: list[int]
     :param avg_type: The type of average that the user wants to find. Can be mean, median, mode,
     or harmonic; defaults to 'mean'
     :type avg_type: str, optional
@@ -120,12 +122,15 @@ def _calc_avg(plat_list: List[int], avg_type: str = "mean", *, extra: int = 0) -
               f" orders: {len(plat_list)}")
     return round(_arguments._AVG_FUNCTIONS[avg_type](plat_list), 1)
 
-def _correct_order_type(item: Dict[str, Any], *, use_buyers: bool = False) -> bool:
+def _correct_order_type(item: dict[str, str], *, use_buyers: bool = False) -> bool:
     """
     Check if a specific order's order type matches the user-specified order type.
 
+    Check the "other_type" field of the specific order against the parameter use_buyers to determine
+    if the order type is correct.
+
     :param item: Information about a order. Order must include field "order_type".
-    :type item: dict
+    :type item: dict[str, str]
     :param use_buyers: Flag to indicate whether to check for "sell" types or "buy" types,
     defaults to False
     :type use_buyers: bool, optional
@@ -134,13 +139,16 @@ def _correct_order_type(item: Dict[str, Any], *, use_buyers: bool = False) -> bo
     """
     return item["order_type"] == ("buy" if use_buyers else "sell")
 
-def _in_time_range(item: Dict[str, Any], time_range: int = 60) -> bool:
+def _in_time_range(item: dict[str, str], time_range: int = 60) -> bool:
     """
-    Check if the order's latest modification date was within the past time_range days.
+    Check if a specific order's latest modification date was within the past time_range days.
+
+    Use the "last_update" field of the specific order and the current day to find the date
+    difference. Returns true if date difference is less than the time_range parameter.
 
     :param item: Information about a order. Order must include the field "last_update".
-    :type item: dict
-    :param time_range: The oldest a order can be to return True, defaults to 60
+    :type item: dict[str, str]
+    :param time_range: The oldest a order can be to return True; defaults to 60
     :type time_range: int, optional
     :return: True if the order was created or modified in the last time_range days. False if the
     order was older than time_range days.
@@ -148,7 +156,7 @@ def _in_time_range(item: Dict[str, Any], time_range: int = 60) -> bool:
     """
     return  (_CURR_TIME - datetime.fromisoformat(item["last_update"])).days <= time_range
 
-def find_avg(args: Namespace) -> None:
+def find_avg(args: argparse.Namespace) -> None:
     """
     Run logic of WarMAC.
 
@@ -163,7 +171,7 @@ def find_avg(args: Namespace) -> None:
     fixed_url = f"{_API_ROOT}/{args.item.replace(' ', '_').replace('&', 'and')}/orders"
     page = urllib3.request("GET", fixed_url, headers=headers, timeout=5)
     if _net_error_checking(page.status):
-        order_list: List[int] = [
+        order_list: list[int] = [
             order["platinum"]
             for order in page.json()["payload"]["orders"]
             if (_in_time_range(order, args.time_range)

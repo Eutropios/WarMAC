@@ -31,7 +31,7 @@ _VERSION = "1.5.8"
 
 def _int_checking(inp: str) -> int:
     """
-    Take string and check if it's an integer greater than 0 and less than 750.
+    Take string input and check if it's an integer greater than 0 and less than 750.
 
     :param inp: argument parser's time range value to be checked against
     :type inp: str

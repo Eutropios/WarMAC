@@ -12,7 +12,7 @@ Formal documentation WIP.
 
 Date of Creation: January 22, 2023
 Date Last Modified: May 13, 2023
-Version of Python required for complete program: >=3.7.0
+Version of Python required for complete program: >=3.9.0
 External packages required for complete program: urllib3
 """ # noqa: D205,D400
 

@@ -9,7 +9,7 @@ authors = [
     {name="Noah Jenner", email="noah.jenner@proton.me"}
 ]
 description = "Warframe Market Average Calculator"
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 readme = "README.md"
 classifiers = [
     "Programming Language :: Python :: 3",
