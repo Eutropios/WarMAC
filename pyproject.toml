@@ -21,14 +21,38 @@ classifiers = [
 "Homepage" = "https://github.com/Eutropios/wfmarket-calc"
 "Bug Tracker" = "https://github.com/Eutropios/wfmarket-calc/issues"
 
+[tool.mypy]
+python_version = "3.9"
+
+[[tool.mypy.overrides]]
+module="_arguments.py"
+
 [tool.ruff]
-line-length = 100
+line-length = 99
 select = [
-    "F", "E", "W", "C90", "N", "D", "UP", "ANN", "S112", "S110", "BLE", "FBT", "B",
-    "A", "COM", "C4", "DTZ", "EM", "EXE", "INP", "PIE", "PYI", "Q", "RSE", "RET",
-    "SIM", "TID", "INT", "ARG", "ERA", "PL", "TRY", "RUF"
+    "F", "E", "W", "C90", "N", "D", "UP", "ANN", "S112", "S110", "BLE", "FBT",
+    "A", "C4", "DTZ", "EM", "EXE", "INP", "PIE", "PYI", "Q", "RSE", "RET",
+    "SIM", "TID", "INT", "ARG", "ERA", "PL", "TRY", "RUF", "B"
 ]
 ignore = ["ANN101"]
 
 [tool.ruff.pydocstyle]
 convention = "pep257"
+
+[tool.black]
+verbose = true
+line-length = 99
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
