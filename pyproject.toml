@@ -32,3 +32,20 @@ ignore = ["ANN101"]
 
 [tool.ruff.pydocstyle]
 convention = "pep257"
+
+[tool.black]
+line-length = 100
+include = '\.py?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
