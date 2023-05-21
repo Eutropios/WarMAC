@@ -1,7 +1,6 @@
 MIT License
 
 Copyright (c) 2023 Noah Jenner
-For licensing regarding urllib3, please see LICENSE-urllib3.txt
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
