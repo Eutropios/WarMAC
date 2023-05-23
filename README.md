@@ -23,7 +23,7 @@ python .\warmac.py -h
 If you're on MacOS or Linux, run:
 
 ```bash
-python3 ./wfmarket-calc/src/warmac/main.py -h
+python3 ./src/warmac/main.py -h
 ```
 
 **WarMAC currently requires end-users to install the dependency library themselves, as this project is not on PyPi.**
