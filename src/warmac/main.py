@@ -59,7 +59,7 @@ class _MalformedURLError(_WarMACError):
         """Construct a _MalformedURLError exception."""
         super().__init__(
             "This item does not exist. Please check your spelling, and remember to use parenthesis"
-            " in the command line if the item is multiple words.",
+            " in the command line if the item is multiple words."
         )
 
 
@@ -216,14 +216,13 @@ def main() -> int:
     try:
         args = _arguments._create_parser().parse_args()  # create parser
         fixed_url = f"{_API_ROOT}/{args.item.replace(' ', '_').replace('&', 'and')}"
-        # setup drop source if statement here
         find_avg(args, fixed_url)
 
     except urllib3.exceptions.HTTPError as e:
         if isinstance(e, urllib3.exceptions.MaxRetryError):
             print(
                 "You're not connected to the internet. Please check your internet connection and"
-                " try again.",
+                " try again."
             )
         elif isinstance(e, urllib3.exceptions.TimeoutError):
             print("The connection timed out. Please try again later.")
