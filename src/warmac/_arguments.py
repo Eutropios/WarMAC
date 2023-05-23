@@ -133,8 +133,6 @@ def _create_parser() -> argp.ArgumentParser:
 
     # Positional Arguments
     parser.add_argument(
-        "item",
-        type=lambda s: s.lower().strip(),
-        help="the item to find the average of",
+        "item", type=lambda s: s.lower().strip(), help="the item to find the average of"
     )
     return parser
