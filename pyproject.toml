@@ -18,8 +18,8 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/Eutropios/wfmarket-calc"
-"Bug Tracker" = "https://github.com/Eutropios/wfmarket-calc/issues"
+"Homepage" = "https://github.com/Eutropios/WarMAC"
+"Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
 
 [tool.mypy]
 python_version = "3.9"
