@@ -1,5 +1,5 @@
 """
-warmac._arguments 1.5.8
+warmac._arguments
 ~~~~~~~~~~~~~~~~~
 
 Copyright (c) 2023 Noah Jenner under MIT License
@@ -9,35 +9,62 @@ File that contains the argument parser for WarMac.
 For information on the main program, please see main.py
 
 Date of Creation: January 22, 2023
-Date Last Modified: May 13, 2023
-Version of Python required for module: >=3.6.0
+Date Last Modified: June 4, 2023
+Version of Python required for module: >=3.9.0
 """  # noqa: D205,D400
+
+from __future__ import annotations
 
 import argparse as argp
 import shutil
-from collections.abc import Callable
 from statistics import harmonic_mean, mean, median, mode
+from typing import Union
 
-_AVG_FUNCTIONS: dict[str, Callable] = {
+try:
+    from src.warmac import _classdefs  # type: ignore
+except ImportError:
+    import _classdefs  # type: ignore
+
+
+AVG_FUNCS: dict[str, function] = {  # noqa: F821
     "mean": mean,
     "median": median,
     "mode": mode,
     "harmonic": harmonic_mean,
 }
+
 _DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
 _HELP_MIN_WIDTH = 100
 _PLATFORMS = ("pc", "ps4", "xbox", "switch")
 _UPPER_TIME_BOUNDS = 750
-_VERSION = "1.5.8"
 
 
-def _int_checking(inp: str) -> int:
+class CustomHelpFormatter(argp.HelpFormatter):
+    def __init__(
+        self,
+        prog: str,
+        indent_increment: int = 2,
+        max_help_position: int = 24,
+        width: Union[int, None] = None,
+    ) -> None:
+        super().__init__(prog, indent_increment, max_help_position, width)
+
+    def _format_action_invocation(self, action: argp.Action) -> str:
+        if not action.option_strings or action.nargs == 0:
+            return super()._format_action_invocation(action)
+        default = self._get_default_metavar_for_optional(action)
+        args_string = self._format_args(action, default)
+        return ", ".join(action.option_strings) + " " + args_string
+
+
+def _int_checking(inp: str, /) -> int:
     """
     Take string input and check if it's an integer greater than 0 and less than 750.
 
     :param inp: argument parser's time range value to be checked against
     :type inp: str
-    :raises ArgumentTypeError: if input is a string, or if inp <= 0, or if input >= _UPPER_BOUNDS
+    :raises ArgumentTypeError: if inp is a string, or if inp <= 0, or
+    if inp >= _UPPER_BOUNDS
     :return: returns inp if inp > 0 and if inp < _UPPER_BOUNDS
     :rtype: int
     """
@@ -52,7 +79,7 @@ def _int_checking(inp: str) -> int:
     return new_inp
 
 
-def _create_parser() -> argp.ArgumentParser:
+def create_parser() -> argp.ArgumentParser:
     """
     Return ArgumentParser with the appropriate documentation and functionality.
 
@@ -61,38 +88,46 @@ def _create_parser() -> argp.ArgumentParser:
     """
     width = min(_HELP_MIN_WIDTH, shutil.get_terminal_size().columns - 2)
     parser = argp.ArgumentParser(
-        formatter_class=lambda prog: argp.HelpFormatter(prog=prog, max_help_position=width),
+        formatter_class=lambda prog: CustomHelpFormatter(
+            prog=prog, max_help_position=width
+        ),
         description=_DESCRIPTION,
         add_help=False,
     )
 
-    parser.add_argument("-h", "--help", action="help", help="Show this message and exit.")
+    parser.add_argument(
+        "-h", "--help", action="help", help="Show this message and exit."
+    )
     parser.add_argument(
         "--version",
         action="version",
         help="Show the program's version number and exit.",
-        version="%(prog)s" f" {_VERSION}",
+        version="%(prog)s" f" {_classdefs.VERSION}",
     )
 
     # Optional Arguments
     parser.add_argument(
         "-a",
-        "--avg_type",
+        "--avgtype",
         default="mean",
         type=lambda s: s.lower().strip(),
-        choices=_AVG_FUNCTIONS,
-        metavar="",
+        choices=AVG_FUNCS,
         help=(
-            f"Specifies the type of average to return; Can be one of {', '.join(_AVG_FUNCTIONS)}."
-            " (Default: mean)"
+            "Specifies the type of average to return; Can be one of "
+            f"[{', '.join(AVG_FUNCS)}]. (Default: mean)"
         ),
+        metavar="<type>",
+        dest="avg_type",
     )
 
     parser.add_argument(
         "-b",
         "--buyers",
         action="store_true",
-        help="Take the average platinum price from buyer orders instead of seller orders.",
+        help=(
+            "Take the average platinum price from buyer orders instead of "
+            "seller orders."
+        ),
         dest="use_buyers",
     )
 
@@ -102,11 +137,11 @@ def _create_parser() -> argp.ArgumentParser:
         default="pc",
         type=lambda s: s.lower().strip(),
         choices=_PLATFORMS,
-        metavar="",
         help=(
-            f"Specifies which platform to fetch orders for; Can be one of {', '.join(_PLATFORMS)}."
-            " (Default: pc)"
+            "Specifies which platform to fetch orders for; Can be one of "
+            f"[{', '.join(_PLATFORMS)}]. (Default: pc)"
         ),
+        metavar="<platform>",
     )
 
     parser.add_argument(
@@ -115,24 +150,17 @@ def _create_parser() -> argp.ArgumentParser:
         default=60,
         type=_int_checking,
         help=(
-            "Specifies in days how old the orders can be. Must be greater than 0 and less than "
-            f"{_UPPER_TIME_BOUNDS}. (Default: 60)"
+            "Specifies in days how old the orders can be. Must be in range [1, "
+            f"{_UPPER_TIME_BOUNDS}]. (Default: 60)"
         ),
-        metavar="",
+        metavar="<days>",
         dest="time_range",
-    )
-
-    parser.add_argument(
-        "-v",
-        "--verbosity",
-        action="count",
-        help="Increases output verbosity. " "Can be -v or -vv",
-        default=0,
-        dest="verbosity",
     )
 
     # Positional Arguments
     parser.add_argument(
-        "item", type=lambda s: s.lower().strip(), help="the item to find the average of"
+        "item",
+        type=lambda s: s.strip(),
+        help="the item to find the average of",
     )
     return parser
