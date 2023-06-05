@@ -1,16 +1,17 @@
 
 # **WarMAC Beta Version 1.5.8**
 
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![image](https://img.shields.io/github/license/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
+
 **WarMAC** is a command-line Python script that can calculate the average market price of items in Warframe.
 WarMAC compiles seller orders from the fan website *<https://warframe.market/>*, and has the option to target specific platforms, pull data from specific time frames, and find the mean, median, mode, or harmonic mean averages.
 
-***
+# **⚙️Quick-start**
 
-## **⚙️Quick-start**
+## *You will need:*
 
-### *You will need:*
-
-* Python >=3.9.0
+* Python >=3.10.0
 * urllib3 package
 
 If you already have Python installed, `git clone` the repo into a directory or download it as a zip.
