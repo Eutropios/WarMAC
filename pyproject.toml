@@ -29,12 +29,16 @@ module="_arguments.py"
 
 [tool.ruff]
 line-length = 88
+show-fixes = true
 select = [
     "F", "E", "W", "C90", "N", "D", "UP", "ANN", "S112", "S110", "BLE", "FBT",
     "A", "C4", "DTZ", "EM", "EXE", "INP", "PIE", "PYI", "Q", "RSE", "RET",
     "SIM", "TID", "INT", "ARG", "ERA", "PL", "TRY", "RUF", "B"
 ]
 ignore = ["ANN101", "UP007"]
+
+[tool.ruff.pycodestyle]
+max-doc-length = 72
 
 [tool.ruff.pydocstyle]
 convention = "pep257"
