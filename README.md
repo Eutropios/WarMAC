@@ -11,7 +11,7 @@ WarMAC compiles seller orders from the fan website *<https://warframe.market/>*,
 
 ## *You will need:*
 
-* Python >=3.9.0
+* Python >=3.10.0
 * urllib3 package
 
 If you already have Python installed, `git clone` the repo into a directory or download it as a zip.
