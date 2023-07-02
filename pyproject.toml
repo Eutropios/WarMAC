@@ -86,6 +86,7 @@
   | buck-out
   | build
   | dist
+  | \.ruff_cache
 )/
 '''
     include = '\.pyi?$'
