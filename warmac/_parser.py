@@ -18,15 +18,19 @@ from __future__ import annotations
 import argparse as ap
 import shutil
 import sys
-from collections.abc import Callable, Generator
+from typing import TYPE_CHECKING
 
-_AVG_FUNCS: tuple[str, str, str, str, str, str] = (
+from warmac import classdefs
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Generator
+
+AVG_FUNCS: tuple[str, str, str, str, str] = (
     "median",
     "mean",
     "mode",
     "harmonic",
     "geometric",
-    "all",
 )
 DEFAULT_TIME = 30
 _DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
@@ -40,13 +44,6 @@ _PLATFORMS: tuple[str, str, str, str] = (
     "switch",
 )
 _PROG_NAME = "warmac"
-_RELIC_REFINEMENTS: tuple[str, str, str, str] = (
-    "intact",
-    "exceptional",
-    "flawless",
-    "radiant",
-)
-VERSION = "1.6.0"
 
 
 class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
@@ -61,7 +58,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
     """
 
     def __init__(
-        self,
+        self: CustomHelpFormat,
         prog: str,
         indent_increment: int = 2,
         max_help_position: int = 24,
@@ -84,7 +81,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
         """
         super().__init__(prog, indent_increment, max_help_position, width)
 
-    def _format_action_invocation(self, action: ap.Action) -> str:
+    def _format_action_invocation(self: CustomHelpFormat, action: ap.Action) -> str:
         """
         Override the superclass _format_action_invocation method.
 
@@ -108,7 +105,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
         # Return the option strings joined with the args_string
         return f"{', '.join(action.option_strings)} {args_string}"
 
-    def _format_action(self, action: ap.Action) -> str:
+    def _format_action(self: CustomHelpFormat, action: ap.Action) -> str:
         """
         Override the superclass _format_action method.
 
@@ -132,7 +129,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
         return result
 
     def _iter_indented_subactions(
-        self,
+        self: CustomHelpFormat,
         action: ap.Action,
     ) -> Generator[ap.Action, None, None]:
         """
@@ -163,7 +160,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
             yield from super()._iter_indented_subactions(action)
 
 
-def _int_checking(user_int: str, upper_bounds: int) -> int | None:
+def _int_checking(user_int: str, upper_bound: int) -> int | None:
     """
     Check if input is an integer and is within range.
 
@@ -173,8 +170,8 @@ def _int_checking(user_int: str, upper_bounds: int) -> int | None:
 
     :param user_int: The user's input
     :type user_int: str
-    :param upper_bounds: The maximum value that the user's input can be
-    :type upper_bounds: int
+    :param upper_bound: The maximum value that the user's input can be
+    :type upper_bound: int
     :raises ValueError: Is thrown if the input is not an integer. Is
     then caught within the function and is raised again as an
     argparse.ArgumentTypeError.
@@ -188,14 +185,13 @@ def _int_checking(user_int: str, upper_bounds: int) -> int | None:
     """
     try:
         casted_int = int(user_int)
-        if not (0 < casted_int <= upper_bounds):
-            raise ValueError
-        return casted_int
-    except ValueError as err:
-        msg: str = (
-            f"Argument must be an integer greater than 0 and less than {upper_bounds}."
-        )
-        raise ap.ArgumentTypeError(msg) from err
+    except ValueError:
+        msg = f"Argument must be an integer greater than 0 and less than {upper_bound}."
+        raise ap.ArgumentTypeError(msg) from None
+    if not (0 < casted_int <= upper_bound):
+        msg = f"Argument must be greater than 0 and less than {upper_bound}."
+        raise ap.ArgumentTypeError(msg) from None
+    return casted_int
 
 
 def _create_parser() -> ap.ArgumentParser:
@@ -214,10 +210,8 @@ def _create_parser() -> ap.ArgumentParser:
         usage=f"{_PROG_NAME} <command> [options]",
         description=_DESCRIPTION,
         formatter_class=lambda prog: CustomHelpFormat(
-            prog=prog,
-            max_help_position=_DEFAULT_WIDTH
-            # prog refers to the first argument passed in the command
-            # line, which is the name of the file in this case.
+            prog=prog,  # first arg in CL, which is the file's name
+            max_help_position=_DEFAULT_WIDTH,
         ),
         add_help=False,
     )
@@ -236,7 +230,7 @@ def _create_parser() -> ap.ArgumentParser:
         "--version",
         action="version",
         help="Show the program's version number and exit.",
-        version=f"{_PROG_NAME} {VERSION}",
+        version=f"{_PROG_NAME} {classdefs.VERSION}",
     )
 
     # ======= Sub-Commands =======
@@ -247,8 +241,8 @@ def _create_parser() -> ap.ArgumentParser:
         "average",
         help="Calculate the average platinum price of an item.",
         description=(
-            "Calculate the average platinum price of an item. Able to find the"
-            " median, mean, mode, and weighted mean of the specified item."
+            "Calculate the average platinum price of an item. Able to find the median,"
+            " mean, mode, geometric mean, and harmonic mean of the specified item."
         ),
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,
@@ -258,8 +252,8 @@ def _create_parser() -> ap.ArgumentParser:
         ),
         add_help=False,
         usage=(
-            f"{_PROG_NAME} average [-s <stat>] [-p <platform>] [-t <days>] [-r <rank> |"
-            " -i <refinement>] [-b] [-l] [-v] [-h] item"
+            f"{_PROG_NAME} average [-s <stat>] [-p <platform>] [-t <days>] [-m | -r]"
+            " [-b] [-l] [--color] item"
         ),
     )
 
@@ -267,7 +261,7 @@ def _create_parser() -> ap.ArgumentParser:
 
     # General Namespace on average:
     # Namespace(item='some_item', statistic='median', platform='pc',
-    # rank=0, time_range=60,
+    # maxrank=false, timerange=60,
     # use_buyers=False, listings=False, verbose=0)
 
     avg_parser.add_argument(
@@ -284,10 +278,10 @@ def _create_parser() -> ap.ArgumentParser:
         "--stats",
         default="median",
         type=lambda s: s.lower().strip(),
-        choices=_AVG_FUNCS,
+        choices=AVG_FUNCS,
         help=(
             "Specifies which statistic to return; Can be one of "
-            f"[{', '.join(_AVG_FUNCS)}]. (Default: median)"
+            f"[{', '.join(AVG_FUNCS)}]. (Default: median)"
         ),
         metavar="<stat>",
         dest="statistic",
@@ -318,16 +312,28 @@ def _create_parser() -> ap.ArgumentParser:
         metavar="<days>",
         dest="timerange",
     )
+    max_or_rad = avg_parser.add_mutually_exclusive_group()
 
-    avg_parser.add_argument(
+    max_or_rad.add_argument(
         "-m",
         "--maxrank",
         action="store_true",
         help=(
-            "Find price statistic of the max rank of a mod or arcane instead of for"
-            " the unranked mod or arcane. (Default: False)"
+            "Get price statistic of the mod/arcane at max rank instead of at unranked. "
+            "(Default: False)"
         ),
         dest="maxrank",
+    )
+
+    max_or_rad.add_argument(
+        "-r",
+        "--radiant",
+        action="store_true",
+        help=(
+            "Get price statistic of the relic at radiant refinement instead of at"
+            " intact. (Default: False)"
+        ),
+        dest="radiant",
     )
 
     avg_parser.add_argument(
@@ -339,21 +345,6 @@ def _create_parser() -> ap.ArgumentParser:
             "from seller orders. (Default: False)"
         ),
         dest="use_buyers",
-    )
-
-    avg_parser.add_argument(
-        "-l",
-        "--listings",
-        action="store_true",
-        help="Prints all found listings of the specified item.",
-        dest="listings",
-    )
-
-    avg_parser.add_argument(
-        "--color",
-        action="store_true",
-        help="Makes the output of the program colorful",
-        dest="color",
     )
 
     avg_parser.add_argument(
@@ -376,6 +367,15 @@ def _create_parser() -> ap.ArgumentParser:
 
 
 def handle_input() -> ap.Namespace:
+    """
+    Create and perform checks on command-line arguments.
+
+    Create argparse.ArgumentParser object, parse command-line arguments,
+    and return the parsed arguments as an argparse.Namespace object.
+
+    :return: The parsed command-line arguments.
+    :rtype: ap.Namespace
+    """
     parser: ap.ArgumentParser = _create_parser()
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)

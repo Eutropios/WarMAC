@@ -1,5 +1,5 @@
 """
-warmac._classdefs
+warmac.classdefs
 ~~~~~~~~~~~~~~~~~
 
 Copyright (c) 2023 Noah Jenner under MIT License
@@ -13,13 +13,13 @@ Date Last Modified: June 21, 2023
 Version of Python required for module: >=3.6.0
 """  # noqa: D205,D400
 
-VERSION = "1.5.8"  # defining the version of the program, used across WarMAC
+VERSION = "0.0.1"
 
 
 class WarMACError(Exception):
     """Base exception thrown in WarMAC."""
 
-    def __init__(self, message: str = "WarMAC Error.") -> None:
+    def __init__(self: "WarMACError", message: str = "WarMAC Error.") -> None:
         """
         Construct a WarMAC exception.
 
@@ -37,7 +37,7 @@ class SubcommandError(WarMACError):
     in SUBCOMMANDS.
     """  # noqa: D205
 
-    def __init__(self) -> None:
+    def __init__(self: "SubcommandError") -> None:
         """Construct a SubcommandError exception."""
         super().__init__("Not a valid subcommand.")
 
@@ -51,7 +51,7 @@ class InternalServerError(WarMACError):
     the user's request.
     """
 
-    def __init__(self) -> None:
+    def __init__(self: "InternalServerError") -> None:
         """Construct a MalformedURLError exception."""
         super().__init__(
             "Error 500, Warframe.market servers have encountered an "
@@ -67,7 +67,7 @@ class MethodNotAllowedError(WarMACError):
     knows the method, but the target resource doesn't support it.
     """
 
-    def __init__(self) -> None:
+    def __init__(self: "MethodNotAllowedError") -> None:
         """Construct a MethodNotAllowedError exception."""
         super().__init__(
             "Error 405, the target resource does not support this function."
@@ -82,7 +82,7 @@ class MalformedURLError(WarMACError):
     resource in question does not exist.
     """
 
-    def __init__(self) -> None:
+    def __init__(self: "MalformedURLError") -> None:
         """Construct a MalformedURLError exception."""
         super().__init__(
             "Error 404, this item does not exist. Please check your spelling, and "
@@ -98,7 +98,7 @@ class ForbiddenRequestError(WarMACError):
     desired resources is forbidden.
     """
 
-    def __init__(self) -> None:
+    def __init__(self: "ForbiddenRequestError") -> None:
         """Construct a ForbiddenRequestError exception."""
         super().__init__(
             "Error 403, the URL you've requested is forbidden. You do not have"
@@ -114,7 +114,7 @@ class UnauthorizedAccessError(WarMACError):
     via proper user credentials is needed to access this resource.
     """
 
-    def __init__(self) -> None:
+    def __init__(self: "UnauthorizedAccessError") -> None:
         """Construct a ForbiddenRequestError exception."""
         super().__init__(
             "Error 401, insufficient credentials. Please log in to access this content."
@@ -124,7 +124,7 @@ class UnauthorizedAccessError(WarMACError):
 class UnknownError(WarMACError):
     """Thrown if the error is unknown."""
 
-    def __init__(self, status_code: int) -> None:
+    def __init__(self: "UnknownError", status_code: int) -> None:
         """Construct a UnknownError exception."""
         super().__init__(
             f"Unknown Error; HTTP Code {status_code}. Writing to errorLog.txt file."

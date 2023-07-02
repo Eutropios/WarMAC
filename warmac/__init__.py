@@ -6,3 +6,9 @@ Main warmac files
 subject to change. Please do not use these in your own tools, as they
 will likely break in the future.
 """  # noqa: D205,D400
+
+from . import classdefs
+
+__all__ = [
+    "classdefs",
+]
