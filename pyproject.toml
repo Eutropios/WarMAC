@@ -1,49 +1,83 @@
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+    build-backend = "poetry.core.masonry.api"
+    requires      = ["poetry-core"]
 
 [project]
-name = "WarMAC_Eutropios"
-version = "0.0.1"
-authors = [
-    {name="Noah Jenner", email="noah.jenner@proton.me"}
-]
-description = "Warframe Market Average Calculator"
-requires-python = ">=3.9"
-readme = "README.md"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
+    authors = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
+    classifiers = [
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3",
+    ]
+    description = "Warframe Market Average Calculator"
+    name = "WarMAC_Eutropios"
+    readme = "README.md"
+    requires-python = ">=3.9"
+    version = "0.0.1"
 
 [project.urls]
-"Homepage" = "https://github.com/Eutropios/WarMAC"
-"Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
+    "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
+    "Homepage"    = "https://github.com/Eutropios/WarMAC"
+
+[tool.poetry]
+    authors     = ["Noah Jenner <noah.jenner@proton.me>"]
+    description = ""
+    name        = "warmac"
+    readme      = "README.md"
+    version     = "0.1.0"
+
+[tool.poetry.dependencies]
+    python = "^3.11"
 
 [tool.mypy]
-python_version = "3.9"
+    python_version = "3.9"
 
 [[tool.mypy.overrides]]
-module="_arguments.py"
+    module = "_arguments.py"
 
 [tool.ruff]
-line-length = 88
-select = [
-    "F", "E", "W", "C90", "N", "D", "UP", "ANN", "S112", "S110", "BLE", "FBT",
-    "A", "C4", "DTZ", "EM", "EXE", "INP", "PIE", "PYI", "Q", "RSE", "RET",
-    "SIM", "TID", "INT", "ARG", "ERA", "PL", "TRY", "RUF", "B"
-]
-ignore = ["ANN101", "UP007"]
+    ignore = ["ANN101", "UP007"]
+    line-length = 88
+    select = [
+        "A",
+        "ANN",
+        "ARG",
+        "B",
+        "BLE",
+        "C4",
+        "C90",
+        "D",
+        "DTZ",
+        "E",
+        "EM",
+        "ERA",
+        "EXE",
+        "F",
+        "FBT",
+        "INP",
+        "INT",
+        "N",
+        "PIE",
+        "PL",
+        "PYI",
+        "Q",
+        "RET",
+        "RSE",
+        "RUF",
+        "S110",
+        "S112",
+        "SIM",
+        "TID",
+        "TRY",
+        "UP",
+        "W",
+    ]
 
 [tool.ruff.pydocstyle]
-convention = "pep257"
+    convention = "pep257"
 
 [tool.black]
-verbose = true
-line-length = 88
-include = '\.pyi?$'
-exclude = '''
+    exclude = '''
 /(
     \.git
   | \.hg
@@ -56,3 +90,6 @@ exclude = '''
   | dist
 )/
 '''
+    include = '\.pyi?$'
+    line-length = 88
+    verbose = true
