@@ -2,8 +2,8 @@
     build-backend = "poetry.core.masonry.api"
     requires      = ["poetry-core"]
 
-[project]
-    authors = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
+[tool.poetry]
+    authors = ["Noah Jenner <noah.jenner@proton.me>"]
     classifiers = [
         "Development Status :: 3 - Alpha",
         "Environment :: Console",
@@ -15,26 +15,25 @@
         "Programming Language :: Python :: Implementation :: CPython",
         "Typing :: Typed",
     ]
-    dependencies = ["urllib3"]
-    description = "Warframe Market Average Calculator"
-    name = "WarMAC_Eutropios"
+    description = "An average platinum price calculator for tradeable items in Warframe."
+    include = [
+        ".markdownlint.yaml",
+        ".pre-commit-config.yaml",
+        "CODE_OF_CONDUCT.md",
+        "tool_attributions.md",
+        "vermin.ini",
+    ]
+    license = "MIT"
+    maintainers = ["Noah Jenner <noah.jenner@proton.me>"]
+    name = "warmac"
     readme = "README.md"
-    requires-python = ">=3.10"
+    repository = "https://github.com/Eutropios/WarMAC"
     version = "0.0.1"
-
-[project.urls]
-    "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
-    "Homepage"    = "https://github.com/Eutropios/WarMAC"
-
-[tool.poetry]
-    authors     = ["Noah Jenner <noah.jenner@proton.me>"]
-    description = ""
-    name        = "warmac"
-    readme      = "README.md"
-    version     = "0.1.0"
-
-[tool.poetry.dependencies]
-    python = "^3.11"
+    [tool.poetry.dependencies]
+        python  = "^3.10"
+        urllib3 = "^2.0.3"
+    [tool.poetry.urls]
+        "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
 
 [tool.mypy]
     python_version = "3.10"
@@ -78,11 +77,11 @@
     ]
     show-fixes = true
 
-[tool.ruff.pycodestyle]
-    max-doc-length = 72
+    [tool.ruff.pycodestyle]
+        max-doc-length = 72
 
-[tool.ruff.pydocstyle]
-    convention = "pep257"
+    [tool.ruff.pydocstyle]
+        convention = "pep257"
 
 [tool.black]
     exclude = '''
