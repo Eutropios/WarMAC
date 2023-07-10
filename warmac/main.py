@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
 Warframe Market Average Calculator (WarMAC) 1.5.9
 ~~~~~~~~~~~~~~~.
@@ -17,15 +18,19 @@ External packages required: urllib3
 
 from __future__ import annotations
 
-import argparse as ap
 import sys
-from collections.abc import Callable, Sequence
-from datetime import datetime as dt, timezone
+from datetime import datetime as dt
+from datetime import timezone
 from statistics import geometric_mean, harmonic_mean, mean, median, mode
+from typing import TYPE_CHECKING, Any
 
-import _classdefs
-import _parser
+import classdefs
+import cli_parser
 import urllib3
+
+if TYPE_CHECKING:
+    import argparse as ap
+    from collections.abc import Callable, Sequence
 
 _API_ROOT = "https://api.warframe.market/v1"
 _AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
@@ -37,21 +42,25 @@ _AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
 }
 CURR_TIME = dt.now(timezone.utc)
 
+
 headers = {
-    "User-Agent": "Mozilla",
+    "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
     "Content-Type": "application/json",
+    "Host": "api.warframe.market",
 }
 
-# OrdersList is used to type-hint the json that's returned by using
-# .json() on a page returned by a urllib3 http request
-OrdersList = list[dict[str, str | int | bool | float | dict[str, int | str | None]]]
-
-
+UserInfo = dict[str, int | str | None]
+OrdersList = list[dict[str, str | int | bool | float | UserInfo]]
+ItemsInSet = list[dict[str, str | int | None | list[str] | dict[str, str]]]
+Include = dict[str, str | dict[str, ItemsInSet]]
+PageJSON = dict[str, dict[str, OrdersList | Include]]
 # def output(args: ap.Namespace, statistic: float) -> None:
 #    pass
 
 
-def _get_json(url: str) -> urllib3.BaseHTTPResponse:
+# Load JSON afterwords in average once new version of urllib3 comes out
+# which allows type-hinting with BaseHTTPResponse
+def _get_json(url: str) -> Any:  # noqa: ANN401
     """
     Request the JSON of a desired item from Warframe.Market.
 
@@ -61,34 +70,34 @@ def _get_json(url: str) -> urllib3.BaseHTTPResponse:
 
     :param url: The formatted URL of the desired item.
     :type url: str
-    :raises _classdefs.UnauthorizedAccessError: Error 401
-    :raises _classdefs.ForbiddenRequestError: Error 403
-    :raises _classdefs.MalformedURLError: Error 404
-    :raises _classdefs.MethodNotAllowedError: Error 405
-    :raises _classdefs.InternalServerError: Error 500
-    :raises _classdefs.UnknownError: The error is unknown
-    :return: The requested page if the status code is 200.
-    :rtype: urllib3.BaseHTTPResponse
+    :raises classdefs.UnauthorizedAccessError: Error 401
+    :raises classdefs.ForbiddenRequestError: Error 403
+    :raises classdefs.MalformedURLError: Error 404
+    :raises classdefs.MethodNotAllowedError: Error 405
+    :raises classdefs.InternalServerError: Error 500
+    :raises classdefs.UnknownError: The error is unknown
+    :return: The requested page as a JSON if the status code is 200.
+    :rtype: Any
     """
     page = urllib3.request("GET", url, headers=headers, timeout=5)
     # add 500, 405
     match (page.status):
         case 200:
-            return page
+            return page.json()
         case 401:
-            raise _classdefs.UnauthorizedAccessError
+            raise classdefs.UnauthorizedAccessError
         case 403:
-            raise _classdefs.ForbiddenRequestError
+            raise classdefs.ForbiddenRequestError
         case 404:
-            raise _classdefs.MalformedURLError
+            raise classdefs.MalformedURLError
         case 405:
-            raise _classdefs.MethodNotAllowedError
+            raise classdefs.MethodNotAllowedError
         case 500:
-            raise _classdefs.InternalServerError
+            raise classdefs.InternalServerError
         case _:
             with open("./errorLog.txt", "a", encoding="UTF-8") as log_file:
                 log_file.write(f"Unknown Error; HTTP Code {page.status}")
-            raise _classdefs.UnknownError(page.status)
+            raise classdefs.UnknownError(page.status)
 
 
 def average(args: ap.Namespace, /) -> None:
@@ -104,21 +113,13 @@ def average(args: ap.Namespace, /) -> None:
     :type args: ap.Namespace
     """  # noqa: D205
     fixed_item = args.item.lower().replace(" ", "_").replace("&", "and")
-    fixed_url = f"{_API_ROOT}/items/{fixed_item}"
-    orders: OrdersList = _get_json(f"{fixed_url}/orders").json()["payload"]["orders"]
+    fixed_url = f"{_API_ROOT}/items/{fixed_item}/orders?include=item"
+    orders = _get_json(fixed_url)
     print(orders)
 
 
 _SUBCMD_TO_FUNC: dict[str, Callable[[ap.Namespace], None]] = {
     "average": average,
-    # "ducats": None,
-    # "lich": None,
-    # "riven": None,
-    # "sister": None,
-    # "graph": None,
-    # "popular": None,
-    # "costliest": None,
-    # "volatile": None
 }
 
 
@@ -132,27 +133,29 @@ def subcommand_select(args: ap.Namespace, /) -> None:
     :param args: The argparse Namespace containing the user-supplied
     command line information.
     :type args: ap.Namespace
-    :raises _classdefs.SubcommandError: An error indicating that th
+    :raises classdefs.SubcommandError: An error indicating that th
     desired subcommand does not exist within the _SUBCMD_TO_FUNC
-    dictionary. Is not needed when using the supplied argparser.
+    dictionary. Is not needed when using the supplied
+    argparse.ArgumentParser.
     """
     try:
         headers["platform"] = args.platform
         _SUBCMD_TO_FUNC[args.subparser](args)
-    except KeyError as err:
-        raise _classdefs.SubcommandError from err
+    except KeyError:
+        raise classdefs.SubcommandError from None
 
 
-def main() -> None:
+def main() -> int:
     """
-    Call _parser.handle_input and run subcommand_select with args.
+    Call parser.handle_input and run subcommand_select with args.
 
-    Call _parser.handle_input to acquire the argparse.Namespace object
+    Call parser.handle_input to acquire the argparse.Namespace object
     containing the command-line arguments passed in the script's
     execution. Call subcommand_select with argparse.Namespace as args.
     """
-    args: ap.Namespace = _parser.handle_input()
+    args: ap.Namespace = cli_parser.handle_input()
     subcommand_select(args)
+    return 0
 
 
 if __name__ == "__main__":

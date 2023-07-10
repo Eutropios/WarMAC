@@ -1,5 +1,5 @@
 """
-warmac._parser
+warmac.cli_parser
 ~~~~~~~~~~~~~~~~~.
 
 Copyright (c) 2023 Noah Jenner under MIT License
@@ -18,7 +18,10 @@ from __future__ import annotations
 import argparse as ap
 import shutil
 import sys
-from collections.abc import Callable, Generator
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Generator
 
 _AVG_FUNCS: tuple[str, str, str, str, str, str] = (
     "median",
@@ -61,7 +64,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
     """
 
     def __init__(
-        self,
+        self: CustomHelpFormat,
         prog: str,
         indent_increment: int = 2,
         max_help_position: int = 24,
@@ -84,7 +87,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
         """
         super().__init__(prog, indent_increment, max_help_position, width)
 
-    def _format_action_invocation(self, action: ap.Action) -> str:
+    def _format_action_invocation(self: CustomHelpFormat, action: ap.Action) -> str:
         """
         Override the superclass _format_action_invocation method.
 
@@ -108,7 +111,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
         # Return the option strings joined with the args_string
         return f"{', '.join(action.option_strings)} {args_string}"
 
-    def _format_action(self, action: ap.Action) -> str:
+    def _format_action(self: CustomHelpFormat, action: ap.Action) -> str:
         """
         Override the superclass _format_action method.
 
@@ -132,7 +135,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
         return result
 
     def _iter_indented_subactions(
-        self,
+        self: CustomHelpFormat,
         action: ap.Action,
     ) -> Generator[ap.Action, None, None]:
         """
@@ -163,7 +166,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
             yield from super()._iter_indented_subactions(action)
 
 
-def _int_checking(user_int: str, upper_bounds: int) -> int | None:
+def _int_checking(user_int: str, upper_bound: int) -> int | None:
     """
     Check if input is an integer and is within range.
 
@@ -173,8 +176,8 @@ def _int_checking(user_int: str, upper_bounds: int) -> int | None:
 
     :param user_int: The user's input
     :type user_int: str
-    :param upper_bounds: The maximum value that the user's input can be
-    :type upper_bounds: int
+    :param upper_bound: The maximum value that the user's input can be
+    :type upper_bound: int
     :raises ValueError: Is thrown if the input is not an integer. Is
     then caught within the function and is raised again as an
     argparse.ArgumentTypeError.
@@ -188,14 +191,13 @@ def _int_checking(user_int: str, upper_bounds: int) -> int | None:
     """
     try:
         casted_int = int(user_int)
-        if not (0 < casted_int <= upper_bounds):
-            raise ValueError
-        return casted_int
-    except ValueError as err:
-        msg: str = (
-            f"Argument must be an integer greater than 0 and less than {upper_bounds}."
-        )
-        raise ap.ArgumentTypeError(msg) from err
+    except ValueError:
+        msg = f"Argument must be an integer greater than 0 and less than {upper_bound}."
+        raise ap.ArgumentTypeError(msg) from None
+    if not (0 < casted_int <= upper_bound):
+        msg = f"Argument must be greater than 0 and less than {upper_bound}."
+        raise ap.ArgumentTypeError(msg)
+    return casted_int
 
 
 def _create_parser() -> ap.ArgumentParser:
@@ -376,6 +378,15 @@ def _create_parser() -> ap.ArgumentParser:
 
 
 def handle_input() -> ap.Namespace:
+    """
+    Create and perform checks on command-line arguments.
+
+    Create argparse.ArgumentParser object, parse command-line arguments,
+    and return the parsed arguments as an argparse.Namespace object.
+
+    :return: The parsed command-line arguments.
+    :rtype: ap.Namespace
+    """
     parser: ap.ArgumentParser = _create_parser()
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)

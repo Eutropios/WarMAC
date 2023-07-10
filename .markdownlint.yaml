@@ -1,7 +1,0 @@
-# default to true for all rules
-default: true
-
-# MD013/line-length
-MD013:
-  line_length: 100
-  code_blocks: false
