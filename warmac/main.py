@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
 
 _API_ROOT = "https://api.warframe.market/v1"
-_AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
+AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
     "mean": mean,
     "median": median,
     "mode": mode,
@@ -80,7 +80,6 @@ def _get_json(url: str) -> Any:  # noqa: ANN401
     :rtype: Any
     """
     page = urllib3.request("GET", url, headers=headers, timeout=5)
-    # add 500, 405
     match (page.status):
         case 200:
             return page.json()
@@ -100,6 +99,52 @@ def _get_json(url: str) -> Any:  # noqa: ANN401
             raise classdefs.UnknownError(page.status)
 
 
+def _calc_avg(plat_list: list[int], args: ap.Namespace) -> float:
+    """
+    Calculate the desired statistic of the price of an item given a
+    list of the prices.
+
+    Given a list, calculate and return the average price in platinum of
+    an item. Verbose output can be requested by setting args.verbose to
+    True.
+
+    :param plat_list: Prices in platinum of each order
+    :type plat_list: list[int]
+    :param args: Command-line arguments containing a boolean field for
+    verbose output, as well as a boolean field for color.
+    :type args: ap.Namespace
+    :raises ArithmeticError: If the given list is empty.
+    :return: The desired statistic of the specified item.
+    :rtype: float
+    """  # noqa: D205
+    # Handle errors
+    if not plat_list:
+        msg = "List cannot be empty!"
+        raise ArithmeticError(msg)
+
+    # Handle verbosity
+    if args.verbose:
+        print(
+            f"Highest: {max(plat_list)}\tLowest: {min(plat_list)}\tNumber of "
+            f"orders: {len(plat_list)}"
+        )
+    return round(AVG_FUNCS[args.statistic](plat_list), 1)
+
+
+def _filter_orders(args: ap.Namespace) -> float:
+    order_list: list[int] = [
+        order["platinum"]
+        for order in page.json()["payload"]["orders"]
+        if (
+            in_time_range(order, time_range=args.time_range)
+            and correct_order_type(order, use_buyers=args.use_buyers)
+        )
+    ]
+    return _calc_avg(order_list, args)
+
+def _is_mod_or_relic() -> tuple[bool, bool]:
+    return (True, True)
+
 def average(args: ap.Namespace, /) -> None:
     """
     Determine the specified statistic of an item using command the line
@@ -115,7 +160,8 @@ def average(args: ap.Namespace, /) -> None:
     fixed_item = args.item.lower().replace(" ", "_").replace("&", "and")
     fixed_url = f"{_API_ROOT}/items/{fixed_item}/orders?include=item"
     orders = _get_json(fixed_url)
-    print(orders)
+
+    _filter_orders(args)
 
 
 _SUBCMD_TO_FUNC: dict[str, Callable[[ap.Namespace], None]] = {

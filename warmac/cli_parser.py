@@ -23,13 +23,12 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
 
-_AVG_FUNCS: tuple[str, str, str, str, str, str] = (
+AVG_FUNCS: tuple[str, str, str, str, str] = (
     "median",
     "mean",
     "mode",
     "harmonic",
     "geometric",
-    "all",
 )
 DEFAULT_TIME = 30
 _DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
@@ -249,8 +248,8 @@ def _create_parser() -> ap.ArgumentParser:
         "average",
         help="Calculate the average platinum price of an item.",
         description=(
-            "Calculate the average platinum price of an item. Able to find the"
-            " median, mean, mode, and weighted mean of the specified item."
+            "Calculate the average platinum price of an item. Able to find the median,"
+            " mean, mode, geometric mean, and harmonic mean of the specified item."
         ),
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,
@@ -260,8 +259,8 @@ def _create_parser() -> ap.ArgumentParser:
         ),
         add_help=False,
         usage=(
-            f"{_PROG_NAME} average [-s <stat>] [-p <platform>] [-t <days>] [-r <rank> |"
-            " -i <refinement>] [-b] [-l] [-v] [-h] item"
+            f"{_PROG_NAME} average [-s <stat>] [-p <platform>] [-t <days>] [-m | -r]"
+            " [-b] [-l] [--color] item"
         ),
     )
 
@@ -269,7 +268,7 @@ def _create_parser() -> ap.ArgumentParser:
 
     # General Namespace on average:
     # Namespace(item='some_item', statistic='median', platform='pc',
-    # rank=0, time_range=60,
+    # maxrank=false, timerange=60,
     # use_buyers=False, listings=False, verbose=0)
 
     avg_parser.add_argument(
@@ -286,10 +285,10 @@ def _create_parser() -> ap.ArgumentParser:
         "--stats",
         default="median",
         type=lambda s: s.lower().strip(),
-        choices=_AVG_FUNCS,
+        choices=AVG_FUNCS,
         help=(
             "Specifies which statistic to return; Can be one of "
-            f"[{', '.join(_AVG_FUNCS)}]. (Default: median)"
+            f"[{', '.join(AVG_FUNCS)}]. (Default: median)"
         ),
         metavar="<stat>",
         dest="statistic",
@@ -320,16 +319,28 @@ def _create_parser() -> ap.ArgumentParser:
         metavar="<days>",
         dest="timerange",
     )
+    max_or_rad = avg_parser.add_mutually_exclusive_group()
 
-    avg_parser.add_argument(
+    max_or_rad.add_argument(
         "-m",
         "--maxrank",
         action="store_true",
         help=(
-            "Find price statistic of the max rank of a mod or arcane instead of for"
-            " the unranked mod or arcane. (Default: False)"
+            "Get price statistic of the mod/arcane at max rank instead of at unranked. "
+            "(Default: False)"
         ),
         dest="maxrank",
+    )
+
+    max_or_rad.add_argument(
+        "-r",
+        "--radiant",
+        action="store_true",
+        help=(
+            "Get price statistic of the relic at radiant refinement instead of at"
+            " intact. (Default: False)"
+        ),
+        dest="radiant",
     )
 
     avg_parser.add_argument(
@@ -349,13 +360,6 @@ def _create_parser() -> ap.ArgumentParser:
         action="store_true",
         help="Prints all found listings of the specified item.",
         dest="listings",
-    )
-
-    avg_parser.add_argument(
-        "--color",
-        action="store_true",
-        help="Makes the output of the program colorful",
-        dest="color",
     )
 
     avg_parser.add_argument(
