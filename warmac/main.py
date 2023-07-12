@@ -17,15 +17,17 @@ External packages required: urllib3
 """  # noqa: D205
 
 from __future__ import annotations
+from mmap import PROT_WRITE
 
 import sys
 from datetime import datetime as dt
 from datetime import timezone
 from statistics import geometric_mean, harmonic_mean, mean, median, mode
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Set
 
 import classdefs
 import cli_parser
+import msgspec
 import urllib3
 
 if TYPE_CHECKING:
@@ -49,18 +51,49 @@ headers = {
     "Host": "api.warframe.market",
 }
 
-UserInfo = dict[str, int | str | None]
-OrdersList = list[dict[str, str | int | bool | float | UserInfo]]
-ItemsInSet = list[dict[str, str | int | None | list[str] | dict[str, str]]]
-Include = dict[str, str | dict[str, ItemsInSet]]
-PageJSON = dict[str, dict[str, OrdersList | Include]]
+class OrdersList(msgspec.Struct):
+    # OrdersList = list[dict[str, str | int | bool | float | UserInfo]]
+    pass
+
+class UserInfo(msgspec.Struct):
+    # UserInfo = dict[str, int | str | None]
+    pass
+
+class ItemInSet(msgspec.Struct):
+    icon: str
+    url_name: str
+    thumb: str
+    trading_tax: int
+    icon_format: str
+    sub_icon: None | str = None
+    quantity_for_set: int | None = None
+    tags: set[str] = set()
+
+    # ItemInSet = dict[str, str | int | None | list[str] | dict[str, str]]
+    pass
+
+class Include(msgspec.Struct):
+    # dict[str, str | dict[str, list[ItemInSet]]]
+    pass
+
+class Response(msgspec.Struct):
+    """
+    Used for response parsing.
+
+    Define the JSON schema and data types to decode the HTTP Response
+    given by urllib3.request.
+    """
+    # PageJSON = dict[str, dict[str, OrdersList | Include]]
+    pass
+
+
 # def output(args: ap.Namespace, statistic: float) -> None:
 #    pass
 
 
 # Load JSON afterwords in average once new version of urllib3 comes out
 # which allows type-hinting with BaseHTTPResponse
-def _get_json(url: str) -> Any:  # noqa: ANN401
+def _get_json(url: str):
     """
     Request the JSON of a desired item from Warframe.Market.
 
@@ -82,7 +115,7 @@ def _get_json(url: str) -> Any:  # noqa: ANN401
     page = urllib3.request("GET", url, headers=headers, timeout=5)
     match (page.status):
         case 200:
-            return page.json()
+            return msgspec.json.decode(page.data)
         case 401:
             raise classdefs.UnauthorizedAccessError
         case 403:
@@ -131,19 +164,17 @@ def _calc_avg(plat_list: list[int], args: ap.Namespace) -> float:
     return round(AVG_FUNCS[args.statistic](plat_list), 1)
 
 
-def _filter_orders(args: ap.Namespace) -> float:
-    order_list: list[int] = [
-        order["platinum"]
-        for order in page.json()["payload"]["orders"]
-        if (
-            in_time_range(order, time_range=args.time_range)
-            and correct_order_type(order, use_buyers=args.use_buyers)
-        )
-    ]
-    return _calc_avg(order_list, args)
+# def _filter_orders(args: ap.Namespace) -> float:
+    # order_list: list[int] = [
+        # order["platinum"]
+        # for order in page.json()["payload"]["orders"]
+        # if (
+            # in_time_range(order, time_range=args.time_range)
+            # and correct_order_type(order, use_buyers=args.use_buyers)
+        # )
+    # ]
+    # return _calc_avg(order_list, args)
 
-def _is_mod_or_relic() -> tuple[bool, bool]:
-    return (True, True)
 
 def average(args: ap.Namespace, /) -> None:
     """
@@ -160,8 +191,12 @@ def average(args: ap.Namespace, /) -> None:
     fixed_item = args.item.lower().replace(" ", "_").replace("&", "and")
     fixed_url = f"{_API_ROOT}/items/{fixed_item}/orders?include=item"
     orders = _get_json(fixed_url)
-
-    _filter_orders(args)
+    print(orders)
+    # item_info: ItemInSet = orders["include"]["item"]["items_in_set"][0]
+    # item_tags: list[str] = item_info["tags"] 
+    # if "mod" in item_tags or "arcane_enhancement" in item_tags:
+        # pass
+    # _filter_orders(args)
 
 
 _SUBCMD_TO_FUNC: dict[str, Callable[[ap.Namespace], None]] = {
