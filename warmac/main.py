@@ -197,7 +197,7 @@ class _WarMACJSON:
         tags: list[str] = item_info["tags"]
         self.is_relic = "relic" in tags
         self.is_mod_or_arcane = "mod" in tags or "arcane_enhancement" in tags
-        self.max_mod_rank = item_info["mod_max_rank"] if self.is_mod_or_arcane else -1
+        self.max_rank = int(item_info["mod_max_rank"]) if self.is_mod_or_arcane else -1
         self.orders: list[dict[str, Any]] = _json["payload"]["orders"]
 
     def __repr__(self: _WarMACJSON) -> str:
@@ -619,7 +619,7 @@ def _calc_avg(plat_list: list[int], args: ap.Namespace) -> float:
     # Handle errors
     if not plat_list:
         msg = "List cannot be empty!"
-        raise ArithmeticError(msg)
+        raise ArithmeticError(msg) from None
 
     # Handle verbosity
     if args.verbose:
@@ -630,6 +630,14 @@ def _calc_avg(plat_list: list[int], args: ap.Namespace) -> float:
     return round(AVG_FUNCS[args.statistic](plat_list), 1)
 
 
+def _is_max_rank(_json: _WarMACJSON, order: dict[str, Any], args: ap.Namespace) -> bool:
+    return order["mod_rank"] == (_json.max_rank if args.maxrank else 0)
+
+
+def _is_radiant(_json: _WarMACJSON, order: dict[str, Any], args: ap.Namespace) -> bool:
+    return order["subtype"] == ("radiant" if args.radiant else "intact")
+
+
 def _filter_orders(_json: _WarMACJSON, args: ap.Namespace) -> list[int]:
     order_list: list[int] = [
         order["platinum"]
@@ -637,6 +645,8 @@ def _filter_orders(_json: _WarMACJSON, args: ap.Namespace) -> list[int]:
         if (
             (CURR_TIME - dt.fromisoformat(order["last_update"])).days <= args.timerange
             and order["order_type"] == ("buy" if args.use_buyers else "sell")
+            and (_is_max_rank(_json, order, args) if _json.is_mod_or_arcane else True)
+            and (_is_radiant(_json, order, args) if _json.is_relic else True)
         )
     ]
     return order_list
@@ -701,6 +711,8 @@ def subcommand_select(args: ap.Namespace, /) -> None:
             with open("./errorLog.txt", "a", encoding="UTF-8") as log_file:
                 log_file.write(f"Unknown connection error {e}")
             print(f"Unknown connection error {e}. Logged in ./errorLog.txt")
+    except ArithmeticError:
+        print("There are no listings matching your search parameters.")
 
 
 def main() -> int:
