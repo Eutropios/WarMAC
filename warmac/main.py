@@ -155,11 +155,13 @@ def _calc_avg(plat_list: list[int], args: ap.Namespace) -> float:
 
 
 def _is_max_rank(_json: _WarMACJSON, order: dict[str, Any], args: ap.Namespace) -> bool:
-    return order["mod_rank"] == (_json.max_rank if args.maxrank else 0)
+    mod_rank: int = order["mod_rank"]
+    return mod_rank == (_json.max_rank if args.maxrank else 0)
 
 
 def _is_radiant(_json: _WarMACJSON, order: dict[str, Any], args: ap.Namespace) -> bool:
-    return order["subtype"] == ("radiant" if args.radiant else "intact")
+    subtype: str = order["subtype"]
+    return subtype == ("radiant" if args.radiant else "intact")
 
 
 def _filter_orders(_json: _WarMACJSON, args: ap.Namespace) -> list[int]:
@@ -188,7 +190,7 @@ def average(args: ap.Namespace, /) -> None:
     command line information.
     :type args: ap.Namespace
     """  # noqa: D205
-    fixed_item = args.item.lower().replace(" ", "_").replace("&", "and")
+    fixed_item: str = args.item.lower().replace(" ", "_").replace("&", "and")
     fixed_url = f"{_API_ROOT}/items/{fixed_item}/orders?include=item"
     retrieved_json = _get_json(fixed_url)
     plat_list: list[int] = _filter_orders(retrieved_json, args)

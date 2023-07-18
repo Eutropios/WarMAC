@@ -350,14 +350,6 @@ def _create_parser() -> ap.ArgumentParser:
     )
 
     avg_parser.add_argument(
-        "-l",
-        "--listings",
-        action="store_true",
-        help="Prints all found listings of the specified item.",
-        dest="listings",
-    )
-
-    avg_parser.add_argument(
         "-v",
         "--verbose",
         action="count",
