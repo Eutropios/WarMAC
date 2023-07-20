@@ -12,7 +12,10 @@
         "Natural Language :: English",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: Implementation :: CPython",
+        "Topic :: Utilities",
         "Typing :: Typed",
     ]
     description = "An average platinum price calculator for tradeable items in Warframe."
@@ -28,7 +31,9 @@
     version     = "0.0.1"
     [tool.poetry.dependencies]
         python  = "^3.10"
-        urllib3 = "^2.0.3"
+        urllib3 = "^2.0.4"
+    [tool.poetry.scripts]
+        warmac = "warmac.main:main"
     [tool.poetry.urls]
         "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
 

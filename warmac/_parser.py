@@ -20,7 +20,7 @@ import shutil
 import sys
 from typing import TYPE_CHECKING
 
-import classdefs
+from warmac import classdefs
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
@@ -210,10 +210,8 @@ def _create_parser() -> ap.ArgumentParser:
         usage=f"{_PROG_NAME} <command> [options]",
         description=_DESCRIPTION,
         formatter_class=lambda prog: CustomHelpFormat(
-            prog=prog,
-            max_help_position=_DEFAULT_WIDTH
-            # prog refers to the first argument passed in the command
-            # line, which is the name of the file in this case.
+            prog=prog,  # first arg in CL, which is the file's name
+            max_help_position=_DEFAULT_WIDTH,
         ),
         add_help=False,
     )

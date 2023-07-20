@@ -24,9 +24,9 @@ from datetime import timezone
 from statistics import geometric_mean, harmonic_mean, mean, median, mode
 from typing import TYPE_CHECKING, Any
 
-import _parser
-import classdefs
 import urllib3
+
+from warmac import _parser, classdefs
 
 if TYPE_CHECKING:
     import argparse as ap
@@ -58,20 +58,20 @@ class _WarMACJSON:
     data returned from the HTTP request.
     """
 
-    def __init__(self: _WarMACJSON, _json: dict[str, Any]) -> None:
+    def __init__(self: _WarMACJSON, order_json: dict[str, Any]) -> None:
         """
         Construct a _WarMACJSON object.
 
-        :param _json: The JSON dictionary that is created from the
+        :param order_json: The JSON dictionary that is created from the
         data returned by the HTTP request.
-        :type _json: dict[str, Any]
+        :type order_json: dict[str, Any]
         """
-        item_info: dict[str, Any] = _json["include"]["item"]["items_in_set"][0]
+        item_info: dict[str, Any] = order_json["include"]["item"]["items_in_set"][0]
         tags: list[str] = item_info["tags"]
         self.is_relic = "relic" in tags
-        self.is_mod_or_arcane = "mod" in tags or "arcane_enhancement" in tags
-        self.max_rank = int(item_info["mod_max_rank"]) if self.is_mod_or_arcane else -1
-        self.orders: list[dict[str, Any]] = _json["payload"]["orders"]
+        self.is_mod = "mod" in tags or "arcane_enhancement" in tags
+        self.max_rank = int(item_info["mod_max_rank"]) if self.is_mod else -1
+        self.orders: list[dict[str, Any]] = order_json["payload"]["orders"]
 
     def __repr__(self: _WarMACJSON) -> str:
         return str(self.orders)
@@ -154,25 +154,29 @@ def _calc_avg(plat_list: list[int], args: ap.Namespace) -> float:
     return round(AVG_FUNCS[args.statistic](plat_list), 1)
 
 
-def _is_max_rank(_json: _WarMACJSON, order: dict[str, Any], args: ap.Namespace) -> bool:
+def _is_max_rank(
+    order_json: _WarMACJSON,
+    order: dict[str, Any],
+    args: ap.Namespace,
+) -> bool:
     mod_rank: int = order["mod_rank"]
-    return mod_rank == (_json.max_rank if args.maxrank else 0)
+    return mod_rank == (order_json.max_rank if args.maxrank else 0)
 
 
-def _is_radiant(_json: _WarMACJSON, order: dict[str, Any], args: ap.Namespace) -> bool:
+def _is_radiant(order: dict[str, Any], args: ap.Namespace) -> bool:
     subtype: str = order["subtype"]
     return subtype == ("radiant" if args.radiant else "intact")
 
 
-def _filter_orders(_json: _WarMACJSON, args: ap.Namespace) -> list[int]:
+def _filter_orders(order_json: _WarMACJSON, args: ap.Namespace) -> list[int]:
     order_list: list[int] = [
         order["platinum"]
-        for order in _json.orders
+        for order in order_json.orders
         if (
             (CURR_TIME - dt.fromisoformat(order["last_update"])).days <= args.timerange
             and order["order_type"] == ("buy" if args.use_buyers else "sell")
-            and (_is_max_rank(_json, order, args) if _json.is_mod_or_arcane else True)
-            and (_is_radiant(_json, order, args) if _json.is_relic else True)
+            and (_is_max_rank(order_json, order, args) if order_json.is_mod else True)
+            and (_is_radiant(order, args) if order_json.is_relic else True)
         )
     ]
     return order_list
@@ -221,8 +225,8 @@ def subcommand_select(args: ap.Namespace, /) -> None:
     try:
         headers["platform"] = args.platform
         _SUBCMD_TO_FUNC[args.subparser](args)
-    except KeyError as e:
-        raise classdefs.SubcommandError from e
+    except KeyError:
+        raise classdefs.SubcommandError from None
     except classdefs.WarMACError as e:
         print(e)
     except urllib3.exceptions.HTTPError as e:
