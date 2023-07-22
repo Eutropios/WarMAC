@@ -12,7 +12,6 @@ repos:
       - id: check-builtin-literals
       - id: check-case-conflict
       - id: check-json
-      - id: check-shebang-scripts-are-executable
       - id: check-symlinks
       - id: check-toml
       - id: check-yaml

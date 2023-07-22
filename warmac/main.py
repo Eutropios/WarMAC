@@ -1,4 +1,3 @@
-#!/usr/bin/python
 """
 Warframe Market Average Calculator (WarMAC) 1.5.9
 ~~~~~~~~~~~~~~~.
@@ -58,20 +57,20 @@ class _WarMACJSON:
     data returned from the HTTP request.
     """
 
-    def __init__(self: _WarMACJSON, order_json: dict[str, Any]) -> None:
+    def __init__(self: _WarMACJSON, json: dict[str, Any]) -> None:
         """
         Construct a _WarMACJSON object.
 
-        :param order_json: The JSON dictionary that is created from the
+        :param json: The JSON dictionary that is created from the
         data returned by the HTTP request.
-        :type order_json: dict[str, Any]
+        :type json: dict[str, Any]
         """
-        item_info: dict[str, Any] = order_json["include"]["item"]["items_in_set"][0]
+        item_info: dict[str, Any] = json["include"]["item"]["items_in_set"][0]
         tags: list[str] = item_info["tags"]
         self.is_relic = "relic" in tags
         self.is_mod = "mod" in tags or "arcane_enhancement" in tags
         self.max_rank = int(item_info["mod_max_rank"]) if self.is_mod else -1
-        self.orders: list[dict[str, Any]] = order_json["payload"]["orders"]
+        self.orders: list[dict[str, Any]] = json["payload"]["orders"]
 
     def __repr__(self: _WarMACJSON) -> str:
         return str(self.orders)
@@ -83,29 +82,30 @@ class _WarMACJSON:
 
 # Load JSON afterwords in average once new version of urllib3 comes out
 # which allows type-hinting with BaseHTTPResponse
-def _get_json(url: str) -> _WarMACJSON:
+def _get_page(url: str) -> urllib3.BaseHTTPResponse:
     """
     Request the JSON of a desired item from Warframe.Market.
 
     Request the JSON of a desired item from Warframe.Market using the
     appropriate formatted URL, along with the appropriate headers.
-    Raise an error if the status code is not 200.
+    Raise an error if the status code is not 200, otherwise return the
+    requested page. This page will need to be decoded into a dictionary.
 
     :param url: The formatted URL of the desired item.
     :type url: str
-    :raises UnauthorizedAccessError: Error 401
-    :raises ForbiddenRequestError: Error 403
-    :raises MalformedURLError: Error 404
-    :raises MethodNotAllowedError: Error 405
-    :raises InternalServerError: Error 500
-    :raises UnknownError: The error is unknown
-    :return: The requested page as a JSON if the status code is 200.
-    :rtype: Any
+    :raises classdefs.UnauthorizedAccessError: Error 401
+    :raises classdefs.ForbiddenRequestError: Error 403
+    :raises classdefs.MalformedURLError: Error 404
+    :raises classdefs.MethodNotAllowedError: Error 405
+    :raises classdefs.InternalServerError: Error 500
+    :raises classdefs.UnknownError: The error is unknown
+    :return: The requested page containing a JSON.
+    :rtype: urllib3.BaseHTTPResponse
     """
     page = urllib3.request("GET", url, headers=headers, timeout=5)
     match (page.status):
         case 200:
-            return _WarMACJSON(page.json())
+            return page
         case 401:
             raise classdefs.UnauthorizedAccessError from None
         case 403:
@@ -117,8 +117,6 @@ def _get_json(url: str) -> _WarMACJSON:
         case 500:
             raise classdefs.InternalServerError from None
         case _:
-            with open("./errorLog.txt", "a", encoding="UTF-8") as log_file:
-                log_file.write(f"Unknown Error; HTTP Code {page.status}")
             raise classdefs.UnknownError(page.status) from None
 
 
@@ -149,34 +147,43 @@ def _calc_avg(plat_list: list[int], args: ap.Namespace) -> float:
     if args.verbose:
         print(
             f"Highest: {max(plat_list)}\tLowest: {min(plat_list)}\tNumber of "
-            f"orders: {len(plat_list)}"
+            f"orders: {len(plat_list)}",
         )
     return round(AVG_FUNCS[args.statistic](plat_list), 1)
 
 
+def _in_timerange(last_updated: str, time_range: int) -> bool:
+    return (CURR_TIME - dt.fromisoformat(last_updated)).days <= time_range
+
+
+def _right_order_type(order_type: str, *, use_buyers: bool = False) -> bool:
+    return order_type == ("buy" if use_buyers else "sell")
+
+
 def _is_max_rank(
-    order_json: _WarMACJSON,
+    json: _WarMACJSON,
     order: dict[str, Any],
     args: ap.Namespace,
 ) -> bool:
     mod_rank: int = order["mod_rank"]
-    return mod_rank == (order_json.max_rank if args.maxrank else 0)
+    return mod_rank == (json.max_rank if args.maxrank else 0)
 
 
-def _is_radiant(order: dict[str, Any], args: ap.Namespace) -> bool:
+def _is_radiant(order: dict[str, Any], *, use_rad: bool = False) -> bool:
     subtype: str = order["subtype"]
-    return subtype == ("radiant" if args.radiant else "intact")
+    # if subtype matches `use radiant`, return True
+    return subtype == ("radiant" if use_rad else "intact")
 
 
-def _filter_orders(order_json: _WarMACJSON, args: ap.Namespace) -> list[int]:
+def _filter_orders(json: _WarMACJSON, args: ap.Namespace) -> list[int]:
     order_list: list[int] = [
         order["platinum"]
-        for order in order_json.orders
+        for order in json.orders
         if (
-            (CURR_TIME - dt.fromisoformat(order["last_update"])).days <= args.timerange
-            and order["order_type"] == ("buy" if args.use_buyers else "sell")
-            and (_is_max_rank(order_json, order, args) if order_json.is_mod else True)
-            and (_is_radiant(order, args) if order_json.is_relic else True)
+            _in_timerange(order["last_update"], args.timerange)
+            and _right_order_type(order["order_type"], use_buyers=args.use_buyers)
+            and (_is_max_rank(json, order, args) if json.is_mod else True)
+            and (_is_radiant(order, use_rad=args.radiant) if json.is_relic else True)
         )
     ]
     return order_list
@@ -196,7 +203,7 @@ def average(args: ap.Namespace, /) -> None:
     """  # noqa: D205
     fixed_item: str = args.item.lower().replace(" ", "_").replace("&", "and")
     fixed_url = f"{_API_ROOT}/items/{fixed_item}/orders?include=item"
-    retrieved_json = _get_json(fixed_url)
+    retrieved_json = _WarMACJSON(_get_page(fixed_url).json())
     plat_list: list[int] = _filter_orders(retrieved_json, args)
     avg_cost = _calc_avg(plat_list, args)
     print(avg_cost)
@@ -233,14 +240,12 @@ def subcommand_select(args: ap.Namespace, /) -> None:
         if isinstance(e, urllib3.exceptions.MaxRetryError):
             print(
                 "You're not connected to the internet. Please check your internet "
-                "connection and try again."
+                "connection and try again.",
             )
         elif isinstance(e, urllib3.exceptions.TimeoutError):
             print("The connection timed out. Please try again later.")
         else:
-            with open("./errorLog.txt", "a", encoding="UTF-8") as log_file:
-                log_file.write(f"Unknown connection error {e}")
-            print(f"Unknown connection error {e}. Logged in ./errorLog.txt")
+            print("Unknown connection error.")
     except ArithmeticError:
         print("There are no listings matching your search parameters.")
 

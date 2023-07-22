@@ -110,8 +110,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
         Override the superclass _format_action method.
 
         Override the superclass' _format_action method to fix the
-        indentation of the leading indentation of subparsers on the
-        help page.
+        the leading indentation of subparsers on the help page.
 
         :param action: the action in which to be formatted
         :type action: ap.Action
@@ -246,7 +245,7 @@ def _create_parser() -> ap.ArgumentParser:
         ),
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,
-            max_help_position=_DEFAULT_WIDTH
+            max_help_position=_DEFAULT_WIDTH,
             # prog refers to the first argument passed in the command
             # line, which is the name of the file in this case.
         ),

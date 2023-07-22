@@ -55,7 +55,7 @@ class InternalServerError(WarMACError):
         """Construct a MalformedURLError exception."""
         super().__init__(
             "Error 500, Warframe.market servers have encountered an "
-            "internal error while processing this request."
+            "internal error while processing this request.",
         )
 
 
@@ -70,7 +70,7 @@ class MethodNotAllowedError(WarMACError):
     def __init__(self: "MethodNotAllowedError") -> None:
         """Construct a MethodNotAllowedError exception."""
         super().__init__(
-            "Error 405, the target resource does not support this function."
+            "Error 405, the target resource does not support this function.",
         )
 
 
@@ -86,7 +86,7 @@ class MalformedURLError(WarMACError):
         """Construct a MalformedURLError exception."""
         super().__init__(
             "Error 404, this item does not exist. Please check your spelling, and "
-            "remember to use quotations if the item is multiple words."
+            "remember to use quotations if the item is multiple words.",
         )
 
 
@@ -102,7 +102,7 @@ class ForbiddenRequestError(WarMACError):
         """Construct a ForbiddenRequestError exception."""
         super().__init__(
             "Error 403, the URL you've requested is forbidden. You do not have"
-            " authorization to access it."
+            " authorization to access it.",
         )
 
 
@@ -117,7 +117,8 @@ class UnauthorizedAccessError(WarMACError):
     def __init__(self: "UnauthorizedAccessError") -> None:
         """Construct a ForbiddenRequestError exception."""
         super().__init__(
-            "Error 401, insufficient credentials. Please log in to access this content."
+            "Error 401, insufficient credentials. Please log in to before making this "
+            "transaction.",
         )
 
 
@@ -127,6 +128,6 @@ class UnknownError(WarMACError):
     def __init__(self: "UnknownError", status_code: int) -> None:
         """Construct a UnknownError exception."""
         super().__init__(
-            f"Unknown Error; HTTP Code {status_code}. Writing to errorLog.txt file."
-            " Please open a new issue on the Github page (link in README.rst file)."
+            f"Unknown Error; HTTP Code {status_code}. Please open a new issue on the "
+            "Github page (link in README.md file).",
         )

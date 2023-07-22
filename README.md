@@ -1,73 +1,38 @@
 
-# **WarMAC Beta Version 1.5.8**
+# **WarMAC Beta Version 0.0.1**
 
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![image](https://img.shields.io/github/license/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
+[![code style: black](https://img.shields.io/badge/code_style-black-000000.svg)](https://github.com/psf/black)
+[![Checked with mypy](https://img.shields.io/badge/mypy-checked-2a6db2)](https://mypy-lang.org/)
 
-**WarMAC** is a command-line Python script that can calculate the average market price of items in Warframe.
-WarMAC compiles seller orders from the fan website *<https://warframe.market/>*, and has the option to target specific platforms, pull data from specific time frames, and find the mean, median, mode, or harmonic mean averages.
+**WarMAC** is a command-line Python script that can calculate the average market price of items in Warframe.  
+WarMAC compiles orders from the fan website *<https://warframe.market/>*, and can be used to find the average prices of prime parts, tradeable parts, relics, mods, and arcane enhancements.  
+WarMAC has the ability to:  
 
-# **⚙️Quick-start**
+* Target PC, PlayStation, XBOX, or Nintendo Switch platforms.
+* Calculate the median, mean, mode, harmonic mean, or geometric means of items.
+* Restrict orders to specific time ranges.
+* Utilize either seller or buyer orders.
+* Find averages for intact or radiant relics.
+* Find average for unranked or max-ranked mods and arcane enhancements.
+* Display additional information about an item on the market.
 
-## *You will need:*
+## To Install  
 
-* Python >=3.10.0
-* urllib3 package
+WarMAC currently only supports Python 3.10, Python 3.11, and Python 3.12. However, there are plans to increase compatibility to lower Python versions.  
 
-If you already have Python installed, `git clone` the repo into a directory or download it as a zip.
-If you're on Windows, run:
+WarMAC can be installed via pip.  
 
-```PowerShell
-python .\warmac.py -h
-```
-
-If you're on MacOS or Linux, run:
-
-```bash
-python3 ./src/warmac/main.py -h
-```
-
-**WarMAC currently requires end-users to install the dependency library themselves, as this project is not on PyPi.**
-If you do not have Python already on your system, please download the latest version from the following link:
-Python download link: <https://www.python.org/downloads/>.
-
-### 🪟On Windows
-
-After downloading and installing the appropriate Python interpreter for your system, open up `cmd`, `PowerShell`, or `Windows Terminal`, and run the following command:
-
-```ps
-python -m pip install urllib3
-```
-
-### 🍎On MacOS and 🐧Linux
-
-After downloading and installing the appropriate Python interpreter for your system, open up `Terminal` and run the following command:
+### **To install via Pip:**  
 
 ```bash
-python3 -m pip install urllib3
+python -m pip install WarMAC
 ```
-
-## **⏬Downloading This Program**
-
-### 🎒Downloading as a .zip file
-
-Download this repository as a `.zip` file, and unzip it into a directory of your choosing.
-
-### 🤖Using Git clone (Recommended)
-
-Clone this repository into a directory of your choosing by typing into the command line:
-
-```bash
-git clone <this repository URL>.git <your directory>
-```
-
-***
 
 ## **🔮Upcoming/The Future of WarMAC**
 
-This project is currently not available on PyPi. However, I am diligently working on adding functionality before the first official release.
-Upcoming features:
-> Mod rank and Arcane rank handling, and deleting lowest/highest sell prices to keep average in line are coming soon.
+Adding even more commands to WarMAC!
 
 ## **💽Reporting Issues**
 
