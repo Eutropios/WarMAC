@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     import argparse as ap
     from collections.abc import Callable, Sequence
 
-_API_ROOT = "https://api.warframe.market/v1"
+_API_ROOT: str = "https://api.warframe.market/v1"
 AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
     "mean": mean,
     "median": median,
@@ -39,8 +39,8 @@ AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
     "geometric": geometric_mean,
     "harmonic": harmonic_mean,
 }
-CURR_TIME = dt.now(timezone.utc)
-DEFAULT_TIME = 30
+CURR_TIME: dt = dt.now(timezone.utc)
+DEFAULT_TIME: int = 30
 
 headers = {
     "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
