@@ -1,6 +1,6 @@
 """
-warmac._parser
-~~~~~~~~~~~~~~~~~.
+warmac.warmac_parser
+~~~~~~~~~~~~~~~~~
 
 Copyright (c) 2023 Noah Jenner under MIT License
 Please see LICENSE.txt for additional licensing information.
@@ -9,18 +9,16 @@ File that contains the argument parser for WarMAC.
 For information on the main program, please see main.py
 
 Date of Creation: June 7, 2023
-Date Last Modified: June 7, 2023
-Version of Python required for module: >=3.10.0
-"""  # noqa: D205
+"""  # noqa: D205, D400
 
 from __future__ import annotations
 
-import argparse as ap
+import argparse
 import shutil
 import sys
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
-from warmac import classdefs
+from warmac import warmac_errors
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
@@ -32,21 +30,19 @@ AVG_FUNCS: tuple[str, str, str, str, str] = (
     "harmonic",
     "geometric",
 )
-DEFAULT_TIME = 30
-_DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
-_HELP_MIN_WIDTH = 34
+DEFAULT_TIME: int = 15
+_HELP_MIN_WIDTH: int = 34
 _DEFAULT_WIDTH: int = min(_HELP_MIN_WIDTH, shutil.get_terminal_size().columns - 2)
-_MAX_TIME_RANGE = 750
+_MAX_TIME_RANGE: int = 365
 _PLATFORMS: tuple[str, str, str, str] = (
     "pc",
     "ps4",
     "xbox",
     "switch",
 )
-_PROG_NAME = "warmac"
 
 
-class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
+class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
     """
     Custom help formatter for argparse.ArgumentParser.
 
@@ -58,11 +54,11 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
     """
 
     def __init__(
-        self: CustomHelpFormat,
+        self,
         prog: str,
         indent_increment: int = 2,
         max_help_position: int = 24,
-        width: int | None = None,
+        width: Union[int, None] = None,
     ) -> None:
         """
         Construct a CustomHelpFormat object.
@@ -77,11 +73,11 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
         :type max_help_position: int, optional
         :param width: the total width that the help screen is able to
         occupy in the terminal, defaults to None
-        :type width: int | None, optional
+        :type width: Union[int, None], optional
         """
         super().__init__(prog, indent_increment, max_help_position, width)
 
-    def _format_action_invocation(self: CustomHelpFormat, action: ap.Action) -> str:
+    def _format_action_invocation(self, action: argparse.Action) -> str:
         """
         Override the superclass _format_action_invocation method.
 
@@ -90,7 +86,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
         that have both a short form and long form.
 
         :param action: the action in which to be formatted
-        :type action: ap.Action
+        :type action: argparse.Action
         :return: the appropriately formatted string
         :rtype: str
         """
@@ -105,7 +101,7 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
         # Return the option strings joined with the args_string
         return f"{', '.join(action.option_strings)} {args_string}"
 
-    def _format_action(self: CustomHelpFormat, action: ap.Action) -> str:
+    def _format_action(self, action: argparse.Action) -> str:
         """
         Override the superclass _format_action method.
 
@@ -113,53 +109,55 @@ class CustomHelpFormat(ap.RawDescriptionHelpFormatter):
         the leading indentation of subparsers on the help page.
 
         :param action: the action in which to be formatted
-        :type action: ap.Action
+        :type action: argparse.Action
         :return: super's _format_action, formatted with the correct
-        leading indentation if the action is a ap._SubParsersAction
+        leading indentation if the action is an
+        argparse._SubParsersAction.
         :rtype: str
         """
         # Overrides the superclass _format_action method
-        # *Fix indentation for subclasses
+        # *ix indentation for subclasses
         result: str = super()._format_action(action)
-        if isinstance(action, ap._SubParsersAction):
-            # *Return result with leading spaces removed, and
+        if isinstance(action, argparse._SubParsersAction):
+            # Return result with leading spaces removed, and
             # appropriate indentation added.
             return f"{'':{self._current_indent}}{result.lstrip()}"
         return result
 
     def _iter_indented_subactions(
-        self: CustomHelpFormat,
-        action: ap.Action,
-    ) -> Generator[ap.Action, None, None]:
+        self,
+        action: argparse.Action,
+    ) -> Generator[argparse.Action, None, None]:
         """
         Override the superclass _iter_indented_subactions method.
 
         Override the superclass' _iter_indented_subactions method to
-        yield from subactions if the action is a ap._SupParsersAction
+        yield from subactions if the action is an
+        argparse._SupParsersAction.
 
         :param action: the action to be yielded from
-        :type action: ap.Action
+        :type action: argparse.Action
         :yield: actions from a list returned by action._get_subactions
-        :rtype: Generator[ap.Action, None, None]
+        :rtype: Generator[argparse.Action, None, None]
         """
         # Overrides the superclass _iter_indented_subactions method
-        # *Fixes indentation on subcommand metavar
-        if isinstance(action, ap._SubParsersAction):
+        # Fixes indentation on subcommand metavar
+        if isinstance(action, argparse._SubParsersAction):
             try:
-                # *Get reference of subclass
-                subactions: Callable[[], list[ap.Action]] = action._get_subactions
+                # Get reference of subclass
+                subactions: Callable[[], list[argparse.Action]] = action._get_subactions
             except AttributeError:
-                # *If an exception is found, do nothing
+                # If an exception is found, do nothing
                 pass
             else:
-                # *Yield from the actions list
+                # Yield from the actions list
                 yield from subactions()
         else:
-            # *Yield from superclass' _iter_indented_subactions method
+            # Yield from superclass' _iter_indented_subactions method
             yield from super()._iter_indented_subactions(action)
 
 
-def _int_checking(user_int: str, upper_bound: int) -> int | None:
+def _int_checking(user_int: str, upper_bound: int) -> Union[int, None]:
     """
     Check if input is an integer and is within range.
 
@@ -174,26 +172,26 @@ def _int_checking(user_int: str, upper_bound: int) -> int | None:
     :raises ValueError: Is thrown if the input is not an integer. Is
     then caught within the function and is raised again as an
     argparse.ArgumentTypeError.
-    :raises ap.ArgumentTypeError: Is thrown if the input is not an
+    :raises argparse.ArgumentTypeError: Is thrown if the input is not an
     integer, if the integer is less than 0, or if the integer is
     greater than upper_bounds.
     :return: None if the user's input is not an integer or if the user's
     input is not within range. Returns the user's input casted as an
     integer if it's within range.
-    :rtype: int | None
+    :rtype: Union[int, None]
     """
     try:
         casted_int = int(user_int)
     except ValueError:
         msg = f"Argument must be an integer greater than 0 and less than {upper_bound}."
-        raise ap.ArgumentTypeError(msg) from None
+        raise argparse.ArgumentTypeError(msg) from None
     if not (0 < casted_int <= upper_bound):
         msg = f"Argument must be greater than 0 and less than {upper_bound}."
-        raise ap.ArgumentTypeError(msg) from None
+        raise argparse.ArgumentTypeError(msg) from None
     return casted_int
 
 
-def _create_parser() -> ap.ArgumentParser:
+def _create_parser() -> argparse.ArgumentParser:
     """
     Create the command-line parser for the program.
 
@@ -203,11 +201,11 @@ def _create_parser() -> ap.ArgumentParser:
     to be used within the program.
 
     :return: The constructed ArgumentParser object.
-    :rtype: ap.ArgumentParser
+    :rtype: argparse.ArgumentParser
     """
-    parser = ap.ArgumentParser(
-        usage=f"{_PROG_NAME} <command> [options]",
-        description=_DESCRIPTION,
+    parser = argparse.ArgumentParser(
+        usage=f"{warmac_errors.PROG_NAME} <command> [options]",
+        description=warmac_errors.DESCRIPTION,
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,  # first arg in CL, which is the file's name
             max_help_position=_DEFAULT_WIDTH,
@@ -229,14 +227,14 @@ def _create_parser() -> ap.ArgumentParser:
         "--version",
         action="version",
         help="Show the program's version number and exit.",
-        version=f"{_PROG_NAME} {classdefs.VERSION}",
+        version=f"{warmac_errors.PROG_NAME} {warmac_errors.VERSION}",
     )
 
     # ======= Sub-Commands =======
     subparsers = parser.add_subparsers(dest="subparser", metavar="")
 
     # ------- Average -------
-    avg_parser: ap.ArgumentParser = subparsers.add_parser(
+    avg_parser: argparse.ArgumentParser = subparsers.add_parser(
         "average",
         help="Calculate the average platinum price of an item.",
         description=(
@@ -251,17 +249,12 @@ def _create_parser() -> ap.ArgumentParser:
         ),
         add_help=False,
         usage=(
-            f"{_PROG_NAME} average [-s <stat>] [-p <platform>] [-t <days>] [-m | -r]"
-            " [-b] [-l] [--color] item"
+            f"{warmac_errors.PROG_NAME} average [-s <stat>] [-p <platform>] [-t <days>]"
+            " [-m | -r] [-b] item"
         ),
     )
 
-    # Option characters used: s, p, r, i, t, b, l, v, h
-
-    # General Namespace on average:
-    # Namespace(item='some_item', statistic='median', platform='pc',
-    # maxrank=false, timerange=60,
-    # use_buyers=False, listings=False, verbose=0)
+    # Option characters used: s, p, t, m, r, b, v, h
 
     avg_parser.add_argument(
         "item",
@@ -365,7 +358,7 @@ def _create_parser() -> ap.ArgumentParser:
     return parser
 
 
-def handle_input() -> ap.Namespace:
+def handle_input() -> argparse.Namespace:
     """
     Create and perform checks on command-line arguments.
 
@@ -373,12 +366,12 @@ def handle_input() -> ap.Namespace:
     and return the parsed arguments as an argparse.Namespace object.
 
     :return: The parsed command-line arguments.
-    :rtype: ap.Namespace
+    :rtype: argparse.Namespace
     """
-    parser: ap.ArgumentParser = _create_parser()
+    parser: argparse.ArgumentParser = _create_parser()
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
         sys.exit(1)
-    parsed_args: ap.Namespace = parser.parse_args()
+    parsed_args: argparse.Namespace = parser.parse_args()
     # if input validation is true
     return parsed_args

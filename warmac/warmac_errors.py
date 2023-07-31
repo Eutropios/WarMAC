@@ -1,5 +1,5 @@
 """
-warmac.classdefs
+warmac.warmac_errors
 ~~~~~~~~~~~~~~~~~
 
 Copyright (c) 2023 Noah Jenner under MIT License
@@ -9,17 +9,17 @@ File that contains the classes used throughout WarMAC.
 For information on the main program, please see main.py
 
 Date of Creation: June 21, 2023
-Date Last Modified: June 21, 2023
-Version of Python required for module: >=3.6.0
 """  # noqa: D205,D400
 
 VERSION = "0.0.1"
+PROG_NAME = "warmac"
+DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
 
 
 class WarMACError(Exception):
     """Base exception thrown in WarMAC."""
 
-    def __init__(self: "WarMACError", message: str = "WarMAC Error.") -> None:
+    def __init__(self, message: str = "WarMAC Error.") -> None:
         """
         Construct a WarMAC exception.
 
@@ -37,9 +37,17 @@ class SubcommandError(WarMACError):
     in SUBCOMMANDS.
     """  # noqa: D205
 
-    def __init__(self: "SubcommandError") -> None:
+    def __init__(self) -> None:
         """Construct a SubcommandError exception."""
         super().__init__("Not a valid subcommand.")
+
+
+class StatisticTypeError(WarMACError):
+    """Thrown if statistic parameter does not exist in AVG_FUNCS."""
+
+    def __init__(self) -> None:
+        """Construct a StatisticTypeError exception."""
+        super().__init__("Not a valid statistic type.")
 
 
 class InternalServerError(WarMACError):
@@ -51,7 +59,7 @@ class InternalServerError(WarMACError):
     the user's request.
     """
 
-    def __init__(self: "InternalServerError") -> None:
+    def __init__(self) -> None:
         """Construct a MalformedURLError exception."""
         super().__init__(
             "Error 500, Warframe.market servers have encountered an "
@@ -67,7 +75,7 @@ class MethodNotAllowedError(WarMACError):
     knows the method, but the target resource doesn't support it.
     """
 
-    def __init__(self: "MethodNotAllowedError") -> None:
+    def __init__(self) -> None:
         """Construct a MethodNotAllowedError exception."""
         super().__init__(
             "Error 405, the target resource does not support this function.",
@@ -82,7 +90,7 @@ class MalformedURLError(WarMACError):
     resource in question does not exist.
     """
 
-    def __init__(self: "MalformedURLError") -> None:
+    def __init__(self) -> None:
         """Construct a MalformedURLError exception."""
         super().__init__(
             "Error 404, this item does not exist. Please check your spelling, and "
@@ -98,7 +106,7 @@ class ForbiddenRequestError(WarMACError):
     desired resources is forbidden.
     """
 
-    def __init__(self: "ForbiddenRequestError") -> None:
+    def __init__(self) -> None:
         """Construct a ForbiddenRequestError exception."""
         super().__init__(
             "Error 403, the URL you've requested is forbidden. You do not have"
@@ -114,7 +122,7 @@ class UnauthorizedAccessError(WarMACError):
     via proper user credentials is needed to access this resource.
     """
 
-    def __init__(self: "UnauthorizedAccessError") -> None:
+    def __init__(self) -> None:
         """Construct a ForbiddenRequestError exception."""
         super().__init__(
             "Error 401, insufficient credentials. Please log in to before making this "
@@ -125,7 +133,7 @@ class UnauthorizedAccessError(WarMACError):
 class UnknownError(WarMACError):
     """Thrown if the error is unknown."""
 
-    def __init__(self: "UnknownError", status_code: int) -> None:
+    def __init__(self, status_code: int) -> None:
         """Construct a UnknownError exception."""
         super().__init__(
             f"Unknown Error; HTTP Code {status_code}. Please open a new issue on the "
