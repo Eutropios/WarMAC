@@ -31,7 +31,7 @@ PLATFORM_DICT = {"xbox one":"xbox", "xbox series x":"xbox", "xbox series s":"xbo
             "nintendo switch":"switch", "oled switch":"switch", "switch lite":"switch",
             "nintendo switch lite":"switch", "playstation":"ps4", "playstation 4":"ps4",
             "playstation 5":"ps4", "ps5":"ps4", "ps":"ps4"}
-            
+
 API_ROOT_LINK = "https://api.warframe.market/v1/items"
 headers={'User-Agent': 'Mozilla', 'Content-Type': 'application/json'}
 
