@@ -16,7 +16,7 @@ from __future__ import annotations
 import argparse
 import shutil
 import sys
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, NoReturn, Union
 
 from warmac import warmac_errors
 
@@ -103,7 +103,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
 
     def _format_action(self, action: argparse.Action) -> str:
         """
-        Override the superclass _format_action method.
+        Override the superclass' _format_action method.
 
         Override the superclass' _format_action method to fix the
         the leading indentation of subparsers on the help page.
@@ -191,6 +191,31 @@ def _int_checking(user_int: str, upper_bound: int) -> Union[int, None]:
     return casted_int
 
 
+class WarMACParser(argparse.ArgumentParser):
+    """
+    Extend argparse.ArgumentParser to reimplement the error function.
+
+    Extend argparse.ArgumentParser to reimplement the standard error
+    function so it exits with status code 2, and prints to stderr.
+    """
+
+    def error(self, message: str) -> NoReturn:
+        """
+        Modify exit message for argparse.ArgumentError occurrences.
+
+        Modify exit message for argparse.ArgumentError occurrences to
+        print to sys.stderr and return an exit code of 2.
+
+        :param message: The message provided by the standard
+        argparse.ArgumentParser class.
+        :type message: str
+        :return: A value is never returned by this function.
+        :rtype: NoReturn
+        """
+        self.print_help(sys.stderr)
+        self.exit(2, f"{self.prog}: error: {message}\n")
+
+
 def _create_parser() -> argparse.ArgumentParser:
     """
     Create the command-line parser for the program.
@@ -203,7 +228,7 @@ def _create_parser() -> argparse.ArgumentParser:
     :return: The constructed ArgumentParser object.
     :rtype: argparse.ArgumentParser
     """
-    parser = argparse.ArgumentParser(
+    parser = WarMACParser(
         usage=f"{warmac_errors.PROG_NAME} <command> [options]",
         description=warmac_errors.DESCRIPTION,
         formatter_class=lambda prog: CustomHelpFormat(

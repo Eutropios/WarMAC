@@ -8,34 +8,34 @@
 [![code style: black](https://img.shields.io/badge/code_style-black-000000.svg)](https://github.com/psf/black)
 [![Checked with mypy](https://img.shields.io/badge/mypy-checked-2a6db2)](https://mypy-lang.org/)
 
-**WarMAC** is a command-line Python script that can calculate the average market price of items in Warframe.  
+**WarMAC** is a command-line Python script that can calculate the average market price of items in Warframe.
 
 **WarMAC** compiles orders from the fan website *<https://warframe.market/>*, and can be used to find the average prices of prime parts, tradeable parts, relics, mods, and arcane enhancements.
 
-## Features
+## 🌟Features
 
 * 🎮Target PC, PlayStation, XBOX, or Nintendo Switch platforms.
 * 📈Calculate the median, mean, mode, harmonic mean, or geometric means of items.
 * 🕜Restrict orders to specific time ranges.
 * 💰Utilize either seller or buyer orders.
 * ⛏️Find averages for intact or radiant relics.
-* ✨Find average for unranked or max-ranked mods and arcane enhancements.
+* ✨Find averages for unranked or max-ranked mods and arcane enhancements.
 
-## ⬇️To Install  
+## ⬇️To Install
 
-WarMAC currently supports Python versions 3.9+. Plans for Python 3.8 support are planned.  
+WarMAC currently supports Python versions 3.9+. Support for Python 3.8 support is planned.
 
-### To install via Pip  
+### 🐍To install via Pip
 
 ```bash
 python -m pip install warmac
 ```
 
-## Usage
+## ❓Usage
 
 Work In Progress
 
-## Documentation
+## 📃Documentation
 
 Work In Progress.
 
@@ -45,31 +45,29 @@ Work In Progress.
 
 ## 🔮Upcoming/The Future of WarMAC
 
-* Adding the ability to pipe the output to other commands
-* Adding the ability to take files as input
-* Adding the ability to output to a file
+* Adding file I/O
 * Adding even more commands to WarMAC!
 
-## Contributing
+## 🙋Contributing
 
 Work In Progress.
 
-## Testing
+## 🧪Testing
 
 Work In Progress.
 
-## Authors
+## 📝Authors
 
 * [@eutropios](https://www.github.com/Eutropios)
 
-## 🗒️Acknowledgements
+## 📢Acknowledgements
 
 In addition to the tools listed in [`.pre-commit-config.yaml`](https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml), this project uses the following tools in its development:
 
-* autoDocstring: <https://github.com/NilsJPWerner/autoDocstring>  
-* Even Better TOML: <https://github.com/tamasfe/taplo>  
-* markdownlint: <https://github.com/DavidAnson/vscode-markdownlint>  
-* vermin: <https://github.com/netromdk/vermin>  
+* autoDocstring: <https://github.com/NilsJPWerner/autoDocstring>
+* Even Better TOML: <https://github.com/tamasfe/taplo>
+* markdownlint: <https://github.com/DavidAnson/vscode-markdownlint>
+* vermin: <https://github.com/netromdk/vermin>
 
 WarMAC is packaged using [Poetry](https://github.com/python-poetry/poetry).
 
@@ -77,7 +75,7 @@ WarMAC is packaged using [Poetry](https://github.com/python-poetry/poetry).
 
 ***This project is NOT affiliated with Warframe, Digital Extremes, or warframe.market***
 
-Copyright (c) 2023 Noah Jenner under MIT License  
+Copyright (c) 2023 Noah Jenner under MIT License
 
-*For additional licensing information, please see LICENSE.txt*  
+*For additional licensing information, please see LICENSE.txt*
 *For licensing regarding urllib3, please see LICENSE-urllib3.txt*
