@@ -1,28 +1,16 @@
 """
 Warframe Market Average Calculator (WarMAC)
-Retrieves the sell price from all listings of a given item from https://warframe.market for a
-specific platform, then finds the average price in platinum of the listings.
-
-Copyright (C) 2023  Noah Jenner
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+Copyright (c) 2023 Noah Jenner under MIT License
 
 **I am NOT affiliated with Warframe, Digital Extremes and its subsidaries, Warframe.market, 
 Playstation, Sony and its subsidaries, XBOX, or Microsoft its subsidaries.**
 
+Retrieves the sell price from all listings of a given item from https://warframe.market for a
+specific platform, then finds the average price in platinum of the listings.
+
 Date of Creation: January 22, 2023
-Date Last Modified: March 9, 2023
-Version 1.3.1
+Date Last Modified: March 14, 2023
+Version 1.3.3
 Version of Python required: 3.6
 Built in packages required: json, datetime
 External packages required: requests, colorama
