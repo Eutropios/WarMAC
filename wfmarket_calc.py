@@ -21,9 +21,9 @@ Copyright (C) 2023  Noah Jenner
 Playstation, Sony and its subsidaries, XBOX, or Microsoft its subsidaries.**
 
 Date of Creation: January 22, 2023
-Date Last Modified: February 21, 2023
+Date Last Modified: March 9, 2023
 Version 1.3.1
-Version of Python built with: 3.11.2 (Not required, I believe 3.6 will suffice)
+Version of Python required: 3.6
 Built in packages required: json, datetime
 External packages required: requests, colorama
 
@@ -43,6 +43,7 @@ PLATFORM_DICT = {"xbox one":"xbox", "xbox series x":"xbox", "xbox series s":"xbo
             "nintendo switch":"switch", "oled switch":"switch", "switch lite":"switch",
             "nintendo switch lite":"switch", "playstation":"ps4", "playstation 4":"ps4",
             "playstation 5":"ps4", "ps5":"ps4", "ps":"ps4"}
+            
 API_ROOT_LINK = "https://api.warframe.market/v1/items"
 headers={'User-Agent': 'Mozilla', 'Content-Type': 'application/json'}
 
