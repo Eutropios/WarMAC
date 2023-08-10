@@ -50,6 +50,25 @@ class StatisticTypeError(WarMACError):
         super().__init__("Not a valid statistic type.")
 
 
+class NoListingsFoundError(WarMACError):
+    """Thrown if no listings were found."""
+
+    def __init__(self) -> None:
+        """Construct a NoListingsFoundError."""
+        super().__init__("There are no listings matching your search parameters.")
+
+
+class EmptyListProvidedError(WarMACError):
+    """Thrown if plat_list is empty in verbose_output."""
+
+    def __init__(self) -> None:
+        """Construct an EmptyListFoundError."""
+        super().__init__("plat_list cannot be empty.")
+
+
+# ---- HTTP Response Code Errors ----
+
+
 class InternalServerError(WarMACError):
     """
     Thrown if the server has encountered an internal error.
@@ -131,7 +150,7 @@ class UnauthorizedAccessError(WarMACError):
 
 
 class UnknownError(WarMACError):
-    """Thrown if the error is unknown."""
+    """Thrown if the HTTP Response Code not covered."""
 
     def __init__(self, status_code: int) -> None:
         """Construct a UnknownError exception."""

@@ -54,28 +54,44 @@ class _WarMACJSON:
     data returned from the HTTP request.
     """
 
-    def __init__(self, json: dict[str, Any]) -> None:
+    def __init__(self, json: dict[str, Any], /) -> None:
         """
         Construct a _WarMACJSON object.
+
+        Construct a _WarMACJSON object from a decoded JSON returned
+        from the http request. Object contains information about if the
+        desired item is a mod or arcane (and if so its max rank), or if
+        it's a relic. Object also contains the found orders of the item.
 
         :param json: The JSON dictionary that is created from the
         data returned by the HTTP request.
         :type json: dict[str, Any]
+        :raises KeyError: Raise KeyError if the JSON dictionary does
+        not contain the necessary fields for initialization.
         """
-        item_info: dict[str, Any] = json["include"]["item"]["items_in_set"][0]
-        tags: list[str] = item_info["tags"]
-        self.is_relic = "relic" in tags
-        self.is_mod_or_arcane = "mod" in tags or "arcane_enhancement" in tags
-        self.max_rank = int(item_info["mod_max_rank"]) if self.is_mod_or_arcane else -1
-        self.orders: list[dict[str, Any]] = json["payload"]["orders"]
+        try:
+            item_info: dict[str, Any] = json["include"]["item"]["items_in_set"][0]
+            tags: list[str] = item_info["tags"]
+            self.is_relic = "relic" in tags
+            self.is_mod_or_arcane = "mod" in tags or "arcane_enhancement" in tags
+            self.max_rank = (
+                int(item_info["mod_max_rank"]) if self.is_mod_or_arcane else -1
+            )
+            self.orders: list[dict[str, Any]] = json["payload"]["orders"]
+        except KeyError as err:
+            msg = "Required JSON field not found."
+            raise KeyError(msg) from err
 
     def __repr__(self) -> str:
+        return str(self.orders)
+
+    def __str__(self) -> str:
         return str(self.orders)
 
 
 # Load JSON afterwords in average once new version of urllib3 comes out
 # which allows type-hinting with BaseHTTPResponse
-def _get_page(url: str) -> urllib3.BaseHTTPResponse:
+def _get_page(url: str, /) -> urllib3.BaseHTTPResponse:
     """
     Request the JSON of a desired item from Warframe.Market.
 
@@ -112,69 +128,134 @@ def _get_page(url: str) -> urllib3.BaseHTTPResponse:
     raise warmac_errors.UnknownError(page.status)
 
 
-def _calc_avg(plat_list: list[int], statistic: str) -> float:
+def _calc_avg(plat_list: list[int], /, statistic: str, *, decimals: int = 1) -> float:
     """
     Calculate the desired statistic of the price of an item given a
     list of the prices.
 
-    Given a list, calculate and return the average price in platinum of
-    an item. Verbose output can be requested by setting args.verbose to
-    True.
+    Given an integer list of prices associated with an item, calculate
+    and return the desired statistic of the price of that item to 1
+    decimal point.
 
     :param plat_list: Prices in platinum of each order
     :type plat_list: list[int]
     :param statistic: The statistic to be calculated.
     :type statistic: str
-    :raises ArithmeticError: If the given list is empty.
+    :param decimals: The number of decimals that the statistic should be
+    rounded to, defaults to 1
+    :type decimals: int, optional
+    :raises warmac_errors.NoListingsFoundError: If plat_list is empty.
+    :raises warmac_errors.StatisticTypeError: If statistic is not
+    present in AVG_FUNCS.
     :return: The desired statistic of the specified item.
     :rtype: float
     """  # noqa: D205
     # Handle errors
     if not plat_list:
-        msg = "List cannot be empty!"
-        raise ArithmeticError(msg) from None
+        raise warmac_errors.NoListingsFoundError from None
     try:
-        return round(AVG_FUNCS[statistic](plat_list), 1)
+        return round(AVG_FUNCS[statistic](plat_list), decimals)
     except KeyError as err:
         raise warmac_errors.StatisticTypeError from err
 
 
-def _in_timerange(last_updated: str, time_range: int) -> bool:
+def _in_time_r(last_updated: str, /, time_r: int = warmac_parser.DEFAULT_TIME) -> bool:
     """
-    Check if order is younger than time_range days.
+    Check if order is younger than time_r days.
 
     Subtract last_updated field from CURR_TIME to check if the
-    difference in days is less than or equal to time_range.
+    difference in days is less than or equal to time_r.
 
     :param last_updated: The datetime that the order was last updated.
     :type last_updated: str
-    :param time_range: The oldest an order can be to be accepted.
-    :type time_range: int
-    :return: True if last_updated <= time_range, False if
-    last_updated > time_range.
+    :param time_r: The oldest an order can be to be accepted, defaults
+    to warmac_parser.DEFAULT_TIME
+    :type time_r: int, optional
+    :return: True if last_updated <= time_r, False if
+    last_updated > time_r.
     :rtype: bool
     """
-    return (CURR_TIME - datetime.fromisoformat(last_updated)).days <= time_range
+    return (CURR_TIME - datetime.fromisoformat(last_updated)).days <= time_r
 
 
 def _right_order_type(order_type: str, *, use_buyers: bool = False) -> bool:
+    """
+    Check if order_type == "buy" or "sell" depending on use_buyers.
+
+    Check if order_type == "buy" if use_buyers is True, or if
+    order_type == "sell" if use_buyers is False.
+
+    :param order_type: The type of the order.
+    :type order_type: str
+    :param use_buyers: Whether or not order_type should be equal to
+    "buy", defaults to False
+    :type use_buyers: bool, optional
+    :return: Return order_type == "buy" if use_buyers is True. Return
+    order_type == "sell" if use_buyers is False.
+    :rtype: bool
+    """
     return order_type == ("buy" if use_buyers else "sell")
 
 
 def _is_max_rank(mod_rank: int, max_rank: int, *, use_maxrank: bool = False) -> bool:
+    """
+    Check if mod_rank == max_rank or 0 depending on use_buyers.
+
+    Check if mod_rank == max_rank if use_maxrank is True, or if
+    mod_rank == 0 if use_maxrank is False.
+
+    :param mod_rank: The rank of the mod or arcane enhancement.
+    :type mod_rank: int
+    :param max_rank: The max rank of the mod or arcane enhancement.
+    :type max_rank: int
+    :param use_maxrank: Whether or not to check the mod_rank against the
+    max_rank, defaults to False
+    :type use_maxrank: bool, optional
+    :return: Return mod_rank == max_rank if use_maxrank is True. Return
+    mod_rank == 0 if use_maxrank is False.
+    :rtype: bool
+    """
     return mod_rank == (max_rank if use_maxrank else 0)
 
 
 def _is_radiant(subtype: str, *, use_rad: bool = False) -> bool:
+    """
+    Check if subtype == "radiant" or "intact" depending on use_rad.
+
+    Check if subtype == "radiant" if use_rad is True, or if
+    subtype == "intact" if use_rad is False.
+
+    :param subtype: The subtype of the relic.
+    :type subtype: str
+    :param use_rad: Whether to check the subtype against "radiant" or
+    "intact", defaults to False
+    :type use_rad: bool, optional
+    :return: Return subtype == "radiant" if use_rad is True. Return
+    subtype == "intact" if use_rad is False.
+    :rtype: bool
+    """
     return subtype == ("radiant" if use_rad else "intact")
 
 
-def _filter_orders(json: _WarMACJSON, args: Namespace) -> list[int]:
-    return [
-        order["platinum"]
-        for order in json.orders
-        if (
-            _in_timerange(order["last_update"], args.timerange)
+def _filter_order(order: dict[str, Any], json: _WarMACJSON, args: Namespace, /) -> bool:
+    """
+    Check if an order meets all specifications given by the user.
+
+    _extended_summary_
+
+    :param order: _description_
+    :type order: dict[str, Any]
+    :param json: _description_
+    :type json: _WarMACJSON
+    :param args: _description_
+    :type args: Namespace
+    :raises KeyError: _description_
+    :return: _description_
+    :rtype: bool
+    """
+    try:
+        return (
+            _in_time_r(order["last_update"], args.timerange)
             and _right_order_type(order["order_type"], use_buyers=args.use_buyers)
             and (
                 _is_max_rank(order["mod_rank"], json.max_rank, use_maxrank=args.maxrank)
@@ -187,10 +268,24 @@ def _filter_orders(json: _WarMACJSON, args: Namespace) -> list[int]:
                 else True
             )
         )
-    ]
+    except KeyError as err:
+        msg = "Required JSON field not found."
+        raise KeyError(msg) from err
 
 
-def verbose_out(avg: float, statistic: str, plat_list: list[int]) -> None:
+def _get_plat_list(json: _WarMACJSON, args: Namespace, /) -> list[int]:
+    try:
+        return [
+            order["platinum"]
+            for order in json.orders
+            if _filter_order(order, json, args)
+        ]
+    except KeyError as err:
+        msg = "Required JSON field not found."
+        raise KeyError(msg) from err
+
+
+def verbose_out(args: Namespace, avg_cost: float, plat_list: list[int], /) -> None:
     """
     Output average price, as well as additional information.
 
@@ -199,8 +294,8 @@ def verbose_out(avg: float, statistic: str, plat_list: list[int]) -> None:
     of orders found that match the search criteria. Output the values
     with their corresponding labels preceding them.
 
-    :param avg: The calculated average price of the item.
-    :type avg: float
+    :param avg_cost: The calculated average price of the item.
+    :type avg_cost: float
     :param statistic: The statistic that was calculated.
     :type statistic: str
     :param plat_list: A list of all of the platinum prices used in
@@ -210,14 +305,17 @@ def verbose_out(avg: float, statistic: str, plat_list: list[int]) -> None:
     # {value:{width}.{precision}}
     try:
         space_after_label = 23
-        statistic = AVG_FUNCS[statistic].__name__.replace("_", " ").title()
+        statistic = AVG_FUNCS[args.statistic].__name__.replace("_", " ").title()
+        print(f"{'Item:':{space_after_label}}{args.item.title()}")
         print(f"{'Statistic Found:':{space_after_label}}{statistic}")
-        print(f"{f'{statistic} Price:':{space_after_label}}{avg}")
-        print(f"{'Max Price:':{space_after_label}}{max(plat_list)}")
-        print(f"{'Min Price:':{space_after_label}}{min(plat_list)}")
+        print(f"{f'{statistic} Price:':{space_after_label}}{avg_cost}")
+        print(f"{'Max Price:':{space_after_label}}{max(plat_list):.1f}")
+        print(f"{'Min Price:':{space_after_label}}{min(plat_list):.1f}")
         print(f"{'Number of Orders:':{space_after_label}}{len(plat_list)}")
     except KeyError as err:
         raise warmac_errors.StatisticTypeError from err
+    except ValueError as err:
+        raise warmac_errors.EmptyListProvidedError from err
 
 
 def average(args: Namespace, /) -> None:
@@ -235,9 +333,13 @@ def average(args: Namespace, /) -> None:
     fixed_item: str = args.item.lower().replace(" ", "_").replace("&", "and")
     fixed_url = f"{_API_ROOT}/items/{fixed_item}/orders?include=item"
     retrieved_json = _WarMACJSON(_get_page(fixed_url).json())
-    plat_list: list[int] = _filter_orders(retrieved_json, args)
+    plat_list: list[int] = _get_plat_list(retrieved_json, args)
     cost = _calc_avg(plat_list, args.statistic)
-    verbose_out(cost, args.statistic, plat_list) if args.verbose else print(cost)
+    verbose_out(
+        args,
+        cost,
+        plat_list,
+    ) if args.verbose else print(cost)
 
 
 _SUBCMD_TO_FUNC: dict[str, Callable[[Namespace], None]] = {
@@ -275,8 +377,6 @@ def subcommand_select(args: Namespace, /) -> None:
             print("The connection timed out. Please try again later.")
         else:
             print("Unknown connection error.")
-    except ArithmeticError:
-        print("There are no listings matching your search parameters.")
 
 
 def main() -> int:

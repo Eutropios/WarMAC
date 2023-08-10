@@ -397,6 +397,4 @@ def handle_input() -> argparse.Namespace:
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
         sys.exit(1)
-    parsed_args: argparse.Namespace = parser.parse_args()
-    # if input validation is true
-    return parsed_args
+    return parser.parse_args()

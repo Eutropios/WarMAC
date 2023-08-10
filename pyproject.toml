@@ -2,6 +2,7 @@
     build-backend = "poetry.core.masonry.api"
     requires      = ["poetry-core>=1.0.0"]
 
+
 [tool.poetry]
     authors = ["Noah Jenner <noah.jenner@proton.me>"]
     classifiers = [
@@ -28,14 +29,15 @@
     packages    = [{include = "warmac"}]
     readme      = "README.md"
     repository  = "https://github.com/Eutropios/WarMAC"
-    version     = "0.0.1"
+    version     = "0.0.2"
     [tool.poetry.dependencies]
         python  = "^3.9"
         urllib3 = "^2.0.4"
     [tool.poetry.scripts]
-        warmac = "warmac.main:main"
+        warmac = "warmac.warmac_main:main"
     [tool.poetry.urls]
         "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
+
 
 [tool.mypy]
     exclude = [
@@ -50,8 +52,9 @@
         'build',
         'dist',
     ]
-    python_version = "3.9"
+    python_version = "3.11"
     strict = true
+
 
 [tool.ruff]
     ignore = [
@@ -84,6 +87,7 @@
 
     [tool.ruff.pydocstyle]
         convention = "pep257"
+
 
 [tool.black]
     exclude = '''
