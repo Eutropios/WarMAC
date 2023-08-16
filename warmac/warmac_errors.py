@@ -11,7 +11,9 @@ For information on the main program, please see main.py
 Date of Creation: June 21, 2023
 """  # noqa: D205,D400
 
-VERSION = "0.0.1"
+from __future__ import annotations
+
+VERSION = "0.0.2"
 PROG_NAME = "warmac"
 DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
 
@@ -19,23 +21,24 @@ DESCRIPTION = "A program to fetch the average market cost of an item in Warframe
 class WarMACError(Exception):
     """Base exception thrown in WarMAC."""
 
-    def __init__(self, message: str = "WarMAC Error.") -> None:
+    def __init__(self, msg: str = "WarMAC Error.") -> None:
         """
         Construct a WarMAC exception.
 
-        :param message: The message to be printed with the exception;
-        defaults to WarMAC Error.
-        :type message: str, optional
+        :param msg: The exception's message, defaults to "WarMAC Error".
+        :type msg: str, optional
         """
-        self.message = message
+        self.message = msg
         super().__init__(self.message)
 
 
 class SubcommandError(WarMACError):
     """
-    Thrown if subparser field of argparse.Namespace does not exist
-    in SUBCOMMANDS.
-    """  # noqa: D205
+    Thrown if subparser does not exist in SUBCOMMANDS.
+
+    Thrown if the subparser field of argparse.Namespace does not exist
+    within the global dictionary SUBCOMMANDS.
+    """
 
     def __init__(self) -> None:
         """Construct a SubcommandError exception."""
@@ -43,7 +46,12 @@ class SubcommandError(WarMACError):
 
 
 class StatisticTypeError(WarMACError):
-    """Thrown if statistic parameter does not exist in AVG_FUNCS."""
+    """
+    Thrown if statistic parameter does not exist in AVG_FUNCS.
+
+    Thrown if the statistic field of argparse.Namespace does not exist
+    within the global dictionary AVG_FUNCS.
+    """
 
     def __init__(self) -> None:
         """Construct a StatisticTypeError exception."""
@@ -51,19 +59,16 @@ class StatisticTypeError(WarMACError):
 
 
 class NoListingsFoundError(WarMACError):
-    """Thrown if no listings were found."""
+    """
+    Thrown if no listings were found.
+
+    Thrown if no order listings are found given the set of parameters
+    that the user gives the program.
+    """
 
     def __init__(self) -> None:
         """Construct a NoListingsFoundError."""
         super().__init__("There are no listings matching your search parameters.")
-
-
-class EmptyListProvidedError(WarMACError):
-    """Thrown if plat_list is empty in verbose_output."""
-
-    def __init__(self) -> None:
-        """Construct an EmptyListFoundError."""
-        super().__init__("plat_list cannot be empty.")
 
 
 # ---- HTTP Response Code Errors ----
@@ -74,8 +79,8 @@ class InternalServerError(WarMACError):
     Thrown if the server has encountered an internal error.
 
     Thrown on HTTP status code 500, which indicates that server has
-    encountered an internal error that prevents it from fulfilling
-    the user's request.
+    encountered an internal error that prevents it from fulfilling the
+    user's request.
     """
 
     def __init__(self) -> None:
@@ -105,8 +110,8 @@ class MalformedURLError(WarMACError):
     """
     Thrown if there the item name given to WarMAC doesn't exist.
 
-    Thrown on HTTP status code 404, which indicates that the
-    resource in question does not exist.
+    Thrown on HTTP status code 404, which indicates that the resource in
+    question does not exist.
     """
 
     def __init__(self) -> None:
@@ -150,7 +155,12 @@ class UnauthorizedAccessError(WarMACError):
 
 
 class UnknownError(WarMACError):
-    """Thrown if the HTTP Response Code not covered."""
+    """
+    Thrown if the HTTP Response Code is not covered.
+
+    Thrown if the HTTP Response Code is not covered by any other error
+    previously stated.
+    """
 
     def __init__(self, status_code: int) -> None:
         """Construct a UnknownError exception."""
