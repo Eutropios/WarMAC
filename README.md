@@ -1,5 +1,5 @@
 
-# WarMAC Beta Version 0.0.2
+# WarMAC Version 0.0.2
 
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Eutropios/WarMAC/main)]((https://github.com/Eutropios/WarMAC))
 [![MIT License](https://img.shields.io/github/license/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
