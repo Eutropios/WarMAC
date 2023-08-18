@@ -23,23 +23,11 @@ from warmac import warmac_errors
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
 
-AVG_FUNCS: tuple[str, str, str, str, str] = (
-    "median",
-    "mean",
-    "mode",
-    "harmonic",
-    "geometric",
-)
-DEFAULT_TIME: int = 15
-_HELP_MIN_WIDTH: int = 34
-_DEFAULT_WIDTH: int = min(_HELP_MIN_WIDTH, shutil.get_terminal_size().columns - 2)
-_MAX_TIME_RANGE: int = 365
-_PLATFORMS: tuple[str, str, str, str] = (
-    "pc",
-    "ps4",
-    "xbox",
-    "switch",
-)
+AVG_FUNCS = ("median", "mean", "mode", "harmonic", "geometric")
+DEFAULT_TIME = 15
+_DEFAULT_WIDTH = min(34, shutil.get_terminal_size().columns - 2)
+_MAX_TIME_RANGE = 60
+_PLATFORMS = ("pc", "ps4", "xbox", "switch")
 
 
 class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
@@ -63,16 +51,17 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         """
         Construct a CustomHelpFormat object.
 
-        :param prog: the name of the program
+        :param prog: The name of the program.
         :type prog: str
-        :param indent_increment: how much space should come before the
-        options on the help screen, defaults to 2
+        :param indent_increment: How much space should come before the
+            options on the help screen, defaults to 2.
         :type indent_increment: int, optional
-        :param max_help_position: how wide the space between each
-        argument and its respective help text should be, defaults to 24
+        :param max_help_position: How wide the space between each
+            argument and its associated help text should be, defaults to
+            24.
         :type max_help_position: int, optional
-        :param width: the total width that the help screen is able to
-        occupy in the terminal, defaults to None
+        :param width: The total width that the help screen is able to
+            occupy in the terminal, defaults to None.
         :type width: Union[int, None], optional
         """
         super().__init__(prog, indent_increment, max_help_position, width)
@@ -85,9 +74,9 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         remove the duplicate metavar in the help display for options
         that have both a short form and long form.
 
-        :param action: the action in which to be formatted
+        :param action: The action in which to be formatted.
         :type action: argparse.Action
-        :return: the appropriately formatted string
+        :return: The appropriately formatted string.
         :rtype: str
         """
         # If option_string is None/zero or nargs is 0
@@ -106,13 +95,13 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         Override the superclass' _format_action method.
 
         Override the superclass' _format_action method to fix the
-        the leading indentation of subparsers on the help page.
+        leading indentation of subparsers on the help page.
 
-        :param action: the action in which to be formatted
+        :param action: The action in which to be formatted.
         :type action: argparse.Action
         :return: super's _format_action, formatted with the correct
-        leading indentation if the action is an
-        argparse._SubParsersAction.
+            leading indentation if the action is an
+            argparse._SubParsersAction.
         :rtype: str
         """
         # Overrides the superclass _format_action method
@@ -135,9 +124,9 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         yield from subactions if the action is an
         argparse._SupParsersAction.
 
-        :param action: the action to be yielded from
+        :param action: The action to be yielded from.
         :type action: argparse.Action
-        :yield: actions from a list returned by action._get_subactions
+        :yield: Actions from a list returned by action._get_subactions.
         :rtype: Generator[argparse.Action, None, None]
         """
         # Overrides the superclass _iter_indented_subactions method
@@ -165,19 +154,19 @@ def _int_checking(user_int: str, upper_bound: int) -> Union[int, None]:
     unable to. Raise an argparse.ArgumentTypeError if integer is not
     greater than 0 and less than upper_bounds.
 
-    :param user_int: The user's input
+    :param user_int: The user's input.
     :type user_int: str
-    :param upper_bound: The maximum value that the user's input can be
+    :param upper_bound: The maximum value that the user's input can be.
     :type upper_bound: int
     :raises ValueError: Is thrown if the input is not an integer. Is
-    then caught within the function and is raised again as an
-    argparse.ArgumentTypeError.
+        then caught within the function and is raised again as an
+        argparse.ArgumentTypeError.
     :raises argparse.ArgumentTypeError: Is thrown if the input is not an
-    integer, if the integer is less than 0, or if the integer is
-    greater than upper_bounds.
+        integer, if the integer is less than 0, or if the integer is
+        greater than upper_bounds.
     :return: None if the user's input is not an integer or if the user's
-    input is not within range. Returns the user's input casted as an
-    integer if it's within range.
+        input is not within range. Returns the user's input casted as an
+        integer if it's within range.
     :rtype: Union[int, None]
     """
     try:
@@ -207,7 +196,7 @@ class WarMACParser(argparse.ArgumentParser):
         print to sys.stderr and return an exit code of 2.
 
         :param message: The message provided by the standard
-        argparse.ArgumentParser class.
+            argparse.ArgumentParser class.
         :type message: str
         :return: A value is never returned by this function.
         :rtype: NoReturn
@@ -397,6 +386,4 @@ def handle_input() -> argparse.Namespace:
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
         sys.exit(1)
-    parsed_args: argparse.Namespace = parser.parse_args()
-    # if input validation is true
-    return parsed_args
+    return parser.parse_args()
