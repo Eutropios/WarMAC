@@ -6,7 +6,6 @@
 [![PyPI](https://img.shields.io/pypi/v/warmac)](https://pypi.org/project/warmac/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/warmac)](https://pypi.org/project/warmac/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dw/warmac)](https://pypi.org/project/warmac/)
-[![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7670/badge)](https://bestpractices.coreinfrastructure.org/projects/7670)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 **WarMAC** is a command-line Python script that can calculate the average market price of items in Warframe.
