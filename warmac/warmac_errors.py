@@ -13,7 +13,7 @@ Date of Creation: June 21, 2023
 
 from __future__ import annotations
 
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 PROG_NAME = "warmac"
 DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
 
@@ -117,8 +117,8 @@ class MalformedURLError(WarMACError):
     def __init__(self) -> None:
         """Construct a MalformedURLError exception."""
         super().__init__(
-            "Error 404, this item does not exist. Please check your spelling, and "
-            "remember to use quotations if the item is multiple words.",
+            "This item does not exist. Please check your spelling, and remember to use "
+            "quotations if the item is multiple words.",
         )
 
 

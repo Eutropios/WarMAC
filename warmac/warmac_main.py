@@ -1,5 +1,5 @@
 """
-Warframe Market Average Calculator (WarMAC) Beta 0.0.1
+Warframe Market Average Calculator (WarMAC) 0.0.3
 ~~~~~~~~~~~~~~~
 
 Copyright (c) 2023 Noah Jenner under MIT License
@@ -70,7 +70,6 @@ class _WarMACJSON:
             contain the necessary fields for initialization.
         """
         try:
-            print(json)
             item_info: dict[str, Any] = json["include"]["item"]["items_in_set"][0]
             tags: list[str] = item_info["tags"]
             self.is_relic = "relic" in tags

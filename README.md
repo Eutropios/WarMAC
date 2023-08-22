@@ -1,7 +1,7 @@
 
-# WarMAC Version 0.0.2
+# WarMAC Version 0.0.3
 
-[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Eutropios/WarMAC/main)]((https://github.com/Eutropios/WarMAC))
+[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Eutropios/WarMAC/main)](https://github.com/Eutropios/WarMAC)
 [![MIT License](https://img.shields.io/github/license/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
 [![PyPI](https://img.shields.io/pypi/v/warmac)](https://pypi.org/project/warmac/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/warmac)](https://pypi.org/project/warmac/)
@@ -61,6 +61,14 @@ options:
   -V, --version  Show the program's version number and exit.
 ```
 
+WarMAC accepts outgoing pipes just like any other tool:
+
+`warmac average -p=ps4 -t=5 -v "bite" | grep "Range"`
+
+WarMAC output can also be redirected to a file:
+
+`warmac average -p PC -t 2 "vengeful revenant" > warmacOut.txt`
+
 ## Documentation
 
 Work In Progress.
@@ -71,7 +79,7 @@ To report a bug or request a feature, please open an [Issue](https://github.com/
 
 ## Upcoming Features
 
-* Adding file I/O
+* Adding file input
 * Adding even more commands to WarMAC!
 
 ## Contributing

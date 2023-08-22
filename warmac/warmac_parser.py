@@ -14,6 +14,7 @@ Date of Creation: June 7, 2023
 from __future__ import annotations
 
 import argparse
+import contextlib
 import shutil
 import sys
 from typing import TYPE_CHECKING, NoReturn, Union
@@ -24,21 +25,22 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Generator
 
 AVG_FUNCS = ("median", "mean", "mode", "harmonic", "geometric")
-DEFAULT_TIME = 15
-_DEFAULT_WIDTH = min(34, shutil.get_terminal_size().columns - 2)
+DEFAULT_TIME = 10
+_HELP_MIN_WIDTH = 34
+_DEFAULT_WIDTH = min(_HELP_MIN_WIDTH, shutil.get_terminal_size().columns - 2)
 _MAX_TIME_RANGE = 60
 _PLATFORMS = ("pc", "ps4", "xbox", "switch")
 
 
 class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
     """
-    Custom help formatter for argparse.ArgumentParser.
+    Custom help formatter for WarMACParser.
 
-    Extends argparse.RawDescriptionHelpFormatter. Overrides
+    Extend argparse.RawDescriptionHelpFormatter to override
     _format_action, _format_action_invocation, and
-    _iter_indented_subactions to remove the subcommand metavar tuple,
-    remove duplicate option metavar, and correct over-indentation on the
-    help menu respectively.
+    _iter_indented_subactions. Overrides remove the subcommand metavar
+    tuples, remove the duplicate option metavars, and correct the over-
+    indentation on the help menu respectively.
     """
 
     def __init__(
@@ -56,11 +58,10 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         :param indent_increment: How much space should come before the
             options on the help screen, defaults to 2.
         :type indent_increment: int, optional
-        :param max_help_position: How wide the space between each
-            argument and its associated help text should be, defaults to
-            24.
+        :param max_help_position: The width between indent_increment and
+            the help text, defaults to 24.
         :type max_help_position: int, optional
-        :param width: The total width that the help screen is able to
+        :param width: The maximum width that the help screen is able to
             occupy in the terminal, defaults to None.
         :type width: Union[int, None], optional
         """
@@ -68,11 +69,11 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
 
     def _format_action_invocation(self, action: argparse.Action) -> str:
         """
-        Override the superclass _format_action_invocation method.
+        Remove duplicate metavar for options with short and long form.
 
-        Override the superclass' _format_action_invocation method to
-        remove the duplicate metavar in the help display for options
-        that have both a short form and long form.
+        Override the _format_action_invocation method to remove the
+        duplicate help metavar for options that have both a short form
+        and long form argument.
 
         :param action: The action in which to be formatted.
         :type action: argparse.Action
@@ -92,20 +93,21 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
 
     def _format_action(self, action: argparse.Action) -> str:
         """
-        Override the superclass' _format_action method.
+        Remove subcommand metavar tuple and fix metavar indentation.
 
-        Override the superclass' _format_action method to fix the
-        leading indentation of subparsers on the help page.
+        Override the _format_action method to remove the subcommand
+        metavar tuple and fix the spacings between the option and its
+        associated metavar.
 
         :param action: The action in which to be formatted.
         :type action: argparse.Action
-        :return: super's _format_action, formatted with the correct
-            leading indentation if the action is an
-            argparse._SubParsersAction.
+        :return: super's _format_action. Will be formatted without the
+            metavar tuple, as well as the correct leading indentation if
+            the action is an argparse._SubParsersAction.
         :rtype: str
         """
         # Overrides the superclass _format_action method
-        # *ix indentation for subclasses
+        # Fix indentation for subclasses
         result: str = super()._format_action(action)
         if isinstance(action, argparse._SubParsersAction):
             # Return result with leading spaces removed, and
@@ -118,11 +120,10 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         action: argparse.Action,
     ) -> Generator[argparse.Action, None, None]:
         """
-        Override the superclass _iter_indented_subactions method.
+        Fix leading indentation for subcommand names in help menu.
 
-        Override the superclass' _iter_indented_subactions method to
-        yield from subactions if the action is an
-        argparse._SupParsersAction.
+        Override the _iter_indented_subactions method to fix the leading
+        indentation for subcommand names in the help menu.
 
         :param action: The action to be yielded from.
         :type action: argparse.Action
@@ -146,38 +147,28 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
             yield from super()._iter_indented_subactions(action)
 
 
-def _int_checking(user_int: str, upper_bound: int) -> Union[int, None]:
+def _int_checking(user_input: str, upper_bound: int) -> int:
     """
-    Check if input is an integer and is within range.
+    Return user_input as an integer if 0 < user_input < upper_bound.
 
-    Cast input as an integer and raise an argparse.ArgumentTypeError if
-    unable to. Raise an argparse.ArgumentTypeError if integer is not
-    greater than 0 and less than upper_bounds.
+    Cast user_input to an integer. If user_input is not an integer or is
+    not 0 < user_input < upper_bound, then raise an
+    argparse.ArgumentTypeError.
 
-    :param user_int: The user's input.
+    :param user_int: The user's input as a string.
     :type user_int: str
-    :param upper_bound: The maximum value that the user's input can be.
+    :param upper_bound: The maximum value that int(user_input) can be.
     :type upper_bound: int
-    :raises ValueError: Is thrown if the input is not an integer. Is
-        then caught within the function and is raised again as an
-        argparse.ArgumentTypeError.
-    :raises argparse.ArgumentTypeError: Is thrown if the input is not an
-        integer, if the integer is less than 0, or if the integer is
-        greater than upper_bounds.
-    :return: None if the user's input is not an integer or if the user's
-        input is not within range. Returns the user's input casted as an
-        integer if it's within range.
-    :rtype: Union[int, None]
+    :raises argparse.ArgumentTypeError: Raised if user_input is not an
+        integer or is not 0 < int(user_input) < upper_bound.
+    :return: Return user_input as an integer.
+    :rtype: int
     """
-    try:
-        casted_int = int(user_int)
-    except ValueError:
-        msg = f"Argument must be an integer greater than 0 and less than {upper_bound}."
-        raise argparse.ArgumentTypeError(msg) from None
-    if not (0 < casted_int <= upper_bound):
-        msg = f"Argument must be greater than 0 and less than {upper_bound}."
-        raise argparse.ArgumentTypeError(msg) from None
-    return casted_int
+    with contextlib.suppress(ValueError):
+        if 0 < (casted_int := int(user_input)) < upper_bound:
+            return casted_int
+    msg = f"Input '{user_input}' must be an integer between 1 and {upper_bound}."
+    raise argparse.ArgumentTypeError(msg)
 
 
 class WarMACParser(argparse.ArgumentParser):
@@ -201,21 +192,19 @@ class WarMACParser(argparse.ArgumentParser):
         :return: A value is never returned by this function.
         :rtype: NoReturn
         """
-        self.print_help(sys.stderr)
-        self.exit(2, f"{self.prog}: error: {message}\n")
+        self.exit(2, f"{self.usage}: error: {message}\n")
 
 
-def _create_parser() -> argparse.ArgumentParser:
+def _create_parser() -> WarMACParser:
     """
     Create the command-line parser for the program.
 
-    Create the command-line parser using the built-in library argparse.
-    Create an argparse.ArgumentParser object and add "help" and
-    "version" options to it. Create subparsers for multiple subcommands
-    to be used within the program.
+    Create an argparse.ArgumentParser object that includes global
+    --help and --version options. Create subparsers for multiple
+    subcommands to be used within the program.
 
     :return: The constructed ArgumentParser object.
-    :rtype: argparse.ArgumentParser
+    :rtype: WarMACParser
     """
     parser = WarMACParser(
         usage=f"{warmac_errors.PROG_NAME} <command> [options]",
@@ -248,7 +237,7 @@ def _create_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="subparser", metavar="")
 
     # ------- Average -------
-    avg_parser: argparse.ArgumentParser = subparsers.add_parser(
+    avg_parser = subparsers.add_parser(
         "average",
         help="Calculate the average platinum price of an item.",
         description=(
@@ -313,7 +302,7 @@ def _create_parser() -> argparse.ArgumentParser:
         type=lambda x: _int_checking(x, _MAX_TIME_RANGE),
         help=(
             "Specifies in days how old the orders can be. Must be in range [1, "
-            f"{_MAX_TIME_RANGE}]. (Default: 60)"
+            f"{_MAX_TIME_RANGE}]. (Default: {DEFAULT_TIME})"
         ),
         metavar="<days>",
         dest="timerange",
@@ -374,15 +363,16 @@ def _create_parser() -> argparse.ArgumentParser:
 
 def handle_input() -> argparse.Namespace:
     """
-    Create and perform checks on command-line arguments.
+    Create argparse.ArgumentParser and parse arguments.
 
     Create argparse.ArgumentParser object, parse command-line arguments,
     and return the parsed arguments as an argparse.Namespace object.
+    Exits early if only "warmac" is called.
 
     :return: The parsed command-line arguments.
     :rtype: argparse.Namespace
     """
-    parser: argparse.ArgumentParser = _create_parser()
+    parser = _create_parser()
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
         sys.exit(1)
