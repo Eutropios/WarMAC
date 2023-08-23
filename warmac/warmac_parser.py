@@ -17,12 +17,9 @@ import argparse
 import contextlib
 import shutil
 import sys
-from typing import TYPE_CHECKING, NoReturn, Union
+from typing import Callable, Generator, List, NoReturn, Union
 
 from warmac import warmac_errors
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Generator
 
 AVG_FUNCS = ("median", "mean", "mode", "harmonic", "geometric")
 DEFAULT_TIME = 10
@@ -135,7 +132,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         if isinstance(action, argparse._SubParsersAction):
             try:
                 # Get reference of subclass
-                subactions: Callable[[], list[argparse.Action]] = action._get_subactions
+                subactions: Callable[[], List[argparse.Action]] = action._get_subactions
             except AttributeError:
                 # If an exception is found, do nothing
                 pass

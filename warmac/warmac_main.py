@@ -1,5 +1,5 @@
 """
-Warframe Market Average Calculator (WarMAC) 0.0.3
+Warframe Market Average Calculator (WarMAC) 0.0.4
 ~~~~~~~~~~~~~~~
 
 Copyright (c) 2023 Noah Jenner under MIT License
@@ -18,7 +18,7 @@ from __future__ import annotations
 import sys
 from datetime import datetime, timezone
 from statistics import geometric_mean, harmonic_mean, mean, median, mode
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Sequence
 
 import urllib3
 
@@ -26,10 +26,9 @@ from warmac import warmac_errors, warmac_parser
 
 if TYPE_CHECKING:
     from argparse import Namespace
-    from collections.abc import Callable, Sequence
 
 _API_ROOT = "https://api.warframe.market/v1"
-AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
+AVG_FUNCS: Dict[str, Callable[[Sequence[int]], float]] = {
     "mean": mean,
     "median": median,
     "mode": mode,
@@ -54,7 +53,7 @@ class _WarMACJSON:
     returned from the HTTP request.
     """
 
-    def __init__(self, json: dict[str, Any], /) -> None:
+    def __init__(self, json: Dict[str, Any], /) -> None:
         """
         Construct a _WarMACJSON object.
 
@@ -65,19 +64,19 @@ class _WarMACJSON:
 
         :param json: The JSON dictionary that is created from the data
             returned by the HTTP request.
-        :type json: dict[str, Any]
+        :type json: Dict[str, Any]
         :raises KeyError: Raise KeyError if the JSON dictionary does not
             contain the necessary fields for initialization.
         """
         try:
-            item_info: dict[str, Any] = json["include"]["item"]["items_in_set"][0]
-            tags: list[str] = item_info["tags"]
+            item_info: Dict[str, Any] = json["include"]["item"]["items_in_set"][0]
+            tags: List[str] = item_info["tags"]
             self.is_relic = "relic" in tags
             self.is_mod_or_arcane = "mod" in tags or "arcane_enhancement" in tags
             self.max_rank = (
                 int(item_info["mod_max_rank"]) if self.is_mod_or_arcane else -1
             )
-            self.orders: list[dict[str, Any]] = json["payload"]["orders"]
+            self.orders: List[Dict[str, Any]] = json["payload"]["orders"]
         except KeyError as err:
             msg = "Required JSON field not found."
             raise KeyError(msg) from err
@@ -128,7 +127,7 @@ def _get_page(url: str, /) -> urllib3.BaseHTTPResponse:
     raise warmac_errors.UnknownError(page.status)
 
 
-def _calc_avg(plat_list: list[int], /, statistic: str, *, decimals: int = 1) -> float:
+def _calc_avg(plat_list: List[int], /, statistic: str, *, decimals: int = 1) -> float:
     """
     Calculate the desired statistic of the price of an item.
 
@@ -137,7 +136,7 @@ def _calc_avg(plat_list: list[int], /, statistic: str, *, decimals: int = 1) -> 
     decimal point.
 
     :param plat_list: Prices in platinum of each order.
-    :type plat_list: list[int]
+    :type plat_list: List[int]
     :param statistic: The statistic to be calculated.
     :type statistic: str
     :param decimals: The number of decimals that the statistic should be
@@ -236,7 +235,7 @@ def _is_radiant(subtype: str, *, use_rad: bool = False) -> bool:
     return subtype == ("radiant" if use_rad else "intact")
 
 
-def _filter_order(order: dict[str, Any], json: _WarMACJSON, args: Namespace, /) -> bool:
+def _filter_order(order: Dict[str, Any], json: _WarMACJSON, args: Namespace, /) -> bool:
     """
     Check if an order meets all specifications given by the user.
 
@@ -244,7 +243,7 @@ def _filter_order(order: dict[str, Any], json: _WarMACJSON, args: Namespace, /) 
     _is_radiant, _in_time_r, _is_max_rank, and _right_order_type.
 
     :param order: The order to run the checks against.
-    :type order: dict[str, Any]
+    :type order: Dict[str, Any]
     :param json: The object containing information about the item.
     :type json: _WarMACJSON
     :param args: The user-given command line arguments.
@@ -274,7 +273,7 @@ def _filter_order(order: dict[str, Any], json: _WarMACJSON, args: Namespace, /) 
         raise KeyError(msg) from err
 
 
-def _get_plat_list(json: _WarMACJSON, args: Namespace, /) -> list[int]:
+def _get_plat_list(json: _WarMACJSON, args: Namespace, /) -> List[int]:
     """
     Return a filtered list of platinum prices.
 
@@ -288,7 +287,7 @@ def _get_plat_list(json: _WarMACJSON, args: Namespace, /) -> list[int]:
     :type args: Namespace
     :raises KeyError: If the json does not contain the required fields.
     :return: A list of the platinum prices from the filtered listings.
-    :rtype: list[int]
+    :rtype: List[int]
     """
     try:
         return [
@@ -304,7 +303,7 @@ def _get_plat_list(json: _WarMACJSON, args: Namespace, /) -> list[int]:
 def verbose_out(
     args: Namespace,
     avg_cost: float,
-    plat_list: list[int],
+    plat_list: List[int],
     time_r: int = warmac_parser.DEFAULT_TIME,
     /,
 ) -> None:
@@ -322,7 +321,7 @@ def verbose_out(
     :param avg_cost: The statistic of the item that was found.
     :type avg_cost: float
     :param plat_list: The list of prices of the item.
-    :type plat_list: list[int]
+    :type plat_list: List[int]
     :param time_r: The oldest a listing could be to not be filtered out,
         defaults to warmac_parser.DEFAULT_TIME.
     :type time_r: int, optional
@@ -358,7 +357,7 @@ def average(args: Namespace, /) -> None:
     fixed_item: str = args.item.lower().replace(" ", "_").replace("&", "and")
     fixed_url = f"{_API_ROOT}/items/{fixed_item}/orders?include=item"
     retrieved_json = _WarMACJSON(_get_page(fixed_url).json())
-    plat_list: list[int] = _get_plat_list(retrieved_json, args)
+    plat_list: List[int] = _get_plat_list(retrieved_json, args)
     cost = _calc_avg(plat_list, args.statistic)
     verbose_out(
         args,
@@ -367,7 +366,7 @@ def average(args: Namespace, /) -> None:
     ) if args.verbose else print(cost)
 
 
-_SUBCMD_TO_FUNC: dict[str, Callable[[Namespace], None]] = {
+_SUBCMD_TO_FUNC: Dict[str, Callable[[Namespace], None]] = {
     "average": average,
 }
 

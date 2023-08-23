@@ -14,6 +14,7 @@
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: Implementation :: CPython",
         "Topic :: Utilities",
@@ -29,9 +30,9 @@
     packages    = [{include = "warmac"}]
     readme      = "README.md"
     repository  = "https://github.com/Eutropios/WarMAC"
-    version     = "0.0.3"
+    version     = "0.0.4"
     [tool.poetry.dependencies]
-        python  = "^3.9"
+        python  = "^3.8"
         urllib3 = "^2.0.4"
     [tool.poetry.scripts]
         warmac = "warmac.warmac_main:main"
@@ -81,7 +82,9 @@
         "SLOT",
         "T20",
         "TD",
+        "UP006",
         "UP007",
+        "UP035",
     ]
     line-length = 88
     select = ["ALL", "CPY001", "PLC1901"]
@@ -90,6 +93,7 @@
     target-version = "py39"
 
     [tool.ruff.per-file-ignores]
+        "docs/conf.py"       = ["CPY001", "D100", "D104", "INP001"]
         "tests/__init__.py"  = ["CPY001", "D100", "D104"]
         "warmac/__init__.py" = ["CPY001", "D100", "D104"]
         "warmac/__main__.py" = ["CPY001", "D100", "D104"]

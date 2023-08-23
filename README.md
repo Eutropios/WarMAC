@@ -1,5 +1,5 @@
 
-# WarMAC Version 0.0.3
+# WarMAC Version 0.0.4
 
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Eutropios/WarMAC/main)](https://github.com/Eutropios/WarMAC)
 [![MIT License](https://img.shields.io/github/license/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
@@ -34,7 +34,7 @@
 
 ## Installation
 
-WarMAC currently supports Python versions 3.9+. Support for Python 3.8 is planned.
+WarMAC currently supports Python versions 3.8+ and has experimental support for 3.12.
 
 ### To install via Pip
 
