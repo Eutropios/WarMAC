@@ -48,7 +48,7 @@ def subcommand_select(args: Namespace, /) -> None:
         _SUBCMD_TO_FUNC[args.subparser](args)
     except KeyError as err:
         raise warmac_errors.SubcommandError from err
-    except warmac_errors.WarMACError as e:
+    except warmac_errors.WarMACBaseError as e:
         print(e)
     except exceptions.MaxRetryError:
         print(

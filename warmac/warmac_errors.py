@@ -19,7 +19,7 @@ PROG_NAME = "warmac"
 DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
 
 
-class WarMACError(Exception):
+class WarMACBaseError(Exception):
     """Base exception thrown in WarMAC."""
 
     def __init__(self, msg: str = "WarMAC Error.") -> None:
@@ -33,7 +33,7 @@ class WarMACError(Exception):
         super().__init__(self.message)
 
 
-class SubcommandError(WarMACError):
+class SubcommandError(WarMACBaseError):
     """
     Thrown if subparser does not exist in SUBCOMMANDS.
 
@@ -46,7 +46,7 @@ class SubcommandError(WarMACError):
         super().__init__("Not a valid subcommand.")
 
 
-class StatisticTypeError(WarMACError):
+class StatisticTypeError(WarMACBaseError):
     """
     Thrown if statistic parameter does not exist in AVG_FUNCS.
 
@@ -59,7 +59,7 @@ class StatisticTypeError(WarMACError):
         super().__init__("Not a valid statistic type.")
 
 
-class NoListingsFoundError(WarMACError):
+class NoListingsFoundError(WarMACBaseError):
     """
     Thrown if no listings were found.
 
@@ -75,7 +75,7 @@ class NoListingsFoundError(WarMACError):
 # ---- HTTP Response Code Errors ----
 
 
-class InternalServerError(WarMACError):
+class InternalServerError(WarMACBaseError):
     """
     Thrown if the server has encountered an internal error.
 
@@ -92,7 +92,7 @@ class InternalServerError(WarMACError):
         )
 
 
-class MethodNotAllowedError(WarMACError):
+class MethodNotAllowedError(WarMACBaseError):
     """
     Thrown if the target resource doesn't support the desired method.
 
@@ -107,7 +107,7 @@ class MethodNotAllowedError(WarMACError):
         )
 
 
-class MalformedURLError(WarMACError):
+class MalformedURLError(WarMACBaseError):
     """
     Thrown if there the item name given to WarMAC doesn't exist.
 
@@ -123,7 +123,7 @@ class MalformedURLError(WarMACError):
         )
 
 
-class ForbiddenRequestError(WarMACError):
+class ForbiddenRequestError(WarMACBaseError):
     """
     Thrown if the server refuses to authorize a request.
 
@@ -139,7 +139,7 @@ class ForbiddenRequestError(WarMACError):
         )
 
 
-class UnauthorizedAccessError(WarMACError):
+class UnauthorizedAccessError(WarMACBaseError):
     """
     Thrown if the user doesn't have the correct credentials.
 
@@ -155,7 +155,7 @@ class UnauthorizedAccessError(WarMACError):
         )
 
 
-class UnknownError(WarMACError):
+class UnknownError(WarMACBaseError):
     """
     Thrown if the HTTP Response Code is not covered.
 
