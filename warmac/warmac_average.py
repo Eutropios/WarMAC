@@ -1,6 +1,7 @@
 """
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Warframe Market Average Calculator (WarMAC) 0.0.4
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Copyright (c) 2023 Noah Jenner under MIT License
 Please see LICENSE.txt for additional licensing information.
@@ -15,7 +16,6 @@ External packages required: urllib3
 
 from __future__ import annotations
 
-import sys
 from datetime import datetime, timezone
 from statistics import geometric_mean, harmonic_mean, mean, median, mode
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Sequence
@@ -36,7 +36,6 @@ AVG_FUNCS: Dict[str, Callable[[Sequence[int]], float]] = {
     "harmonic": harmonic_mean,
 }
 CURR_TIME = datetime.now(timezone.utc)
-
 headers = {
     "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
     "Content-Type": "application/json",
@@ -88,8 +87,6 @@ class _WarMACJSON:
         return str(self.orders)
 
 
-# Load JSON afterwords in average once new version of urllib3 comes out
-# which allows type-hinting with BaseHTTPResponse
 def _get_page(url: str, /) -> urllib3.BaseHTTPResponse:
     """
     Request the JSON of a desired item from Warframe.Market.
@@ -354,6 +351,7 @@ def average(args: Namespace, /) -> None:
         command line information.
     :type args: Namespace
     """
+    headers["platform"] = args.platform
     fixed_item: str = args.item.lower().replace(" ", "_").replace("&", "and")
     fixed_url = f"{_API_ROOT}/items/{fixed_item}/orders?include=item"
     retrieved_json = _WarMACJSON(_get_page(fixed_url).json())
@@ -364,60 +362,3 @@ def average(args: Namespace, /) -> None:
         cost,
         plat_list,
     ) if args.verbose else print(cost)
-
-
-_SUBCMD_TO_FUNC: Dict[str, Callable[[Namespace], None]] = {
-    "average": average,
-}
-
-
-def subcommand_select(args: Namespace, /) -> None:
-    """
-    Select which function to use based on args.subparser field.
-
-    Use try block and a dictionary to execute the appropriate function
-    corresponding to the field args.subparser.
-
-    :param args: The argparse.Namespace containing the user-supplied
-        command line information.
-    :type args: Namespace
-    :raises SubcommandError: An error indicating that the desired
-        subcommand does not exist within the _SUBCMD_TO_FUNC dictionary.
-    """
-    try:
-        headers["platform"] = args.platform
-        _SUBCMD_TO_FUNC[args.subparser](args)
-    except KeyError as err:
-        raise warmac_errors.SubcommandError from err
-    except warmac_errors.WarMACError as e:
-        print(e)
-    except urllib3.exceptions.HTTPError as e:
-        if isinstance(e, urllib3.exceptions.MaxRetryError):
-            print(
-                "You're not connected to the internet. Please check your internet "
-                "connection and try again.",
-            )
-        elif isinstance(e, urllib3.exceptions.TimeoutError):
-            print("The connection timed out. Please try again later.")
-        else:
-            print("Unknown connection error.")
-
-
-def main() -> int:
-    """
-    Call _parser.handle_input and run subcommand_select with args.
-
-    Call _parser.handle_input to acquire the argparse.Namespace object
-    containing the command-line arguments passed in the script's
-    execution. Call subcommand_select with argparse.Namespace as args.
-    """
-    args: Namespace = warmac_parser.handle_input()
-    subcommand_select(args)
-    return 0
-
-
-if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except KeyboardInterrupt:
-        print("Keyboard Interrupt. Exiting Program.")

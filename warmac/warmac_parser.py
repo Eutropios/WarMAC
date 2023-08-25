@@ -1,6 +1,7 @@
 """
+~~~~~~~~~~~~~~~~~~~~~
 warmac.warmac_parser
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 Copyright (c) 2023 Noah Jenner under MIT License
 Please see LICENSE.txt for additional licensing information.

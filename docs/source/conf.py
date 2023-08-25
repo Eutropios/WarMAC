@@ -1,4 +1,8 @@
-from __future__ import annotations
+import sys
+from pathlib import Path
+
+python_path = str(Path("../../warmac/"))
+sys.path.insert(0, python_path)
 
 project = "WarMAC"
 copyright = "2023, Noah Jenner"  # noqa: A001
@@ -20,4 +24,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # -- Options for HTML output -------------------------------------------
 
 html_theme = "nature"
-html_static_path = ["_static"]
+
+_static_path = str(Path("../_static"))
+html_static_path = [_static_path]
