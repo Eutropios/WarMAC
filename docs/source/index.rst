@@ -1,7 +1,7 @@
 .. WarMAC documentation master file, created by
-    sphinx-quickstart on Tue Aug 22 17:40:25 2023.
-    You can adapt this file completely to your liking, but it should at least
-    contain the root `toctree` directive.
+   sphinx-quickstart on Tue Aug 22 17:40:25 2023.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
 Welcome to WarMAC's documentation!
 ==================================
@@ -13,25 +13,31 @@ the average prices of any tradeable item.
 
 .. note::
 
-    This project is under active development.
+   This project is under active development.
 
 Contents
 --------
 
-.. toctree::
-    :maxdepth: 2
-    :caption: Documentation
+.. toctree:: 
+   :maxdepth: 2
+   :caption: Usage
 
-    using_warmac
-    warmac_average
-    warmac_parser
-    warmac_errors
+   using_warmac
 
 .. toctree::
-    :hidden:
-    :caption: Project Links
+   :maxdepth: 2
+   :caption: Documentation
 
-    GitHub (Eutropios) <https://github.com/Eutropios/WarMAC>
+   warmac_main
+   warmac_average
+   warmac_parser
+   warmac_errors
+
+.. toctree::
+   :hidden:
+   :caption: Project Links
+
+   GitHub (Eutropios) <https://github.com/Eutropios/WarMAC>
 
 Indices and tables
 ------------------

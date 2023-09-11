@@ -3,19 +3,21 @@
 WarMAC Parser
 =============
 
+.. py:data:: warmac_parser.DEFAULT_TIME
+
 .. autoclass:: warmac_parser.CustomHelpFormat
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :private-members:
-    :special-members: __init__
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+   :special-members: __init__
 
 .. autoclass:: warmac_parser.WarMACParser
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :private-members:
-    :special-members: __init__
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+   :special-members: __init__
 
 .. autofunction:: warmac_parser._int_checking
 

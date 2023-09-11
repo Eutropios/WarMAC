@@ -35,7 +35,7 @@
         python  = "^3.8"
         urllib3 = "^2.0.4"
     [tool.poetry.scripts]
-        warmac = "warmac.__main__:console_main"
+        warmac = "warmac.__init__:console_main"
     [tool.poetry.urls]
         "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
 
@@ -113,7 +113,7 @@
     [tool.ruff.per-file-ignores]
         "docs/source/conf.py" = ["CPY001", "D100", "D104", "I002", "INP001"]
         "tests/__init__.py"   = ["CPY001", "D100", "D104", "I002"]
-        "warmac/__init__.py"  = ["CPY001", "D100", "D104", "I002"]
+        "warmac/__main__.py"  = ["CPY001", "D100", "D104", "I002"]
 
     [tool.ruff.pycodestyle]
         max-doc-length = 72
