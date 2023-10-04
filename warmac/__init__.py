@@ -32,7 +32,7 @@ __all__ = [
     "warmac_average",
 ]
 
-#:
+#: A dictionary of all possible subcommands
 SUBCMD_TO_FUNC = {
     "average": warmac_average.average,
 }
@@ -45,11 +45,10 @@ def subcommand_select(args: Namespace, /) -> None:
     Use try block and a dictionary to execute the appropriate function
     corresponding to the field ``args.subparser``.
 
-    :param args: The ``argparse.Namespace`` containing the user-supplied
-        command line information.
-    :type args: Namespace
+    :param args: The :py:class:`argparse.Namespace` containing the
+        user-supplied command line information.
     :raises SubcommandError: An error indicating that the desired
-        subcommand does not exist within the  :data:`SUBCMD_TO_FUNC`
+        subcommand does not exist within the :py:data:`.SUBCMD_TO_FUNC`
         dictionary.
     """
     try:
@@ -71,14 +70,13 @@ def subcommand_select(args: Namespace, /) -> None:
 
 def console_main() -> Literal[0]:
     """
-    Create a :data:`warmac_parser.WarMACParser` and run associated
+    Create a :py:data:`warmac_parser.WarMACParser` and run associated
     subcommand.
 
-    Call :func:`warmac_parser.handle_input` to create and parse a
-    :class:`warmac_parser.WarMACParser`. Arguments are then used in the
-    script's execution, beginning by calling :func:`subcommand_select`
-    with argparse.Namespace as ``args``.
-
+    Call :py:func:`warmac_parser.handle_input` to create and parse a
+    :py:class:`warmac_parser.WarMACParser`. Arguments are then used in
+    the script's execution, beginning by calling
+    :py:func:`.subcommand_select` with the parsed arguments.
     :return: Return 0 if everything returns successfully.
     """  # noqa: D205
     args: Namespace = warmac_parser.handle_input()

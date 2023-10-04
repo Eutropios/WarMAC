@@ -13,10 +13,6 @@ Date of Creation: June 21, 2023
 
 from __future__ import annotations
 
-VERSION = "0.0.4"
-PROG_NAME = "warmac"
-DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
-
 
 class WarMACBaseError(Exception):
     """Base exception thrown in WarMAC."""
@@ -27,7 +23,6 @@ class WarMACBaseError(Exception):
 
         :param msg: The exception's message, defaults to the phrase
             "WarMAC Error".
-        :type msg: str, optional
         """
         self.message = msg
         super().__init__(self.message)

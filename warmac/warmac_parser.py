@@ -17,23 +17,31 @@ import argparse
 import contextlib
 import shutil
 import sys
-from typing import Callable, Generator, List, NoReturn, Union
+from typing import Generator, NoReturn, Union
 
-from warmac import warmac_errors
-
+#: The statistic types that the average command can use
 _AVG_FUNCS = ("median", "mean", "mode", "harmonic", "geometric")
-
 #: The default time to collect orders until
 DEFAULT_TIME = 10
+#: The description of the program
+_DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
+#: The minimum width that the help text should take up in the CLI
 _HELP_MIN_WIDTH = 34
+#: Minimum of the minimum help width and the terminal width
 _DEFAULT_WIDTH = min(_HELP_MIN_WIDTH, shutil.get_terminal_size().columns - 2)
+#: The maximum time range that the average command can pull from
 _MAX_TIME_RANGE = 60
+#: The platforms that the user can choose from
 _PLATFORMS = ("pc", "ps4", "xbox", "switch")
+#: The name of the program.
+_PROG_NAME = "warmac"
+#: The current version of WarMAC
+_VERSION = "0.0.4"
 
 
 class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
     """
-    Custom help formatter for :py:class:`.WarMACParser`.
+    Custom help formatter for :py:class:`warmac_parser.WarMACParser`.
 
     Extend :py:class:`argparse.RawDescriptionHelpFormatter` to
     reimplement a few methods. Reimplementations include removing the
@@ -52,16 +60,12 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         Construct a :py:class:`.CustomHelpFormat` object.
 
         :param prog: The name of the program.
-        :type prog: str
         :param indent_increment: How much space should come before the
             options on the help screen, defaults to 2.
-        :type indent_increment: int, optional
         :param max_help_position: The width between ``indent_increment``
             and the help text, defaults to 24.
-        :type max_help_position: int, optional
         :param width: The maximum width that the help screen is able to
             occupy in the terminal, defaults to None.
-        :type width: Union[int, None], optional
         """
         super().__init__(prog, indent_increment, max_help_position, width)
 
@@ -74,7 +78,6 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         have both a short form and long form argument.
 
         :param action: The action in which to be formatted.
-        :type action: argparse.Action
         :return: The appropriately formatted string.
         """
         # If option_string is None/zero or nargs is 0
@@ -97,7 +100,6 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         spacings between the option and its associated metavar.
 
         :param action: The action in which to be formatted.
-        :type action: argparse.Action
         :return: ``HelpFormatter._format_action(action)``.
             Will be formatted without the metavar tuple, as well as the
             correct leading indentation if the action is an
@@ -113,7 +115,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         return result
 
     def _iter_indented_subactions(
-        self,
+        self,  # noqa: PLR6301
         action: argparse.Action,
     ) -> Generator[argparse.Action, None, None]:
         """
@@ -124,7 +126,6 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         the help menu.
 
         :param action: The action to be yielded from.
-        :type action: argparse.Action
         :yield: Actions from a list returned by
             ``action._get_subactions``.
         """
@@ -133,7 +134,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         if isinstance(action, argparse._SubParsersAction):
             try:
                 # Get reference of subclass
-                subactions: Callable[[], List[argparse.Action]] = action._get_subactions
+                subactions = action._get_subactions
             except AttributeError:
                 # If an exception is found, do nothing
                 pass
@@ -154,9 +155,7 @@ def _int_checking(usr_inp: str, max_val: int) -> int:
     :py:exc:`argparse.ArgumentTypeError`.
 
     :param usr_inp: The user's input as a string.
-    :type usr_inp: str
     :param max_val: The maximum value that ``int(usr_inp)`` can be.
-    :type max_val: int
     :raises argparse.ArgumentTypeError: Raised if ``usr_inp`` is not an
         integer or is not ``0 < int(usr_inp) < max_val``.
     :return: Return ``usr_inp`` as an integer.
@@ -187,7 +186,6 @@ class WarMACParser(argparse.ArgumentParser):
 
         :param message: The message provided by the standard
             :py:class:`argparse.ArgumentParser` class.
-        :type message: str
         :return: A value is never returned by this function.
         """
         self.exit(2, f"{self.usage}: error: {message}\n")
@@ -204,8 +202,8 @@ def _create_parser() -> WarMACParser:
     :return: The constructed :py:class:`.WarMACParser` object.
     """
     parser = WarMACParser(
-        usage=f"{warmac_errors.PROG_NAME} <command> [options]",
-        description=warmac_errors.DESCRIPTION,
+        usage=f"{_PROG_NAME} <command> [options]",
+        description=_DESCRIPTION,
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,  # first arg in CL, which is the file's name
             max_help_position=_DEFAULT_WIDTH,
@@ -227,7 +225,7 @@ def _create_parser() -> WarMACParser:
         "--version",
         action="version",
         help="Show the program's version number and exit.",
-        version=f"{warmac_errors.PROG_NAME} {warmac_errors.VERSION}",
+        version=f"{_PROG_NAME} {_VERSION}",
     )
 
     # ======= Sub-Commands =======
@@ -249,8 +247,8 @@ def _create_parser() -> WarMACParser:
         ),
         add_help=False,
         usage=(
-            f"{warmac_errors.PROG_NAME} average [-s <stat>] [-p <platform>] [-t <days>]"
-            " [-m | -r] [-b] item"
+            f"{_PROG_NAME} average [-s <stat>] [-p <platform>] [-t <days>] [-m | -r]"
+            " [-b] item"
         ),
     )
 

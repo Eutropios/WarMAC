@@ -1,9 +1,23 @@
 .. _warmac_parser:
 
-WarMAC Parser
-=============
+###############
+ WarMAC Parser
+###############
+
+|  WarMAC's parser is built on Python's argparse module. The appearance of the
+   command-line interface has been substantially modified to appear in a clean
+   and organized manner.
+
+.. note::
+
+   Only global variables and constants that are public are documented. Please
+   see the source code for private variable/constant documentation.
 
 .. py:data:: warmac_parser.DEFAULT_TIME
+   :type: int
+   :value: datetime.datetime.now(datetime.timezone.utc)
+
+   The default time that will be used for calculating listing ages.
 
 .. autoclass:: warmac_parser.CustomHelpFormat
    :members:

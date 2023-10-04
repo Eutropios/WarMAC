@@ -25,10 +25,10 @@ from warmac import warmac_errors, warmac_parser
 if TYPE_CHECKING:
     from argparse import Namespace
 
-# The root URL used for communicating with the API of warframe.market.
+#: The root URL used for communicating with the API of warframe.market.
 _API_ROOT = "https://api.warframe.market/v1"
 
-# A dictionary that maps user input to its respective function.
+#: A dictionary that maps user input to its respective function.
 AVG_FUNCS: Dict[str, Callable[[Sequence[int]], float]] = {
     "mean": mean,
     "median": median,
@@ -37,10 +37,10 @@ AVG_FUNCS: Dict[str, Callable[[Sequence[int]], float]] = {
     "harmonic": harmonic_mean,
 }
 
-# An ISO-8601 timestamp of the current time retrieved on execution.
+#: An ISO-8601 timestamp of the current time retrieved on execution.
 CURR_TIME = datetime.now(timezone.utc)
 
-# A dictionary containing the headers to be used in the HTTP request.
+#: A dictionary containing the headers to be used in the HTTP request.
 headers = {
     "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
     "Content-Type": "application/json",
@@ -69,7 +69,6 @@ class _WarMACJSON:
 
         :param json: The JSON dictionary that is created from the data
             returned by the HTTP request.
-        :type json: Dict[str, Any]
         :raises KeyError: If the JSON dictionary does not contain the
             necessary fields for initialization.
         """
@@ -81,9 +80,6 @@ class _WarMACJSON:
         self.orders: List[Dict[str, Any]] = json["payload"]["orders"]
 
     def __repr__(self) -> str:
-        return str(self.orders)
-
-    def __str__(self) -> str:
         return str(self.orders)
 
 
@@ -98,14 +94,12 @@ def _get_page(url: str, /) -> urllib3.BaseHTTPResponse:
     decoded into a dictionary.
 
     :param url: The formatted URL of the desired item.
-    :type url: str
     :raises warmac_errors.UnauthorizedAccessError: Error 401.
     :raises warmac_errors.ForbiddenRequestError: Error 403.
     :raises warmac_errors.MalformedURLError: Error 404.
     :raises warmac_errors.MethodNotAllowedError: Error 405.
     :raises warmac_errors.InternalServerError: Error 500.
-    :raises warmac_errors.UnknownError: Any other HTTP status code not
-        covered by the previous exceptions.
+    :raises warmac_errors.UnknownError: Any other HTTP status code.
     :return: The requested page containing a JSON.
     """
     page = urllib3.request("GET", url, headers=headers, timeout=5)
@@ -127,19 +121,16 @@ def _get_page(url: str, /) -> urllib3.BaseHTTPResponse:
 
 def _calc_avg(plat_list: List[int], /, statistic: str, *, decimals: int = 1) -> float:
     """
-    Calculate the desired ``statistic`` of the price of an item.
+    Calculate the desired statistic of the price of an item.
 
     Given an integer list of prices associated with an item, calculate
     and return the desired statistic of the price of that item to 1
     decimal point.
 
     :param plat_list: Prices in platinum of each order.
-    :type plat_list: List[int]
     :param statistic: The statistic to be calculated.
-    :type statistic: str
     :param decimals: The number of decimals that the statistic should be
         rounded to, defaults to 1.
-    :type decimals: int, optional
     :raises warmac_errors.NoListingsFoundError: If ``plat_list`` has no
         contents.
     :raises warmac_errors.StatisticTypeError: If ``statistic`` is not
@@ -159,15 +150,13 @@ def _in_time_r(last_updated: str, /, time_r: int = warmac_parser.DEFAULT_TIME) -
     """
     Check if order is younger than ``time_r`` days.
 
-    Subtract last_updated field from :py:const:`.CURR_TIME` to check if
+    Subtract last_updated field from :py:data:`.CURR_TIME` to check if
     the difference in days is less than or equal to ``time_r``.
 
     :param last_updated: The date and time that the order was last
         updated at.
-    :type last_updated: str
     :param time_r: The oldest an order can be to be accepted, defaults
         to :py:const:`warmac_parser.DEFAULT_TIME`.
-    :type time_r: int, optional
     :return: True if ``last_updated ≤ time_r``, False if ``last_updated
         > time_r``.
     """
@@ -188,16 +177,12 @@ def _comp_val(
     ``val_to_comp == false_val`` if ``condition`` is False.
 
     :param val_to_comp: The string to check against.
-    :type val_to_comp: Union[str, int]
     :param true_val: The string that ``val_to_comp`` will be checked
         against if ``condition`` is True.
-    :type true_val: Union[str, int]
     :param false_val: The string that ``val_to_comp`` will be checked
         against if ``condition`` is False.
-    :type false_val: Union[str, int]
     :param condition: Whether to check ``val_to_comp`` against
         ``true_val`` or ``false_val``, defaults to False.
-    :type condition: bool, optional
     :return: Return ``val_to_comp == true_val`` if ``condition`` is
         True. Return ``val_to_comp == false_val`` if ``condition`` is
         False.
@@ -221,11 +206,8 @@ def _filter_order(order: Dict[str, Any], json: _WarMACJSON, args: Namespace, /) 
       on ``args.radiant``
 
     :param order: The order to run the checks against.
-    :type order: Dict[str, Any]
     :param json: The object containing information about the item.
-    :type json: _WarMACJSON
     :param args: The user-given command line arguments.
-    :type args: argparse.Namespace
     :raises KeyError: If ``json`` does not contain the required fields.
     :return: True if all four conditions are met, return False if any
         one of them are not met.
@@ -265,9 +247,7 @@ def _get_plat_list(json: _WarMACJSON, args: Namespace, /) -> List[int]:
 
     :param json: The object containing the item's listings and the
         associated information with that item.
-    :type json: _WarMACJSON
     :param args: The user-given command line arguments.
-    :type args: argparse.Namespace
     :raises KeyError: If ``json`` does not contain the required fields.
     :return: A list of the platinum prices from the filtered listings.
     """
@@ -299,14 +279,10 @@ def _verbose_out(
     preceding them.
 
     :param args: The user-given command line arguments.
-    :type args: argparse.Namespace
     :param avg_cost: The statistic of the item that was found.
-    :type avg_cost: float
     :param plat_list: The list of prices of the item.
-    :type plat_list: List[int]
     :param time_r: The oldest a listing could be to not be filtered out,
         defaults to :py:const:`warmac_parser.DEFAULT_TIME`.
-    :type time_r: int, optional
     :raises warmac_errors.StatisticTypeError: If ``statistic`` is not
         present in :py:data:`.AVG_FUNCS`.
     """
@@ -334,7 +310,6 @@ def average(args: Namespace, /) -> None:
 
     :param args: The :py:class:`argparse.Namespace` containing the
         user-supplied command line information.
-    :type args: argparse.Namespace
     """
     headers["platform"] = args.platform
     fixed_item: str = args.item.lower().replace(" ", "_").replace("&", "and")

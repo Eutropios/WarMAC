@@ -20,15 +20,17 @@ author = "Noah Jenner"
 release = "0.0.4"
 language = "en"
 
-# -- General configuration ---------------------------------------------
+# -- General configuration --------------------------------------------
 
 extensions = [
     "sphinx.ext.duration",
     "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.intersphinx",
-    "sphinx_immaterial",
+    "sphinx_copybutton",
+    "sphinx_last_updated_by_git",
+    "notfound.extension",
+    # install this https://github.com/readthedocs/sphinx-hoverxref
 ]
 
 master_doc = "index"
@@ -46,76 +48,34 @@ autodoc_default_options = {
     "undoc-members": True,
     "private-members": True,
 }
-autodoc_type_aliases = {
-    "typing.Dict": "dict",
-    "typing.List": "list",
-}
-nitpicky = True
-
+# autodoc_type_aliases = {str, str}
+# nitpicky = True
 autodoc_typehints = "signature"
 autodoc_preserve_defaults = True
 
+# ---- Options for HTML output ----------------------------------------
 
-# ---- Static and Template Info ----------------------------------------
-
-templates_path = ["_templates"]
-
-_static_path = str(Path("../_static"))
-html_static_path = [_static_path]
-
-# ---- Options for HTML output -----------------------------------------
-
-html_theme = "sphinx_immaterial"
-# pygments_style
+_static_path = Path("../_static")
+templates_path = [str(Path("../_templates"))]
+html_static_path = [str(_static_path)]
+html_theme = "furo"
+html_css_files = [str(_static_path / "custom.css")]
 htmlhelp_basename = "warmacdoc"
 highlight_language = "python"
+pygments_style = "one-dark"
+pygments_dark_style = "one-dark"
 
 html_theme_options = {
-    "icon": {
-        "repo": "fontawesome/brands/github",
-        "edit": "material/file-edit-outline",
-    },
-    "site_url": "https://github.com/Eutropios/WarMAC",
-    "repo_url": "https://github.com/Eutropios/WarMAC",
-    "repo_name": "WarMAC",
-    "edit_uri": "blob/main/docs",
     "globaltoc_collapse": True,
-    "features": [
-        # "navigation.expand",
-        # "navigation.tabs",
-        # "toc.integrate",
-        # "navigation.sections",
-        # "navigation.instant",
-        # "header.autohide",
-        # "navigation.top",
-        # "navigation.tracking",
-        # "search.highlight",
-        # "search.share",
-        # "toc.follow",
-        # "toc.sticky",
-        # "content.tabs.link",
-        # "announce.dismiss",
-    ],
-    "palette": [
-        {
-            "media": "(prefers-color-scheme: light)",
-            "scheme": "default",
-            "primary": "light-green",
-            "accent": "light-green",
-            "toggle": {
-                "icon": "material/lightbulb-outline",
-                "name": "Switch to dark mode",
-            },
-        },
-        {
-            "media": "(prefers-color-scheme: dark)",
-            "scheme": "slate",
-            "primary": "light-green",
-            "accent": "light-green",
-            "toggle": {
-                "icon": "material/lightbulb",
-                "name": "Switch to light mode",
-            },
-        },
-    ],
+    "source_repository": "https://github.com/Eutropios/WarMAC",
+    "source_branch": "main",
+    "source_directory": "docs/",
+    "light_css_variables": {
+        "color-link--hover": "#35939a",
+    },
+    "dark_css_variables": {
+        "color-api-name": "#ff6b6b",
+        "color-api-pre-name": "#4ec9b0",
+        "color-link--hover": "#59e5ee",
+    },
 }

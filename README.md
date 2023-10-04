@@ -12,7 +12,7 @@
 
 **WarMAC** compiles orders from the fan website *<https://warframe.market/>*, and can be used to find the average prices of prime parts, tradeable parts, relics, mods, and arcane enhancements.
 
-## 🌟Features
+## Features
 
 * 🎮Target PC, PlayStation, XBOX, or Nintendo Switch platforms.
 * 📈Calculate the median, mean, mode, harmonic mean, or geometric means of items.
@@ -48,7 +48,7 @@ Using WarMAC is as simple as:
 
 The full command-line usage is as follows:
 
-```txt
+```console
 usage: warmac <command> [options]
 
 A program to fetch the average market cost of an item in Warframe.

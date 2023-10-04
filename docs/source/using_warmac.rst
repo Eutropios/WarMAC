@@ -1,12 +1,33 @@
 .. _using_warmac:
 
-Using WarMAC
-============
+#######
+ Usage
+#######
 
-| The command-line usage for warmac is as follows:
+|  WarMAC has a variety of subcommands for users to select from. Each subcommand
+   has its own unique options and arguments. Wherever possible, options that
+   perform similar functions for different subcommands will share the same name.
 
-CHANGE THIS TO HAVE HEADERS FOR EACH PARAMETER AND EXPLAIN MORE THOROUGHLY.
-.. code-block:: none
+.. note::
+
+   WarMAC currently only has the Average subcommand. More subcommands will be
+   added in the future.
+
+****************
+ Running WarMAC
+****************
+
+|  Every WarMAC command is preceded by calling ``warmac``. You can also run
+   ``warmac`` without calling any specific subcommand.
+
+.. code:: console
+
+   warmac
+
+|  Doing so will return the main help page, which describes the usage of the
+   program:
+
+.. code:: console
 
    usage: warmac <command> [options]
 
@@ -19,13 +40,33 @@ CHANGE THIS TO HAVE HEADERS FOR EACH PARAMETER AND EXPLAIN MORE THOROUGHLY.
       -h, --help     Show this message and exit.
       -V, --version  Show the program's version number and exit.
 
-Average
--------
+``-h``, ``--help``
+==================
 
-| Average is currently the only subcommand available in WarMAC.
-| Its command-line usage is as follows:
+|  Print the command line usage and then exit. Providing this option is
+   identical to calling ``warmac`` without any subcommand.
+|  WarMAC will ignore all other options if ``-h`` or ``--help`` is given.
 
-.. code-block:: none
+``-V``, ``--version``
+=====================
+
+|  Print the current version of WarMAC and exit.
+|  WarMAC will ignore all other options if ``-V`` or ``--version`` is given.
+| 
+|  When determining whether to display the program's help, or to display the
+   current program's version, WarMAC will use whichever of the two options is
+   given first.
+
+*********
+ Average
+*********
+
+|  The Average command can be used to find the average platinum price of a
+   particular item.
+
+USE PIP DOCUMENTATION AS A GUIDE FOR MULTI-SUBCOMMAND DOCS
+
+.. code:: console
 
    usage: warmac average [-s <stat>] [-p <platform>] [-t <days>] [-m | -r] [-b] item
 
@@ -45,3 +86,38 @@ Average
    -b, --buyers               Take the average platinum price from buyer orders instead of from seller orders. (Default: False)
    -v, --verbose              Prints additional information about the program.
    -h, --help                 Show this message and exit.
+
+THIS IS ALL BLACK STUFF, IT'S JUST HERE FOR REFERENCE
+
+## Usage
+
+To get started right away with sensible defaults:
+
+```sh black {source_file_or_directory} ```
+
+You can run _Black_ as a package if running it as a script doesn't work:
+
+```sh python -m black {source_file_or_directory} ```
+
+### Command line options
+
+The CLI options of _Black_ can be displayed by running `black --help`. All
+options are also covered in more detail below.
+
+While _Black_ has quite a few knobs these days, it is still opinionated so style
+options are deliberately limited and rarely added.
+
+Note that all command-line options listed above can also be configured using a
+`pyproject.toml` file (more on that below).
+
+#### `-c`, `--code`
+
+Format the code passed in as a string.
+
+```console $ black --code "print ( 'hello, world' )" print("hello, world") ```
+
+#### `-l`, `--line-length`
+
+How many characters per line to allow. The default is 88.
+
+See also [the style documentation](labels/line-length).

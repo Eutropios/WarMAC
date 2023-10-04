@@ -1,30 +1,36 @@
-.. WarMAC documentation master file, created by
+..
+   WarMAC documentation master file, created by
    sphinx-quickstart on Tue Aug 22 17:40:25 2023.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-Welcome to WarMAC's documentation!
-==================================
+####################################
+ Welcome to WarMAC's documentation!
+####################################
 
-**WarMAC** (/'wɔr'mæk/)is a command-line Python script that can calculate the
-average market price of items in Warframe.  It compiles orders from the fan
-website `warframe.market <https://warframe.market/>`_, and can be used to find
-the average prices of any tradeable item.
+|  **WarMAC** (/'wɔr'mæk/)is a command-line Python script that can calculate the
+   average market price of items in Warframe. It compiles orders from the fan
+   website `warframe.market <https://warframe.market/>`_, and can be used to
+   find the average prices of any tradeable item.
+|
+|  WarMAC supports Python versions 3.8 to 3.12.
 
-.. note::
+.. attention::
 
    This project is under active development.
 
-Contents
---------
+*****************
+ Getting Started
+*****************
 
-.. toctree:: 
+.. toctree::
+   :hidden:
    :maxdepth: 2
-   :caption: Usage
+   :caption: User Guide
 
+   installation
    using_warmac
 
 .. toctree::
+   :hidden:
    :maxdepth: 2
    :caption: Documentation
 
@@ -35,12 +41,20 @@ Contents
 
 .. toctree::
    :hidden:
+   :titlesonly:
    :caption: Project Links
 
-   GitHub (Eutropios) <https://github.com/Eutropios/WarMAC>
+   GitHub <https://github.com/Eutropios/WarMAC>
+   PyPI <https://pypi.org/project/WarMAC/>
+
+|  Ready to install WarMAC?
+|  :doc:`Installation Guide </installation>`
+|
+|  Need help using WarMAC?
+|  :doc:`Using WarMAC </using_warmac>`
 
 Indices and tables
-------------------
+==================
 
-* :ref:`genindex`
-* :ref:`search`
+-  :ref:`genindex`
+-  :ref:`search`

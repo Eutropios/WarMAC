@@ -1,12 +1,15 @@
 .. _warmac_errors:
 
-WarMAC Errors
-=============
+###############
+ WarMAC Errors
+###############
 
-All of the custom errors used within WarMAC
+|  All of the custom errors used within WarMAC.
 
-Base Error
-----------
+************
+ Base Error
+************
+
 .. autoexception:: warmac_errors.WarMACBaseError
    :members:
    :undoc-members:
@@ -14,7 +17,7 @@ Base Error
    :private-members:
 
 Generic Errors
-^^^^^^^^^^^^^^
+==============
 
 .. autoexception:: warmac_errors.SubcommandError
    :members:
@@ -35,7 +38,7 @@ Generic Errors
    :private-members:
 
 HTTP Errors
-^^^^^^^^^^^
+===========
 
 .. autoexception:: warmac_errors.WarMACHTTPError
    :members:
