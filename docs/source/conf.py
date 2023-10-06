@@ -49,7 +49,7 @@ autodoc_default_options = {
     "private-members": True,
 }
 # autodoc_type_aliases = {str, str}
-# nitpicky = True
+nitpicky = True
 autodoc_typehints = "signature"
 autodoc_preserve_defaults = True
 

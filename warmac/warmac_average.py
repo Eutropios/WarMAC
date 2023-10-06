@@ -23,7 +23,7 @@ import urllib3
 from warmac import warmac_errors, warmac_parser
 
 if TYPE_CHECKING:
-    from argparse import Namespace
+    import argparse
 
 #: The root URL used for communicating with the API of warframe.market.
 _API_ROOT = "https://api.warframe.market/v1"
@@ -119,7 +119,7 @@ def _get_page(url: str, /) -> urllib3.BaseHTTPResponse:
     raise warmac_errors.UnknownError(page.status)
 
 
-def _calc_avg(plat_list: List[int], /, statistic: str, *, decimals: int = 1) -> float:
+def _calc_avg(plat_list: List[int], statistic: str, *, decimals: int = 1) -> float:
     """
     Calculate the desired statistic of the price of an item.
 
@@ -190,19 +190,23 @@ def _comp_val(
     return val_to_comp == (true_val if condition else false_val)
 
 
-def _filter_order(order: Dict[str, Any], json: _WarMACJSON, args: Namespace, /) -> bool:
+def _filter_order(
+    order: Dict[str, Any],
+    json: _WarMACJSON,
+    args: argparse.Namespace,
+) -> bool:
     """
     Check if an order meets all specifications given by the user.
 
     Check if an order meets all user-given specifications which are as
     follows:
 
-    * if it was updated less than ``args.timerange`` days ago
-    * if the order is of type "buy" or "sell" depending on
+    - if it was updated less than ``args.timerange`` days ago
+    - if the order is of type "buy" or "sell" depending on
       ``args.use_buyers``
-    * if the order is a mod or arcane, whether it's unranked or max rank
+    - if the order is a mod or arcane, whether it's unranked or max rank
       depending on ``args.maxrank``
-    * if the order is a relic, wether it's intact or radiant depending
+    - if the order is a relic, wether it's intact or radiant depending
       on ``args.radiant``
 
     :param order: The order to run the checks against.
@@ -238,7 +242,7 @@ def _filter_order(order: Dict[str, Any], json: _WarMACJSON, args: Namespace, /) 
         raise KeyError(msg) from err
 
 
-def _get_plat_list(json: _WarMACJSON, args: Namespace, /) -> List[int]:
+def _get_plat_list(json: _WarMACJSON, args: argparse.Namespace, /) -> List[int]:
     """
     Return a filtered list of platinum prices.
 
@@ -263,7 +267,7 @@ def _get_plat_list(json: _WarMACJSON, args: Namespace, /) -> List[int]:
 
 
 def _verbose_out(
-    args: Namespace,
+    args: argparse.Namespace,
     avg_cost: float,
     plat_list: List[int],
     /,
@@ -301,7 +305,7 @@ def _verbose_out(
         raise warmac_errors.StatisticTypeError from err
 
 
-def average(args: Namespace, /) -> None:
+def average(args: argparse.Namespace, /) -> None:
     """
     Determine the specified statistic of an item.
 

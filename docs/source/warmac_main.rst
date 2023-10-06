@@ -8,7 +8,7 @@
    together all of the necessary modules and functions and executes them.
 
 .. py:data:: warmac.SUBCMD_TO_FUNC
-   :type: Dict[str, Callable[[argparse.Namespace], None]]
+   :type: typing.Dict[str, typing.Callable[[argparse.Namespace], None]]
    :value: warmac_average.average()
 
    A dictionary of all subcommands that can be executed by the user.

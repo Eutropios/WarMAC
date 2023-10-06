@@ -24,7 +24,7 @@ from urllib3 import exceptions
 from warmac import warmac_average, warmac_errors, warmac_parser
 
 if TYPE_CHECKING:
-    from argparse import Namespace
+    import argparse
 
 __all__ = [
     "warmac_errors",
@@ -38,7 +38,7 @@ SUBCMD_TO_FUNC = {
 }
 
 
-def subcommand_select(args: Namespace, /) -> None:
+def subcommand_select(args: argparse.Namespace, /) -> None:
     """
     Select which function to use based on ``args.subparser`` field.
 
@@ -79,7 +79,7 @@ def console_main() -> Literal[0]:
     :py:func:`.subcommand_select` with the parsed arguments.
     :return: Return 0 if everything returns successfully.
     """  # noqa: D205
-    args: Namespace = warmac_parser.handle_input()
+    args: argparse.Namespace = warmac_parser.handle_input()
     subcommand_select(args)
     return 0
 

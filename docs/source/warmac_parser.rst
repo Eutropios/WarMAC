@@ -15,7 +15,7 @@
 
 .. py:data:: warmac_parser.DEFAULT_TIME
    :type: int
-   :value: datetime.datetime.now(datetime.timezone.utc)
+   :value: 10
 
    The default time that will be used for calculating listing ages.
 
