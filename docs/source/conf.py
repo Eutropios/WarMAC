@@ -25,11 +25,11 @@ language = "en"
 extensions = [
     "sphinx.ext.duration",
     "sphinx.ext.autodoc",
-    "sphinx.ext.autosectionlabel",
     "sphinx.ext.intersphinx",
     "sphinx_copybutton",
     "sphinx_last_updated_by_git",
     "notfound.extension",
+    "sphinx_inline_tabs",
     # install this https://github.com/readthedocs/sphinx-hoverxref
 ]
 
@@ -56,7 +56,6 @@ autodoc_preserve_defaults = True
 # ---- Options for HTML output ----------------------------------------
 
 _static_path = Path("../_static")
-templates_path = [str(Path("../_templates"))]
 html_static_path = [str(_static_path)]
 html_theme = "furo"
 html_css_files = [str(_static_path / "custom.css")]

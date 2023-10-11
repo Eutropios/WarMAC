@@ -16,15 +16,13 @@ External packages required: urllib3
 
 from __future__ import annotations
 
+import argparse  # noqa: TCH003
 import sys
-from typing import TYPE_CHECKING, Literal
+from typing import Callable, Dict, Literal
 
 from urllib3 import exceptions
 
 from warmac import warmac_average, warmac_errors, warmac_parser
-
-if TYPE_CHECKING:
-    import argparse
 
 __all__ = [
     "warmac_errors",
@@ -33,12 +31,12 @@ __all__ = [
 ]
 
 #: A dictionary of all possible subcommands
-SUBCMD_TO_FUNC = {
+SUBCMD_TO_FUNC: Dict[str, Callable[[argparse.Namespace], None]] = {
     "average": warmac_average.average,
 }
 
 
-def subcommand_select(args: argparse.Namespace, /) -> None:
+def subcommand_select(args: argparse.Namespace) -> None:
     """
     Select which function to use based on ``args.subparser`` field.
 
@@ -47,9 +45,9 @@ def subcommand_select(args: argparse.Namespace, /) -> None:
 
     :param args: The :py:class:`argparse.Namespace` containing the
         user-supplied command line information.
-    :raises SubcommandError: An error indicating that the desired
-        subcommand does not exist within the :py:data:`.SUBCMD_TO_FUNC`
-        dictionary.
+    :raises SubcommandError: An error indicating that the
+        desired subcommand does not exist within the
+        :py:data:`.SUBCMD_TO_FUNC` dictionary.
     """
     try:
         SUBCMD_TO_FUNC[args.subparser](args)
@@ -79,8 +77,7 @@ def console_main() -> Literal[0]:
     :py:func:`.subcommand_select` with the parsed arguments.
     :return: Return 0 if everything returns successfully.
     """  # noqa: D205
-    args: argparse.Namespace = warmac_parser.handle_input()
-    subcommand_select(args)
+    subcommand_select(warmac_parser.handle_input())
     return 0
 
 

@@ -19,7 +19,7 @@
    A dictionary that maps user input to its respective function.
 
 .. py:data:: warmac_average.CURR_TIME
-   :type: datetime.datetime
+   :type: ~datetime.datetime
    :value: datetime.datetime.now(datetime.timezone.utc)
 
    An ISO-8601 timestamp of the current time retrieved on execution.

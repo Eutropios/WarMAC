@@ -52,7 +52,7 @@
 
 |  Print the current version of WarMAC and exit.
 |  WarMAC will ignore all other options if ``-V`` or ``--version`` is given.
-| 
+|
 |  When determining whether to display the program's help, or to display the
    current program's version, WarMAC will use whichever of the two options is
    given first.

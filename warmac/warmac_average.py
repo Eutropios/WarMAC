@@ -14,16 +14,15 @@ External packages required: urllib3
 
 from __future__ import annotations
 
+# Argparse is imported normally purely to satisfy Sphinx autodoc
+import argparse  # noqa: TCH003
 from datetime import datetime, timezone
 from statistics import geometric_mean, harmonic_mean, mean, median, mode
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Sequence, Union
+from typing import Any, Callable, Dict, List, Sequence, Union
 
 import urllib3
 
 from warmac import warmac_errors, warmac_parser
-
-if TYPE_CHECKING:
-    import argparse
 
 #: The root URL used for communicating with the API of warframe.market.
 _API_ROOT = "https://api.warframe.market/v1"
@@ -57,7 +56,7 @@ class _WarMACJSON:
     returned from the HTTP request.
     """
 
-    def __init__(self, json: Dict[str, Any], /) -> None:
+    def __init__(self, json: Dict[str, Any]) -> None:
         """
         Construct a :py:class:`._WarMACJSON` object.
 
@@ -83,7 +82,7 @@ class _WarMACJSON:
         return str(self.orders)
 
 
-def _get_page(url: str, /) -> urllib3.BaseHTTPResponse:
+def _get_page(url: str) -> urllib3.BaseHTTPResponse:
     """
     Request the JSON of a desired item from Warframe.Market.
 
@@ -119,7 +118,7 @@ def _get_page(url: str, /) -> urllib3.BaseHTTPResponse:
     raise warmac_errors.UnknownError(page.status)
 
 
-def _calc_avg(plat_list: List[int], statistic: str, *, decimals: int = 1) -> float:
+def _calc_avg(plat_list: List[int], statistic: str, decimals: int = 1) -> float:
     """
     Calculate the desired statistic of the price of an item.
 
@@ -146,7 +145,7 @@ def _calc_avg(plat_list: List[int], statistic: str, *, decimals: int = 1) -> flo
         raise warmac_errors.StatisticTypeError from err
 
 
-def _in_time_r(last_updated: str, /, time_r: int = warmac_parser.DEFAULT_TIME) -> bool:
+def _in_time_r(last_updated: str, time_r: int = warmac_parser.DEFAULT_TIME) -> bool:
     """
     Check if order is younger than ``time_r`` days.
 
@@ -242,7 +241,7 @@ def _filter_order(
         raise KeyError(msg) from err
 
 
-def _get_plat_list(json: _WarMACJSON, args: argparse.Namespace, /) -> List[int]:
+def _get_plat_list(json: _WarMACJSON, args: argparse.Namespace) -> List[int]:
     """
     Return a filtered list of platinum prices.
 
@@ -270,7 +269,6 @@ def _verbose_out(
     args: argparse.Namespace,
     avg_cost: float,
     plat_list: List[int],
-    /,
     time_r: int = warmac_parser.DEFAULT_TIME,
 ) -> None:
     """
@@ -305,7 +303,7 @@ def _verbose_out(
         raise warmac_errors.StatisticTypeError from err
 
 
-def average(args: argparse.Namespace, /) -> None:
+def average(args: argparse.Namespace) -> None:
     """
     Determine the specified statistic of an item.
 

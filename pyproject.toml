@@ -32,7 +32,7 @@
     repository  = "https://github.com/Eutropios/WarMAC"
     version     = "0.0.4"
     [tool.poetry.dependencies]
-        python  = "^3.8"
+        python  = ">=3.8,<=3.13.0"
         urllib3 = "^2.0.4"
     [tool.poetry.scripts]
         warmac = "warmac.__init__:console_main"
