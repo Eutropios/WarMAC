@@ -1,130 +1,130 @@
 [build-system]
-    build-backend = "poetry.core.masonry.api"
-    requires      = ["poetry-core>=1.0.0"]
+  build-backend = "poetry.core.masonry.api"
+  requires      = ["poetry-core>=1.0.0"]
 
 
 [tool.poetry]
-    authors = ["Noah Jenner <noah.jenner@proton.me>"]
-    classifiers = [
-        "Development Status :: 4 - Beta",
-        "Environment :: Console",
-        "Intended Audience :: End Users/Desktop",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: Implementation :: CPython",
-        "Topic :: Utilities",
-        "Typing :: Typed",
-    ]
-    description = "An average platinum price calculator for tradeable items in Warframe."
-    # documentation = ""
-    # include = [""]
-    keywords    = ["warframe calculator", "warframe market", "warframe"]
-    license     = "MIT"
-    maintainers = ["Noah Jenner <noah.jenner@proton.me>"]
-    name        = "WarMAC"
-    packages    = [{include = "warmac"}]
-    readme      = "README.md"
-    repository  = "https://github.com/Eutropios/WarMAC"
-    version     = "0.0.4"
-    [tool.poetry.dependencies]
-        python  = ">=3.8,<=3.13.0"
-        urllib3 = "^2.0.4"
-    [tool.poetry.scripts]
-        warmac = "warmac.__init__:console_main"
-    [tool.poetry.urls]
-        "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
+  authors = ["Noah Jenner <noah.jenner@proton.me>"]
+  classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+  ]
+  description = "An average platinum price calculator for tradeable items in Warframe."
+  # documentation = ""
+  # include = [""]
+  keywords    = ["warframe calculator", "warframe market", "warframe"]
+  license     = "MIT"
+  maintainers = ["Noah Jenner <noah.jenner@proton.me>"]
+  name        = "WarMAC"
+  packages    = [{include = "warmac"}]
+  readme      = "README.md"
+  repository  = "https://github.com/Eutropios/WarMAC"
+  version     = "0.0.4"
+  [tool.poetry.dependencies]
+    python  = ">=3.8,<=3.13.0"
+    urllib3 = "^2.0.4"
+  [tool.poetry.scripts]
+    warmac = "warmac.__init__:console_main"
+  [tool.poetry.urls]
+    "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
 
 
 [tool.docformatter]
-    black               = true
-    pre-summary-newline = true
-    recursive           = true
-    style               = "sphinx"
-    wrap-descriptions   = 72
-    wrap-summaries      = 72
+  black               = true
+  pre-summary-newline = true
+  recursive           = true
+  style               = "sphinx"
+  wrap-descriptions   = 72
+  wrap-summaries      = 72
 
 
 [tool.mypy]
-    exclude = [
-        '\.git',
-        '\.hg',
-        '\.mypy_cache',
-        '\.ruff_cache',
-        '\.tox',
-        '\.venv',
-        '_build',
-        'buck-out',
-        'build',
-        'dist',
-    ]
-    python_version = "3.11"
-    strict = true
+  exclude = [
+    '\.git',
+    '\.hg',
+    '\.mypy_cache',
+    '\.ruff_cache',
+    '\.tox',
+    '\.venv',
+    '_build',
+    'buck-out',
+    'build',
+    'dist',
+  ]
+  python_version = "3.11"
+  strict = true
 
 
 [tool.ruff]
-    ignore = [
-        "AIR",
-        "ANN101",
-        "DJ",
-        "ERA001",
-        "FIX",
-        "INT",
-        "ISC002",
-        "NPY",
-        "PD",
-        "PT",
-        "SLF001",
-        "SLOT",
-        "T20",
-        "TD",
-        "UP006",
-        "UP007",
-        "UP035",
-    ]
-    line-length = 88
-    preview = true
-    select = ["ALL", "CPY001", "PLC1901"]
-    show-fixes = true
-    tab-size = 4
-    target-version = "py38"
+  ignore = [
+    "AIR",
+    "ANN101",
+    "DJ",
+    "ERA001",
+    "FIX",
+    "INT",
+    "ISC002",
+    "NPY",
+    "PD",
+    "PT",
+    "SLF001",
+    "SLOT",
+    "T20",
+    "TD",
+    "UP006",
+    "UP007",
+    "UP035",
+  ]
+  line-length = 88
+  preview = true
+  select = ["ALL", "CPY001", "PLC1901"]
+  show-fixes = true
+  tab-size = 4
+  target-version = "py38"
 
-    [tool.ruff.flake8-copyright]
-        author = "Noah Jenner"
+  [tool.ruff.flake8-copyright]
+    author = "Noah Jenner"
 
-    [tool.ruff.flake8-implicit-str-concat]
-        allow-multiline = true
+  [tool.ruff.flake8-implicit-str-concat]
+    allow-multiline = true
 
-    [tool.ruff.flake8-quotes]
-        docstring-quotes = "double"
-        inline-quotes    = "double"
-        multiline-quotes = "double"
+  [tool.ruff.flake8-quotes]
+    docstring-quotes = "double"
+    inline-quotes    = "double"
+    multiline-quotes = "double"
 
-    [tool.ruff.flake8-type-checking]
-        exempt-modules = ["typing"]
-        strict         = true
+  [tool.ruff.flake8-type-checking]
+    exempt-modules = ["typing"]
+    strict         = true
 
-    [tool.ruff.isort]
-        required-imports = ["from __future__ import annotations"]
+  [tool.ruff.isort]
+    required-imports = ["from __future__ import annotations"]
 
-    [tool.ruff.per-file-ignores]
-        "docs/source/conf.py" = ["CPY001", "D100", "D104", "I002", "INP001"]
-        "tests/__init__.py"   = ["CPY001", "D100", "D104", "I002"]
-        "warmac/__main__.py"  = ["CPY001", "D100", "D104", "I002"]
+  [tool.ruff.per-file-ignores]
+    "docs/source/conf.py" = ["CPY001", "D100", "D104", "I002", "INP001"]
+    "tests/__init__.py"   = ["CPY001", "D100", "D104", "I002"]
+    "warmac/__main__.py"  = ["CPY001", "D100", "D104", "I002"]
 
-    [tool.ruff.pycodestyle]
-        max-doc-length = 72
+  [tool.ruff.pycodestyle]
+    max-doc-length = 72
 
-    [tool.ruff.pydocstyle]
-        convention = "pep257"
+  [tool.ruff.pydocstyle]
+    convention = "pep257"
 
 
 [tool.black]
-    exclude = '''
+  exclude = '''
 /(
     \.git
   | \.hg
@@ -138,6 +138,6 @@
   | \.ruff_cache
 )/
 '''
-    include = '\.pyi?$'
-    line-length = 88
-    verbose = true
+  include = '\.pyi?$'
+  line-length = 88
+  verbose = true

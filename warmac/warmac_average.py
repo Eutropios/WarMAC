@@ -29,11 +29,11 @@ _API_ROOT = "https://api.warframe.market/v1"
 
 #: A dictionary that maps user input to its respective function.
 AVG_FUNCS: Dict[str, Callable[[Sequence[int]], float]] = {
+    "geometric": geometric_mean,
+    "harmonic": harmonic_mean,
     "mean": mean,
     "median": median,
     "mode": mode,
-    "geometric": geometric_mean,
-    "harmonic": harmonic_mean,
 }
 
 #: An ISO-8601 timestamp of the current time retrieved on execution.
@@ -41,10 +41,10 @@ CURR_TIME = datetime.now(timezone.utc)
 
 #: A dictionary containing the headers to be used in the HTTP request.
 headers = {
-    "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
+    "Accept": "application/json",
     "Content-Type": "application/json",
     "Host": "api.warframe.market",
-    "Accept": "application/json",
+    "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
 }
 
 

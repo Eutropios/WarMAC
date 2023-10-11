@@ -19,16 +19,16 @@ import shutil
 import sys
 from typing import Generator, NoReturn, Union
 
-#: The statistic types that the average command can use
-_AVG_FUNCS = ("median", "mean", "mode", "harmonic", "geometric")
 #: The default time to collect orders until
 DEFAULT_TIME = 10
-#: The description of the program
-_DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
+#: The statistic types that the average command can use
+_AVG_FUNCS = ("median", "mean", "mode", "harmonic", "geometric")
 #: The minimum width that the help text should take up in the CLI
 _HELP_MIN_WIDTH = 34
-#: Minimum of the minimum help width and the terminal width
+#: Minimum value of _HELP_MIN_WIDTH and the terminal's width
 _DEFAULT_WIDTH = min(_HELP_MIN_WIDTH, shutil.get_terminal_size().columns - 2)
+#: The description of the program
+_DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
 #: The maximum time range that the average command can pull from
 _MAX_TIME_RANGE = 60
 #: The platforms that the user can choose from
