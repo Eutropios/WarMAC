@@ -2,7 +2,6 @@
     build-backend = "poetry.core.masonry.api"
     requires      = ["poetry-core>=1.0.0"]
 
-
 [tool.poetry]
     authors = ["Noah Jenner <noah.jenner@proton.me>"]
     classifiers = [
@@ -39,7 +38,6 @@
     [tool.poetry.urls]
         "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
 
-
 [tool.docformatter]
     black               = true
     pre-summary-newline = true
@@ -47,7 +45,6 @@
     style               = "sphinx"
     wrap-descriptions   = 72
     wrap-summaries      = 72
-
 
 [tool.mypy]
     exclude = [
@@ -64,7 +61,6 @@
     ]
     python_version = "3.11"
     strict = true
-
 
 [tool.ruff]
     ignore = [
@@ -121,7 +117,6 @@
 
     [tool.ruff.pydocstyle]
         convention = "pep257"
-
 
 [tool.black]
     exclude = '''

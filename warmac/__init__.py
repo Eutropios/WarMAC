@@ -25,9 +25,9 @@ from urllib3 import exceptions
 from warmac import warmac_average, warmac_errors, warmac_parser
 
 __all__ = [
+    "warmac_average",
     "warmac_errors",
     "warmac_parser",
-    "warmac_average",
 ]
 
 #: A dictionary of all possible subcommands
