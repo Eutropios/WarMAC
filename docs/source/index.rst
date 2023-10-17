@@ -10,7 +10,7 @@
    average market price of items in Warframe. It compiles orders from the fan
    website `warframe.market <https://warframe.market/>`_, and can be used to
    find the average prices of any tradeable item.
-|
+
 |  WarMAC supports Python versions 3.8 to 3.12.
 
 .. attention::

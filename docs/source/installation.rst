@@ -16,7 +16,7 @@ Using pip
 **********
 
 |  Currently, the primary method of installing WarMAC is by installing it
-   globally through pip. This can be done using the following command:
+   through pip. This can be done using the following command:
 
 .. tab:: Unix/macOS
 

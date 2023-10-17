@@ -26,22 +26,47 @@
 * [Installation](#installation)
 * [Usage](#usage)
 * [Documentation](#documentation)
-* [Reporting Issues](#reporting-issues)
 * [Upcoming Features](#upcoming-features)
 * [Contributing](#contributing)
 * [Acknowledgements](#acknowledgements)
 * [Licensing](#licensing)
 
-## Installation
+## Installation<a id="installation"></a> <!--This ensures PyPI compatibility-->
 
-WarMAC currently supports Python versions 3.8+ and has experimental support for 3.12.
+WarMAC only supports Python versions 3.8 to 3.12. There are currently no plans to add support to Python 3.7
 
-### To install via Pip
+### Using Pip
 
-Open your terminal and input this command:  
-`python -m pip install warmac`
+Full installation instructions can be found in the official documentation.
 
-## Usage
+Currently, the primary method of installing WarMAC is by installing it through pip. This can be done using the following command:
+
+| Platform | Command |
+|---|---|
+| UNIX/MacOS | `python -m pip install warmac` |
+| Windows | `py -m pip install warmac` |
+
+You can ensure that you've installed WarMAC correctly by calling its help page like so:
+
+```shell
+warmac --version
+```
+
+### Using Poetry
+
+WarMAC can also be installed using [Poetry](https://python-poetry.org/) either through the provided `poetry.lock` file (recommended), or by building a lock of your own.
+
+To obtain the source code, you can either download the latest version from the [Releases tab](https://github.com/Eutropios/WarMAC/releases), or by cloning the repository using [Git](https://git-scm.com/downloads) with the following command:
+
+```console
+git clone https://github.com/Eutropios/WarMAC.git ./some/directory
+```
+
+WarMAC can then be built by navigating to the directory you cloned WarMAC into, and running the `poetry build` and `poetry install` commands.
+
+## Usage<a id="usage"></a>
+
+Full usage instructions can be found in the official documentation.
 
 Using WarMAC is as simple as:  
 `warmac <command> [options] item`
@@ -69,20 +94,16 @@ WarMAC output can also be redirected to a file:
 
 `warmac average -p PC -t 2 "vengeful revenant" > warmacOut.txt`
 
-## Documentation
+## Documentation<a id="documentation"></a>
 
 Work In Progress.
 
-## Reporting Issues
-
-To report a bug or request a feature, please open an [Issue](https://github.com/Eutropios/WarMAC/issues).
-
-## Upcoming Features
+## Upcoming Features<a id="upcoming-features"></a>
 
 * Adding file input
 * Adding even more commands to WarMAC!
 
-## Contributing
+## Contributing<a id="contributing"></a>
 
 Contributions are welcome. The expected development stack that you will use is black, mypy, and ruff. Please see [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml) for appropriate configuration.
 
@@ -90,7 +111,7 @@ Contributions are welcome. The expected development stack that you will use is b
 
 There are currently no tests or intrusive Github Actions, but that is expected to change in the future.
 
-## Acknowledgements
+## Acknowledgements<a id="acknowledgements"></a>
 
 In addition to the tools listed in [`.pre-commit-config.yaml`](https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml) and [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml), this project uses the following tools in its development:
 
@@ -101,7 +122,7 @@ In addition to the tools listed in [`.pre-commit-config.yaml`](https://github.co
 
 WarMAC is packaged using [Poetry](https://github.com/python-poetry/poetry).
 
-## Licensing
+## Licensing<a id="licensing"></a>
 
 ***This project is NOT affiliated with Warframe, Digital Extremes, or warframe.market***
 
@@ -115,5 +136,3 @@ Copyright (c) 2023 Noah Jenner under MIT License
 WarMAC is authored by:
 
 * [@eutropios](https://www.github.com/Eutropios)
-
-[Back to top](#table-of-contents)
