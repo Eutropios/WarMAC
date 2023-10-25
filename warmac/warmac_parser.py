@@ -115,7 +115,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         return result
 
     def _iter_indented_subactions(
-        self,  # noqa: PLR6301
+        self,
         action: argparse.Action,
     ) -> Generator[argparse.Action, None, None]:
         """

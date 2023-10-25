@@ -1,0 +1,26 @@
+# Edit this file as you like.
+#
+# All these sections are optional. Each section with the exception of [general] represents
+# one rule and each key in it is an option for that specific rule.
+#
+# Rules and sections can be referenced by their full name or by id. For example
+# section "[body-max-line-length]" could also be written as "[B1]". Full section names are
+# used in here for clarity.
+#
+[general]
+    contrib = contrib-title-conventional-commits,CC1
+
+[contrib-title-conventional-commits]
+    types = fix,feat,chore,docs,style,refactor,perf,test,revert,ci,build
+
+[title-max-length]
+    line-length = 50
+
+[title-min-length]
+    min-length = 5
+
+[body-max-line-length]
+    line-length = 72
+
+[body-min-length]
+    min-length = 5

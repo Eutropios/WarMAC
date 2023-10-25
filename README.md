@@ -1,4 +1,3 @@
-
 # WarMAC Version 0.0.4
 
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Eutropios/WarMAC/main)](https://github.com/Eutropios/WarMAC)
@@ -54,7 +53,7 @@ warmac --version
 
 ### Using Poetry
 
-WarMAC can also be installed using [Poetry](https://python-poetry.org/) either through the provided `poetry.lock` file (recommended), or by building a lock of your own.
+WarMAC can also be installed using [Poetry](https://python-poetry.org/) either through the provided [`poetry.lock`](https://github.com/Eutropios/WarMAC/blob/main/poetry.lock) file (recommended), or by building a lock of your own.
 
 To obtain the source code, you can either download the latest version from the [Releases tab](https://github.com/Eutropios/WarMAC/releases), or by cloning the repository using [Git](https://git-scm.com/downloads) with the following command:
 
@@ -116,7 +115,7 @@ There are currently no tests or intrusive Github Actions, but that is expected t
 In addition to the tools listed in [`.pre-commit-config.yaml`](https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml) and [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml), this project uses the following tools in its development:
 
 * [autoDocstring](https://github.com/NilsJPWerner/autoDocstring)
-* [Even Better TOML](https://github.com/tamasfe/taplo)
+* [Taplo and the Even Better TOML extension](https://github.com/tamasfe/taplo)
 * [markdownlint](https://github.com/DavidAnson/vscode-markdownlint)
 * [vermin](https://github.com/netromdk/vermin)
 

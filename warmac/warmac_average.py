@@ -42,6 +42,7 @@ CURR_TIME = datetime.now(timezone.utc)
 #: A dictionary containing the headers to be used in the HTTP request.
 headers = {
     "Accept": "application/json",
+    "Accept-Language": "en",
     "Content-Type": "application/json",
     "Host": "api.warframe.market",
     "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
@@ -269,7 +270,6 @@ def _verbose_out(
     args: argparse.Namespace,
     avg_cost: float,
     plat_list: List[int],
-    time_r: int = warmac_parser.DEFAULT_TIME,
 ) -> None:
     """
     Output average price, as well as additional information.
@@ -283,8 +283,6 @@ def _verbose_out(
     :param args: The user-given command line arguments.
     :param avg_cost: The statistic of the item that was found.
     :param plat_list: The list of prices of the item.
-    :param time_r: The oldest a listing could be to not be filtered out,
-        defaults to :py:const:`warmac_parser.DEFAULT_TIME`.
     :raises warmac_errors.StatisticTypeError: If ``statistic`` is not
         present in :py:data:`.AVG_FUNCS`.
     """
@@ -292,12 +290,14 @@ def _verbose_out(
     try:
         space_after_label = 23
         statistic = AVG_FUNCS[args.statistic].__name__.replace("_", " ").title()
-        print(f"{'Item:':{space_after_label}}{args.item.title()}")
+        fixed_item_name = args.item.replace("_", " ").replace(" and ", " & ").title()
+        print(f"{'Item:':{space_after_label}}{fixed_item_name}")
         print(f"{'Statistic Found:':{space_after_label}}{statistic}")
-        print(f"{'Time Range Used:':{space_after_label}}{time_r}")
-        print(f"{f'{statistic} Price:':{space_after_label}}{avg_cost}")
-        print(f"{'Max Price:':{space_after_label}}{max(plat_list):.1f}")
-        print(f"{'Min Price:':{space_after_label}}{min(plat_list):.1f}")
+        time_r_message = f"{'Time Range Used:':{space_after_label}}{args.timerange} day"
+        print(f"{time_r_message}s" if args.timerange > 1 else time_r_message)
+        print(f"{f'{statistic} Price:':{space_after_label}}{avg_cost} platinum")
+        print(f"{'Max Price:':{space_after_label}}{max(plat_list):.0f} platinum")
+        print(f"{'Min Price:':{space_after_label}}{min(plat_list):.0f} platinum")
         print(f"{'Number of Orders:':{space_after_label}}{len(plat_list)}")
     except KeyError as err:
         raise warmac_errors.StatisticTypeError from err
