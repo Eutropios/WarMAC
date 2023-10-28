@@ -52,6 +52,7 @@ autodoc_default_options = {
 nitpicky = True
 autodoc_typehints = "signature"
 autodoc_preserve_defaults = True
+copybutton_selector = "div:not(.no-copybutton) > div.highlight > pre"
 
 # ---- Options for HTML output ----------------------------------------
 
@@ -62,7 +63,7 @@ html_css_files = [str(_static_path / "custom.css")]
 htmlhelp_basename = "warmacdoc"
 highlight_language = "python"
 pygments_style = "one-dark"
-pygments_dark_style = "one-dark"
+pygments_dark_style = "monokai"
 
 html_theme_options = {
     "globaltoc_collapse": True,

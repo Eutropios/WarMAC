@@ -55,7 +55,7 @@ warmac --version
 
 WarMAC can also be installed using [Poetry](https://python-poetry.org/) either through the provided [`poetry.lock`](https://github.com/Eutropios/WarMAC/blob/main/poetry.lock) file (recommended), or by building a lock of your own.
 
-To obtain the source code, you can either download the latest version from the [Releases tab](https://github.com/Eutropios/WarMAC/releases), or by cloning the repository using [Git](https://git-scm.com/downloads) with the following command:
+To obtain the source code, you can either download the latest version from [Releases](https://github.com/Eutropios/WarMAC/releases), or by cloning the repository using [git](https://git-scm.com/downloads) with the following command:
 
 ```console
 git clone https://github.com/Eutropios/WarMAC.git ./some/directory
@@ -65,7 +65,7 @@ WarMAC can then be built by navigating to the directory you cloned WarMAC into, 
 
 ## Usage<a id="usage"></a>
 
-Full usage instructions can be found in the official documentation.
+Full usage instructions can be found in the official documentation. (Add link here once live).
 
 Using WarMAC is as simple as:  
 `warmac <command> [options] item`

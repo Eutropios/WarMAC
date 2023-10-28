@@ -17,18 +17,15 @@
  Running WarMAC
 ****************
 
-|  Every WarMAC command is preceded by calling ``warmac``. You can also run
-   ``warmac`` without calling any specific subcommand.
+|  Every WarMAC subcommand is preceded by ``warmac``. To view WarMAC's general
+   help, simply run ``warmac`` without calling any subcommand.
+
+|  The general help section describes each subcommand's function, as well as
+   describing the available flags and options.
 
 .. code:: console
 
-   warmac
-
-|  Doing so will return the main help page, which describes the usage of the
-   program:
-
-.. code:: console
-
+   $ warmac
    usage: warmac <command> [options]
 
    A program to fetch the average market cost of an item in Warframe.
@@ -38,7 +35,7 @@
 
    options:
       -h, --help     Show this message and exit.
-      -V, --version  Show the program's version number and exit.
+      -V, --version  Show the version of WarMAC and exit.
 
 ``-h``, ``--help``
 ==================

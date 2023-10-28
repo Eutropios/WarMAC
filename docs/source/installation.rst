@@ -20,13 +20,13 @@ Using pip
 
 .. tab:: Unix/macOS
 
-   .. code-block:: shell
+   .. code:: console
       
       python -m pip install warmac
 
 .. tab:: Windows
 
-   .. code-block:: console
+   .. code:: console
 
       py -m pip install warmac
 
@@ -53,9 +53,8 @@ Using pip
    either through the provided ``poetry.lock`` file (recommended), or by
    building a lock of your own.
 
-|  To obtain the source code, you can either download the latest version from
-   the `Releases tab <https://github.com/Eutropios/WarMAC/releases>`_, or by
-   cloning the repository using `Git <https://git-scm.com/downloads>`_ with the
+|  To obtain the source code, you can either download the latest version from `Releases <https://github.com/Eutropios/WarMAC/releases>`_, or by
+   cloning the repository using `git <https://git-scm.com/downloads>`_ with the
    following command:
 
 .. code:: console
