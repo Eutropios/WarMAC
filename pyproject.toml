@@ -66,10 +66,12 @@
     ignore = [
         "AIR",
         "ANN101",
+        "COM812",
         "DJ",
         "ERA001",
         "FIX",
         "INT",
+        "ISC001",
         "ISC002",
         "NPY",
         "PD",
@@ -82,11 +84,11 @@
         "UP007",
         "UP035",
     ]
+    indent-width = 4
     line-length = 88
     preview = true
     select = ["ALL", "CPY001", "PLC1901"]
     show-fixes = true
-    tab-size = 4
     target-version = "py38"
 
     [tool.ruff.flake8-copyright]
@@ -99,6 +101,24 @@
         docstring-quotes = "double"
         inline-quotes    = "double"
         multiline-quotes = "double"
+
+    [tool.ruff.format]
+        exclude = [
+            ".git",
+            ".hg",
+            ".mypy_cache",
+            ".tox",
+            ".venv",
+            "_build",
+            "buck-out",
+            "build",
+            "dist",
+            "ruff_cache",
+        ]
+        indent-style = "space"
+        line-ending = "auto"
+        quote-style = "double"
+        skip-magic-trailing-comma = false
 
     [tool.ruff.flake8-type-checking]
         exempt-modules = ["typing"]
@@ -117,22 +137,3 @@
 
     [tool.ruff.pydocstyle]
         convention = "pep257"
-
-[tool.black]
-    exclude = '''
-/(
-    \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  | \.ruff_cache
-)/
-'''
-    include = '\.pyi?$'
-    line-length = 88
-    verbose = true

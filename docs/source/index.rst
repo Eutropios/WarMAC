@@ -27,7 +27,7 @@
    :caption: User Guide
 
    installation
-   using_warmac
+   cli/index
 
 .. toctree::
    :hidden:
@@ -51,7 +51,7 @@
 |  :doc:`Installation Guide </installation>`
 |
 |  Need help using WarMAC?
-|  :doc:`Using WarMAC </using_warmac>`
+|  :doc:`Using WarMAC <cli/index>`
 
 Indices and tables
 ==================

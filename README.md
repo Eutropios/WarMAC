@@ -104,7 +104,7 @@ Work In Progress.
 
 ## Contributing<a id="contributing"></a>
 
-Contributions are welcome. The expected development stack that you will use is black, mypy, and ruff. Please see [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml) for appropriate configuration.
+Contributions are welcome. The expected development stack that you will use is docformatter, mypy, and ruff. Please see [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml) for appropriate configuration.
 
 ### Testing
 

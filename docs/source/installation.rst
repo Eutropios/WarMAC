@@ -11,9 +11,9 @@
 
 |  WarMAC's only dependency is urllib3 ≥2.0.4,<3.0.0
 
-**********
-Using pip
-**********
+***********
+ Using pip
+***********
 
 |  Currently, the primary method of installing WarMAC is by installing it
    through pip. This can be done using the following command:
@@ -21,7 +21,7 @@ Using pip
 .. tab:: Unix/macOS
 
    .. code:: console
-      
+
       python -m pip install warmac
 
 .. tab:: Windows
@@ -37,8 +37,8 @@ Using pip
 
    warmac --version
 
-|  Once you've installed WarMAC, check out :ref:`using_warmac` for how to use
-   WarMAC.
+|  Once you've installed WarMAC, check out :doc:`Usage </cli/index>` for how to
+   use WarMAC.
 
 **************
  Using Poetry
@@ -53,9 +53,10 @@ Using pip
    either through the provided ``poetry.lock`` file (recommended), or by
    building a lock of your own.
 
-|  To obtain the source code, you can either download the latest version from `Releases <https://github.com/Eutropios/WarMAC/releases>`_, or by
-   cloning the repository using `git <https://git-scm.com/downloads>`_ with the
-   following command:
+|  To obtain the source code, you can either download the latest version from
+   `Releases <https://github.com/Eutropios/WarMAC/releases>`_, or by cloning the
+   repository using `git <https://git-scm.com/downloads>`_ with the following
+   command:
 
 .. code:: console
 

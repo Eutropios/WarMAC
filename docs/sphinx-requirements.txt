@@ -1,4 +1,3 @@
--r ../requirements.txt
 furo >= 2023.9.10
 sphinx >= 7.2.0, < 8.0.0
 sphinx-copybutton >= 0.5.2, < 1.0.0

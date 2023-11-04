@@ -1,62 +1,8 @@
-.. _using_warmac:
+.. _average:
 
-#######
- Usage
-#######
-
-|  WarMAC has a variety of subcommands for users to select from. Each subcommand
-   has its own unique options and arguments. Wherever possible, options that
-   perform similar functions for different subcommands will share the same name.
-
-.. note::
-
-   WarMAC currently only has the Average subcommand. More subcommands will be
-   added in the future.
-
-****************
- Running WarMAC
-****************
-
-|  Every WarMAC subcommand is preceded by ``warmac``. To view WarMAC's general
-   help, simply run ``warmac`` without calling any subcommand.
-
-|  The general help section describes each subcommand's function, as well as
-   describing the available flags and options.
-
-.. code:: console
-
-   $ warmac
-   usage: warmac <command> [options]
-
-   A program to fetch the average market cost of an item in Warframe.
-
-   commands:
-      average        Calculate the average platinum price of an item.
-
-   options:
-      -h, --help     Show this message and exit.
-      -V, --version  Show the version of WarMAC and exit.
-
-``-h``, ``--help``
-==================
-
-|  Print the command line usage and then exit. Providing this option is
-   identical to calling ``warmac`` without any subcommand.
-|  WarMAC will ignore all other options if ``-h`` or ``--help`` is given.
-
-``-V``, ``--version``
-=====================
-
-|  Print the current version of WarMAC and exit.
-|  WarMAC will ignore all other options if ``-V`` or ``--version`` is given.
-|
-|  When determining whether to display the program's help, or to display the
-   current program's version, WarMAC will use whichever of the two options is
-   given first.
-
-*********
+#########
  Average
-*********
+#########
 
 |  The Average command can be used to find the average platinum price of a
    particular item.

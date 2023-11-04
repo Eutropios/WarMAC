@@ -56,14 +56,14 @@ copybutton_selector = "div:not(.no-copybutton) > div.highlight > pre"
 
 # ---- Options for HTML output ----------------------------------------
 
-_static_path = Path("../_static")
+_static_path = Path("_static")
 html_static_path = [str(_static_path)]
 html_theme = "furo"
 html_css_files = [str(_static_path / "custom.css")]
 htmlhelp_basename = "warmacdoc"
 highlight_language = "python"
 pygments_style = "one-dark"
-pygments_dark_style = "monokai"
+pygments_dark_style = "one-dark"
 
 html_theme_options = {
     "globaltoc_collapse": True,
