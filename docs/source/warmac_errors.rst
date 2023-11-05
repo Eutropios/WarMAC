@@ -25,12 +25,6 @@ Generic Errors
    :show-inheritance:
    :private-members:
 
-.. autoexception:: warmac_errors.StatisticTypeError
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
 .. autoexception:: warmac_errors.NoListingsFoundError
    :members:
    :undoc-members:

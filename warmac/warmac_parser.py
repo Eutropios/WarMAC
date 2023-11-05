@@ -368,8 +368,7 @@ def handle_input() -> argparse.Namespace:
     :return: The parsed command-line arguments.
     """
     parser = _create_parser()
-    parsed_args = parser.parse_args()
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
         sys.exit(1)
-    return parsed_args
+    return parser.parse_args()

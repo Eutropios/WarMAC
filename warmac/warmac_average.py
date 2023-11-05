@@ -15,7 +15,7 @@ External packages required: urllib3
 from __future__ import annotations
 
 # Argparse is imported normally purely to satisfy Sphinx autodoc
-import argparse  # noqa: TCH003
+import argparse
 from datetime import datetime, timezone
 from statistics import geometric_mean, harmonic_mean, mean, median, mode
 from typing import Any, Callable, Dict, List, Sequence, Union
@@ -49,6 +49,7 @@ headers = {
 }
 
 
+# Maybe replace with TypedDict
 class _WarMACJSON:
     """
     Object storing the contents of a JSON.
@@ -57,7 +58,7 @@ class _WarMACJSON:
     returned from the HTTP request.
     """
 
-    def __init__(self, json: Dict[str, Any]) -> None:
+    def __init__(self, json_: Dict[str, Any]) -> None:
         """
         Construct a :py:class:`._WarMACJSON` object.
 
@@ -67,17 +68,15 @@ class _WarMACJSON:
         or if it's a relic. Object also contains the found orders of the
         item.
 
-        :param json: The JSON dictionary that is created from the data
+        :param json_: The JSON dictionary that is created from the data
             returned by the HTTP request.
-        :raises KeyError: If the JSON dictionary does not contain the
-            necessary fields for initialization.
         """
-        item_info: Dict[str, Any] = json["include"]["item"]["items_in_set"][0]
+        item_info: Dict[str, Any] = json_["include"]["item"]["items_in_set"][0]
         tags: List[str] = item_info["tags"]
         self.is_relic = "relic" in tags
         self.is_mod_or_arcane = "mod" in tags or "arcane_enhancement" in tags
         self.max_rank = int(item_info["mod_max_rank"]) if self.is_mod_or_arcane else -1
-        self.orders: List[Dict[str, Any]] = json["payload"]["orders"]
+        self.orders: List[Dict[str, Any]] = json_["payload"]["orders"]
 
     def __repr__(self) -> str:
         return str(self.orders)
@@ -133,17 +132,12 @@ def _calc_avg(plat_list: List[int], statistic: str, decimals: int = 1) -> float:
         rounded to, defaults to 1.
     :raises warmac_errors.NoListingsFoundError: If ``plat_list`` has no
         contents.
-    :raises warmac_errors.StatisticTypeError: If ``statistic`` is not
-        present in :py:data:`.AVG_FUNCS`.
     :return: The desired statistic of the specified item.
     """
     # Handle errors
     if not plat_list:
         raise warmac_errors.NoListingsFoundError from None
-    try:
-        return round(float(AVG_FUNCS[statistic](plat_list)), decimals)
-    except KeyError as err:
-        raise warmac_errors.StatisticTypeError from err
+    return round(float(AVG_FUNCS[statistic](plat_list)), decimals)
 
 
 def _in_time_r(last_updated: str, time_r: int = warmac_parser.DEFAULT_TIME) -> bool:
@@ -192,7 +186,7 @@ def _comp_val(
 
 def _filter_order(
     order: Dict[str, Any],
-    json: _WarMACJSON,
+    json_: _WarMACJSON,
     args: argparse.Namespace,
 ) -> bool:
     """
@@ -210,60 +204,48 @@ def _filter_order(
       on ``args.radiant``
 
     :param order: The order to run the checks against.
-    :param json: The object containing information about the item.
+    :param json_: The object containing information about the item.
     :param args: The user-given command line arguments.
-    :raises KeyError: If ``json`` does not contain the required fields.
     :return: True if all four conditions are met, return False if any
         one of them are not met.
     """
-    try:
-        return (
-            # Check if the order type is a buy or sell order depending
-            # on args.use_buyers
-            _comp_val(order["order_type"], "buy", "sell", condition=args.use_buyers)
-            and _in_time_r(order["last_update"], args.timerange)
-            and (
-                # Check if the rank of the mod is the mod's max rank or
-                # unranked depending on args.maxrank
-                _comp_val(order["mod_rank"], json.max_rank, 0, condition=args.maxrank)
-                if json.is_mod_or_arcane
-                else True
-            )
-            and (
-                # Check if the refinement of the relic is "radiant" or
-                # "intact" depending on args.radiant
-                _comp_val(order["subtype"], "radiant", "intact", condition=args.radiant)
-                if json.is_relic
-                else True
-            )
+    return (
+        # Check if the order type is a buy or sell order depending
+        # on args.use_buyers
+        _comp_val(order["order_type"], "buy", "sell", condition=args.use_buyers)
+        and _in_time_r(order["last_update"], args.timerange)
+        and (
+            # Check if the rank of the mod is the mod's max rank or
+            # unranked depending on args.maxrank
+            _comp_val(order["mod_rank"], json_.max_rank, 0, condition=args.maxrank)
+            if json_.is_mod_or_arcane
+            else True
         )
-    except KeyError as err:
-        msg = "Required JSON field not found."
-        raise KeyError(msg) from err
+        and (
+            # Check if the refinement of the relic is "radiant" or
+            # "intact" depending on args.radiant
+            _comp_val(order["subtype"], "radiant", "intact", condition=args.radiant)
+            if json_.is_relic
+            else True
+        )
+    )
 
 
-def _get_plat_list(json: _WarMACJSON, args: argparse.Namespace) -> List[int]:
+def _get_plat_list(json_: _WarMACJSON, args: argparse.Namespace) -> List[int]:
     """
     Return a filtered list of platinum prices.
 
     Return a filtered list of platinum prices given a
     :py:class:`._WarMACJSON` and the user's command-line arguments.
 
-    :param json: The object containing the item's listings and the
+    :param json_: The object containing the item's listings and the
         associated information with that item.
     :param args: The user-given command line arguments.
-    :raises KeyError: If ``json`` does not contain the required fields.
     :return: A list of the platinum prices from the filtered listings.
     """
-    try:
-        return [
-            order["platinum"]
-            for order in json.orders
-            if _filter_order(order, json, args)
-        ]
-    except KeyError as err:
-        msg = "Required JSON field not found."
-        raise KeyError(msg) from err
+    return [
+        order["platinum"] for order in json_.orders if _filter_order(order, json_, args)
+    ]
 
 
 def _verbose_out(
@@ -283,24 +265,19 @@ def _verbose_out(
     :param args: The user-given command line arguments.
     :param avg_cost: The statistic of the item that was found.
     :param plat_list: The list of prices of the item.
-    :raises warmac_errors.StatisticTypeError: If ``statistic`` is not
-        present in :py:data:`.AVG_FUNCS`.
     """
     # {value:{width}.{precision}}
-    try:
-        space_after_label = 23
-        statistic = AVG_FUNCS[args.statistic].__name__.replace("_", " ").title()
-        fixed_item_name = args.item.replace("_", " ").replace(" and ", " & ").title()
-        print(f"{'Item:':{space_after_label}}{fixed_item_name}")
-        print(f"{'Statistic Found:':{space_after_label}}{statistic}")
-        time_r_message = f"{'Time Range Used:':{space_after_label}}{args.timerange} day"
-        print(f"{time_r_message}s" if args.timerange > 1 else time_r_message)
-        print(f"{f'{statistic} Price:':{space_after_label}}{avg_cost} platinum")
-        print(f"{'Max Price:':{space_after_label}}{max(plat_list):.0f} platinum")
-        print(f"{'Min Price:':{space_after_label}}{min(plat_list):.0f} platinum")
-        print(f"{'Number of Orders:':{space_after_label}}{len(plat_list)}")
-    except KeyError as err:
-        raise warmac_errors.StatisticTypeError from err
+    space_after_label = 23
+    statistic = AVG_FUNCS[args.statistic].__name__.replace("_", " ").title()
+    fixed_item_name = args.item.replace("_", " ").replace(" and ", " & ").title()
+    print(f"{'Item:':{space_after_label}}{fixed_item_name}")
+    print(f"{'Statistic Found:':{space_after_label}}{statistic}")
+    time_r_message = f"{'Time Range Used:':{space_after_label}}{args.timerange} day"
+    print(f"{time_r_message}s" if args.timerange > 1 else time_r_message)
+    print(f"{f'{statistic} Price:':{space_after_label}}{avg_cost} platinum")
+    print(f"{'Max Price:':{space_after_label}}{max(plat_list):.0f} platinum")
+    print(f"{'Min Price:':{space_after_label}}{min(plat_list):.0f} platinum")
+    print(f"{'Number of Orders:':{space_after_label}}{len(plat_list)}")
 
 
 def average(args: argparse.Namespace) -> None:

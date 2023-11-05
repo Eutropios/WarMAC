@@ -16,7 +16,7 @@ External packages required: urllib3
 
 from __future__ import annotations
 
-import argparse  # noqa: TCH003
+import argparse
 import sys
 from typing import Callable, Dict, Literal
 

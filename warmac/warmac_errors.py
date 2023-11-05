@@ -41,20 +41,6 @@ class SubcommandError(WarMACBaseError):
         super().__init__("Not a valid subcommand.")
 
 
-class StatisticTypeError(WarMACBaseError):
-    """
-    Thrown if statistic does not exist in
-    :data:`warmac_average.AVG_FUNCS`.
-
-    Thrown if the ``statistic`` field of ``argparse.Namespace`` does not
-    exist within :data:`warmac_average.AVG_FUNCS`.
-    """  # noqa: D205
-
-    def __init__(self) -> None:
-        """Construct a ``StatisticTypeError`` exception."""
-        super().__init__("Not a valid statistic type.")
-
-
 class NoListingsFoundError(WarMACBaseError):
     """
     Thrown if no listings were found.

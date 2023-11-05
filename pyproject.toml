@@ -22,7 +22,7 @@
     description = "An average platinum price calculator for tradeable items in Warframe."
     # documentation = ""
     # include = [""]
-    keywords    = ["warframe calculator", "warframe market", "warframe"]
+    keywords    = ["platinum", "warframe calculator", "warframe market", "warframe"]
     license     = "MIT"
     maintainers = ["Noah Jenner <noah.jenner@proton.me>"]
     name        = "WarMAC"
@@ -31,7 +31,7 @@
     repository  = "https://github.com/Eutropios/WarMAC"
     version     = "0.0.4"
     [tool.poetry.dependencies]
-        python  = ">=3.8,<=3.13.0"
+        python  = ">=3.8,<3.13.0"
         urllib3 = "^2.0.4"
     [tool.poetry.scripts]
         warmac = "warmac.__init__:console_main"
@@ -63,6 +63,7 @@
     strict = true
 
 [tool.ruff]
+    explicit-preview-rules = false
     ignore = [
         "AIR",
         "ANN101",
@@ -87,7 +88,7 @@
     indent-width = 4
     line-length = 88
     preview = true
-    select = ["ALL", "CPY001", "PLC1901"]
+    select = ["ALL"]
     show-fixes = true
     target-version = "py38"
 
@@ -121,7 +122,7 @@
         skip-magic-trailing-comma = false
 
     [tool.ruff.flake8-type-checking]
-        exempt-modules = ["typing"]
+        exempt-modules = ["argparse", "typing"]
         strict         = true
 
     [tool.ruff.isort]

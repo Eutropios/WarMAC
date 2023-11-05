@@ -26,7 +26,7 @@
 
 .. py:data:: warmac_average.headers
    :type: typing.Dict[str, str]
-   :value: {'User-Agent': 'Mozilla/5.0 Gecko/20100101 Firefox/116.0', 'Content-Type': 'application/json', 'Host': 'api.warframe.market', 'Accept': 'application/json'}
+   :value: {'Accept': 'application/json', 'Accept-Language': 'en', 'Content-Type': 'application/json', 'Host': 'api.warframe.market', 'User-Agent': 'Mozilla/5.0 Gecko/20100101 Firefox/116.0',}
 
    A dictionary containing the headers to be used in the HTTP request. During execution, another header is added named 'platform', which contains one of ('pc', 'xbox', 'ps4', 'switch') corresponding to the user's platform.
 
