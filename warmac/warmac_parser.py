@@ -248,7 +248,7 @@ def _create_parser() -> WarMACParser:
         add_help=False,
         usage=(
             f"{_PROG_NAME} average [-s <stat>] [-p <platform>] [-t <days>] [-m | -r]"
-            " [-b] item"
+            " [-b] [-v] item"
         ),
     )
 
@@ -271,7 +271,7 @@ def _create_parser() -> WarMACParser:
         choices=_AVG_FUNCS,
         help=(
             "Specifies which statistic to return; Can be one of "
-            f"[{', '.join(_AVG_FUNCS)}]. (Default: median)"
+            f"({', '.join(_AVG_FUNCS)}). (Default: median)"
         ),
         metavar="<stat>",
         dest="statistic",
@@ -285,7 +285,7 @@ def _create_parser() -> WarMACParser:
         choices=_PLATFORMS,
         help=(
             "Specifies which platform to fetch orders for; Can be one of "
-            f"[{', '.join(_PLATFORMS)}]. (Default: pc)"
+            f"({', '.join(_PLATFORMS)}). (Default: pc)"
         ),
         metavar="<platform>",
     )

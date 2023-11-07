@@ -18,7 +18,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 from statistics import geometric_mean, harmonic_mean, mean, median, mode
-from typing import Any, Callable, Dict, List, Sequence, Union
+from typing import Any, Callable, Dict, List, Sequence, TypedDict, Union
 
 import urllib3
 
@@ -49,37 +49,56 @@ headers = {
 }
 
 
-# Maybe replace with TypedDict
-class _WarMACJSON:
+# TODO: Create a typeddict for the crap in each order
+
+
+class _WarMACJSON(TypedDict):
     """
-    Object storing the contents of a JSON.
+    A :py:class:`~typing.TypedDict` that stores the retrieved JSON.
 
-    Object that stores the contents of the JSON created using the data
-    returned from the HTTP request.
+    A :py:class:`~typing.TypedDict` that stores information about the
+    retrieved item, as well as its associated orders.
+
+    :param is_relic: Whether or not the requested item is a relic.
+    :param is_mod_or_arcane: Whether or not the requested item is a mod
+        or arcane enhancement.
+    :param max_rank: The maximum rank that the mod or arcane enhancement
+        can be. If the item is not a mod or arcane enhancement, then
+        this will store -1.
+    :param orders: The requested orders associated with this item.
     """
 
-    def __init__(self, json_: Dict[str, Any]) -> None:
-        """
-        Construct a :py:class:`._WarMACJSON` object.
+    is_relic: bool
+    is_mod_or_arcane: bool
+    max_rank: int
+    orders: List[Dict[str, Any]]
 
-        Construct a :py:class:`._WarMACJSON` object using a decoded JSON
-        returned from a HTTP request. Object contains information about
-        if the desired item is a mod or arcane (and if so its max rank),
-        or if it's a relic. Object also contains the found orders of the
-        item.
 
-        :param json_: The JSON dictionary that is created from the data
-            returned by the HTTP request.
-        """
-        item_info: Dict[str, Any] = json_["include"]["item"]["items_in_set"][0]
-        tags: List[str] = item_info["tags"]
-        self.is_relic = "relic" in tags
-        self.is_mod_or_arcane = "mod" in tags or "arcane_enhancement" in tags
-        self.max_rank = int(item_info["mod_max_rank"]) if self.is_mod_or_arcane else -1
-        self.orders: List[Dict[str, Any]] = json_["payload"]["orders"]
+def _extract_info(input_json_: Dict[str, Any]) -> _WarMACJSON:
+    """
+    Extract the necessary information from the retrieved JSON.
 
-    def __repr__(self) -> str:
-        return str(self.orders)
+    Extract the retrieved item's tags, which indicate whether or not
+    the item is a mod, relic, arcane. If the item is a mod or arcane,
+    the max rank is stored in max_rank. If the item is not a mod or
+    arcane, -1 is stored in max_rank. Finally, a list of dictionaries
+    corresponding to each order is also extracted.
+
+    :param input_json_: The :py:class:`argparse.BaseHTTPResponse`
+        retrieved from the request that has been decoded into a JSON.
+    :return: Return a TypedDict containing the information extracted
+        from the JSON.
+    """
+    item_info: Dict[str, Any] = input_json_["include"]["item"]["items_in_set"][0]
+    tags: List[str] = item_info["tags"]
+    mod_or_arcane = "mod" in tags or "arcane_enhancement" in tags
+    json_: _WarMACJSON = {
+        "is_relic": "relic" in tags,
+        "is_mod_or_arcane": mod_or_arcane,
+        "max_rank": int(item_info["mod_max_rank"]) if mod_or_arcane else -1,
+        "orders": input_json_["payload"]["orders"],
+    }
+    return json_
 
 
 def _get_page(url: str) -> urllib3.BaseHTTPResponse:
@@ -217,15 +236,15 @@ def _filter_order(
         and (
             # Check if the rank of the mod is the mod's max rank or
             # unranked depending on args.maxrank
-            _comp_val(order["mod_rank"], json_.max_rank, 0, condition=args.maxrank)
-            if json_.is_mod_or_arcane
+            _comp_val(order["mod_rank"], json_["max_rank"], 0, condition=args.maxrank)
+            if json_["is_mod_or_arcane"]
             else True
         )
         and (
             # Check if the refinement of the relic is "radiant" or
             # "intact" depending on args.radiant
             _comp_val(order["subtype"], "radiant", "intact", condition=args.radiant)
-            if json_.is_relic
+            if json_["is_relic"]
             else True
         )
     )
@@ -244,7 +263,9 @@ def _get_plat_list(json_: _WarMACJSON, args: argparse.Namespace) -> List[int]:
     :return: A list of the platinum prices from the filtered listings.
     """
     return [
-        order["platinum"] for order in json_.orders if _filter_order(order, json_, args)
+        order["platinum"]
+        for order in json_["orders"]
+        if _filter_order(order, json_, args)
     ]
 
 
@@ -293,7 +314,7 @@ def average(args: argparse.Namespace) -> None:
     headers["platform"] = args.platform
     fixed_item: str = args.item.lower().replace(" ", "_").replace("&", "and")
     fixed_url = f"{_API_ROOT}/items/{fixed_item}/orders?include=item"
-    retrieved_json = _WarMACJSON(_get_page(fixed_url).json())
+    retrieved_json = _extract_info(_get_page(fixed_url).json())
     plat_list: List[int] = _get_plat_list(retrieved_json, args)
     cost = _calc_avg(plat_list, args.statistic)
     _verbose_out(

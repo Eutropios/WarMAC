@@ -19,11 +19,22 @@
  Running WarMAC
 ****************
 
-|  Every WarMAC subcommand is preceded by ``warmac``. The general help section 
+|  Every WarMAC subcommand is preceded by ``warmac``. The general help section
    of the program can be viewed by running :option:`warmac --help`.
 
 |  The general help section describes each subcommand's function, as well as
    describing the available flags and options.
+
+.. code:: console
+
+   warmac <command> [options]
+
+*********
+ Options
+*********
+
+|  When determining whether to display the program's help, or to display the
+   current program's version, WarMAC will use whichever of the two options is given first.
 
 .. option:: -h, --help
 
@@ -31,11 +42,8 @@
    identical to calling ``warmac`` without any subcommand. WarMAC will ignore
    all other options if ``-h`` or ``--help`` is given.
 
+
 .. option:: -V, --version
 
    Print the current version of WarMAC and exit. WarMAC will ignore all other
    options if ``-V`` or ``--version`` is given.
-
-   When determining whether to display the program's help, or to display the
-   current program's version, WarMAC will use whichever of the two options is
-   given first.
