@@ -27,7 +27,7 @@
 
 .. code:: console
 
-   warmac <command> [options]
+   $ warmac <command> [options]
 
 *********
  Options

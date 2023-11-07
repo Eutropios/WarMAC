@@ -62,7 +62,7 @@ WarMAC can also be installed using [Poetry](https://python-poetry.org/) either t
 
 To obtain the source code, you can either download the latest version from [Releases](https://github.com/Eutropios/WarMAC/releases), or by cloning the repository using [git](https://git-scm.com/downloads) with the following command:
 
-```console
+```bash
 git clone https://github.com/Eutropios/WarMAC.git ./some/directory
 ```
 

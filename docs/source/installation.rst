@@ -22,20 +22,20 @@
 
    .. code:: console
 
-      python -m pip install warmac
+      $ python -m pip install warmac
 
 .. tab:: Windows
 
    .. code:: console
 
-      py -m pip install warmac
+      $ py -m pip install warmac
 
 |  You can ensure that you've installed WarMAC correctly by calling its help
    page like so:
 
 .. code:: console
 
-   warmac --version
+   $ warmac --version
 
 |  Once you've installed WarMAC, check out :doc:`Usage </cli/index>` for how to
    use WarMAC.
@@ -60,7 +60,7 @@
 
 .. code:: console
 
-   git clone https://github.com/Eutropios/WarMAC.git ./some/directory
+   $ git clone https://github.com/Eutropios/WarMAC.git ./some/directory
 
 |  WarMAC can then be built by navigating to the directory you cloned WarMAC
    into, and running the ``poetry build`` and ``poetry install`` commands.

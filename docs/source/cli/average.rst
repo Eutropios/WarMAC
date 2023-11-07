@@ -12,7 +12,7 @@
 
 .. code:: console
 
-   warmac average [options] item
+   $ warmac average [options] item
 
 The average command is used to calculate the average platinum price of a
 specific item. It provides the average platinum price for any tradable item.
