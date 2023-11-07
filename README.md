@@ -70,37 +70,50 @@ WarMAC can then be built by navigating to the directory you cloned WarMAC into, 
 
 ## Usage<a id="usage"></a>
 
-Full usage instructions can be found in the official documentation. (Add link here once live).
+### General Usage
 
-Using WarMAC is as simple as:  
-`warmac <command> [options] item`
+Full usage instructions as well as examples can be found in the [official documentation](https://warmac.readthedocs.io/en/).
 
-The full command-line usage is as follows:
+WarMAC has a variety of subcommands for users to select from. Each subcommand has its own unique options and arguments. Wherever possible, options that perform similar functions for different subcommands will share the same name.
 
-```console
-usage: warmac <command> [options]
+Every WarMAC subcommand is preceded by ``warmac``. The general help section of the program can be viewed by running `warmac --help`.
 
-A program to fetch the average market cost of an item in Warframe.
+To view a specific subcommand's usage from the command line, simply run:
+`warmac <command> --help`
 
-commands:
-  average        Calculate the average platinum price of an item.
+For example, to view the usage for the average subcommand, users should run:
+`warmac average --help`
 
-options:
-  -h, --help     Show this message and exit.
-  -V, --version  Show the program's version number and exit.
-```
+### Handling WarMAC Output
 
 WarMAC accepts outgoing pipes just like any other tool:
 
-`warmac average -p=ps4 -t=5 -v "bite" | grep "Range"`
+```bash
+$ warmac average -p=ps4 -t=5 -v "bite" | grep "Time Range"
+Time Range Used:             10 days
+```
 
 WarMAC output can also be redirected to a file:
 
-`warmac average -p PC -t 2 "vengeful revenant" > warmacOut.txt`
+```bash
+$ warmac average -p PC -t 2 -v "vengeful revenant" > warmacOut.txt
+$ cat warmacOut.txt
+Item:                  Vengeful Revenant
+Statistic Found:       Median
+Time Range Used:       2 days
+Median Price:          5.0 platinum
+Max Price:             30 platinum
+Min Price:             4 platinum
+Number of Orders:      38
+```
+
+### Examples
+
+Work In Progress.
 
 ## Documentation<a id="documentation"></a>
 
-Work In Progress.
+Full documentation for installation, usage, and contributing can be found [here](https://warmac.readthedocs.io/en/).
 
 ## Upcoming Features<a id="upcoming-features"></a>
 

@@ -20,7 +20,7 @@
         "Typing :: Typed",
     ]
     description = "An average platinum price calculator for tradeable items in Warframe."
-    # documentation = ""
+    documentation = "https://warmac.readthedocs.io/en/"
     # include = [""]
     keywords    = ["platinum", "warframe calculator", "warframe market", "warframe"]
     license     = "MIT"

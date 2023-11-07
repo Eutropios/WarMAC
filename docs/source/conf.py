@@ -54,6 +54,8 @@ autodoc_default_options = {
 autodoc_preserve_defaults = True
 autodoc_typehints = "signature"
 copybutton_selector = "div:not(.no-copybutton) > div.highlight > pre"
+copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
+copybutton_prompt_is_regexp = True
 
 # ---- Options for HTML output ----------------------------------------
 
