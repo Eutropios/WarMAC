@@ -4,7 +4,7 @@
  WarMAC Errors
 ###############
 
-|  All of the custom errors used within WarMAC.
+|  All of the custom errors that are used within WarMAC.
 
 ************
  Base Error

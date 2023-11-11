@@ -3,18 +3,20 @@
 # WarMAC Version 0.0.4
 
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Eutropios/WarMAC/main)](https://github.com/Eutropios/WarMAC)
-[![MIT License](https://img.shields.io/github/license/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Eutropios/WarMAC/main.svg)](https://results.pre-commit.ci/latest/github/Eutropios/WarMAC/main)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)  
+[![Documentation Status](https://readthedocs.org/projects/warmac/badge/?version=latest)](https://warmac.readthedocs.io/en/latest/?badge=latest)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Eutropios/WarMAC/main.svg)](https://results.pre-commit.ci/latest/github/Eutropios/WarMAC/main)  
 [![PyPI](https://img.shields.io/pypi/v/warmac)](https://pypi.org/project/warmac/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dw/warmac)](https://pypi.org/project/warmac/)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/warmac)](https://pypi.org/project/warmac/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/warmac)](https://pypi.org/project/warmac/)  
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![MIT License](https://img.shields.io/github/license/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Eutropios/WarMAC)
 
 </div>
 
 **WarMAC** is a command-line Python script that can calculate the average market price of items in Warframe.
 
-**WarMAC** compiles orders from the fan website *<https://warframe.market/>*, and can be used to find the average prices of prime parts, tradeable parts, relics, mods, and arcane enhancements.
+**WarMAC** compiles orders from the fan website *<https://warframe.market/>* and can be used to find the average prices of prime parts, tradeable parts, relics, mods, and arcane enhancements.
 
 ## Features
 
@@ -58,9 +60,9 @@ warmac --version
 
 ### Using Poetry
 
-WarMAC can also be installed using [Poetry](https://python-poetry.org/) either through the provided [`poetry.lock`](https://github.com/Eutropios/WarMAC/blob/main/poetry.lock) file (recommended), or by building a lock of your own.
+WarMAC can also be installed using [Poetry](https://python-poetry.org/) either through the provided [`poetry.lock`](https://github.com/Eutropios/WarMAC/blob/main/poetry.lock) file (recommended) or by building a lock of your own.
 
-To obtain the source code, you can either download the latest version from [Releases](https://github.com/Eutropios/WarMAC/releases), or by cloning the repository using [git](https://git-scm.com/downloads) with the following command:
+To obtain the source code, you can either download the latest version from [Releases](https://github.com/Eutropios/WarMAC/releases) or by cloning the repository using [git](https://git-scm.com/downloads) with the following command:
 
 ```bash
 git clone https://github.com/Eutropios/WarMAC.git ./some/directory
@@ -113,7 +115,7 @@ Work In Progress.
 
 ## Documentation<a id="documentation"></a>
 
-Full documentation for installation, usage, and contributing can be found [here](https://warmac.readthedocs.io/en/).
+Full documentation for installation, usage, and contribution guidelines can be found [here](https://warmac.readthedocs.io/en/).
 
 ## Upcoming Features<a id="upcoming-features"></a>
 
@@ -122,11 +124,11 @@ Full documentation for installation, usage, and contributing can be found [here]
 
 ## Contributing<a id="contributing"></a>
 
-Contributions are welcome. The expected development stack that you will use is docformatter, mypy, and ruff. Please see [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml) for appropriate configuration.
+Contributions are welcome. The expected development stack that you will use consists of `docformatter`, `mypy`, and `ruff`. Please see [`pyproject.toml`](<https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml>) for the appropriate configuration of each tool.
 
 ### Testing
 
-There are currently no tests or intrusive Github Actions, but that is expected to change in the future.
+There are currently no tests or intrusive GitHub Actions, but that is expected to change in the future.
 
 ## Acknowledgements<a id="acknowledgements"></a>
 
@@ -141,7 +143,7 @@ WarMAC is packaged using [Poetry](https://github.com/python-poetry/poetry).
 
 ## Licensing<a id="licensing"></a>
 
-***This project is NOT affiliated with Warframe, Digital Extremes, or warframe.market***
+***This project is NOT affiliated with Warframe, Digital Extremes, or Warframe Market***
 
 Copyright (c) 2023 Noah Jenner under MIT License
 

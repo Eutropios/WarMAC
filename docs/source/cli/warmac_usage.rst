@@ -33,7 +33,7 @@
  Options
 *********
 
-|  When determining whether to display the program's help, or to display the
+|  When determining whether to display the program's help or to display the
    current program's version, WarMAC will use whichever of the two options is given first.
 
 .. option:: -h, --help

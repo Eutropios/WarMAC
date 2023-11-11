@@ -50,7 +50,7 @@
    to keep the dependency versions as is to maintain stability.
 
 |  WarMAC can also be installed using `Poetry <https://python-poetry.org/>`_
-   either through the provided ``poetry.lock`` file (recommended), or by
+   either through the provided ``poetry.lock`` file (recommended) or by
    building a lock of your own.
 
 |  To obtain the source code, you can either download the latest version from

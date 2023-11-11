@@ -4,7 +4,7 @@
  WarMAC Parser
 ###############
 
-|  WarMAC's parser is built on Python's argparse module. The appearance of the
+|  WarMAC's parser is built with Python's argparse module. The appearance of the
    command-line interface has been substantially modified to appear in a clean
    and organized manner.
 

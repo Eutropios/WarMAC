@@ -12,33 +12,34 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-# -- General configuration --------------------------------------------
+# -- Metadata ----------------------------------------------------------
 
 python_path = str(Path("../../warmac/").resolve())
 sys.path.insert(0, python_path)
 
-author = "Noah Jenner"
-copyright = "2023, Noah Jenner"  # noqa: A001
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-language = "en"
-master_doc = "index"
 project = "WarMAC"
+copyright = "2023, Noah Jenner"  # noqa: A001
+author = "Noah Jenner"
 release = "0.0.4"
-source_suffix = ".rst"
-templates_path = ["_templates"]
+language = "en"
 
-# -- Extensions --------------------------------------------------------
+# -- General Config ----------------------------------------------------
 
 extensions = [
-    "notfound.extension",
-    "sphinx.ext.autodoc",
     "sphinx.ext.duration",
+    "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
     "sphinx_copybutton",
-    "sphinx_inline_tabs",
     "sphinx_last_updated_by_git",
+    "notfound.extension",
+    "sphinx_inline_tabs",
     # install this https://github.com/readthedocs/sphinx-hoverxref
 ]
+
+master_doc = "index"
+source_suffix = ".rst"
+templates_path = ["_templates"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
@@ -47,27 +48,27 @@ intersphinx_mapping = {
 
 autodoc_default_options = {
     "members": True,
-    "private-members": True,
     "undoc-members": True,
+    "private-members": True,
 }
 # autodoc_type_aliases = {str, str}
-autodoc_preserve_defaults = True
+nitpicky = True
 autodoc_typehints = "signature"
+autodoc_preserve_defaults = True
 copybutton_selector = "div:not(.no-copybutton) > div.highlight > pre"
 copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
 copybutton_prompt_is_regexp = True
 
 # ---- Options for HTML output ----------------------------------------
 
-_static_path = Path("_static")
-highlight_language = "python"
+_static_path = Path("../_static")
 html_static_path = [str(_static_path)]
-html_css_files = [str(_static_path / "custom.css")]
 html_theme = "furo"
+html_css_files = [str(_static_path / "custom.css")]
 htmlhelp_basename = "warmacdoc"
-nitpicky = True
-pygments_dark_style = "one-dark"
+highlight_language = "python"
 pygments_style = "one-dark"
+pygments_dark_style = "one-dark"
 
 html_theme_options = {
     "globaltoc_collapse": True,

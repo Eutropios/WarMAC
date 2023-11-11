@@ -36,8 +36,8 @@ specific item. It provides the average platinum price for any tradable item.
 
 .. option:: -p, --platform <platform>
 
-   Specifies which platform to fetch item's orders for. It can be one of pc,
-   ps4, xbox, or  switch. By default, the platform that the orders are fetched
+   Specifies which platform to fetch the item's orders for. It can be one of pc,
+   ps4, xbox, or switch. By default, the platform that the orders are fetched
    for is PC.
 
 .. option:: -t, --timerange <days>
@@ -55,9 +55,9 @@ specific item. It provides the average platinum price for any tradable item.
 
 .. option:: -r, --radiant
 
-   Calculates the price statistic of the relic with a radiant refinement
-   instead of with an intact refinement. This option cannot be used together
-   with the :option:`warmac average --maxrank` option.
+   Calculates the price statistic of the relic at a radiant refinement instead
+   of at an intact refinement. This option cannot be used together with the
+   :option:`warmac average --maxrank` option.
 
 .. option:: -b, --buyers
    

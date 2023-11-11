@@ -33,8 +33,6 @@
 .. autoclass:: warmac_average._WarMACJSON
    :members:
    :undoc-members:
-   :private-members:
-   :special-members: __init__
 
 .. autofunction:: warmac_average._get_page
 
