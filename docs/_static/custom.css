@@ -15,7 +15,3 @@ a.reference {
     transition-property: color;
     transition-timing-function: ease-out;
 }
-
-a.sidebar-brand > span.sidebar-brand-text {
-    color: pink;
-}
