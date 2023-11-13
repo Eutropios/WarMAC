@@ -25,7 +25,7 @@
 |  The general help section describes each subcommand's function, as well as
    describing the available flags and options.
 
-.. code:: console
+.. code-block:: console
 
    $ warmac <command> [options]
 

@@ -2,16 +2,17 @@
    WarMAC documentation master file, created by
    sphinx-quickstart on Tue Aug 22 17:40:25 2023.
 
-####################################
- Welcome to WarMAC's documentation!
-####################################
+########
+ WarMAC
+########
 
-|  **WarMAC** (/'wɔr'mæk/) is a command-line Python script that can calculate   
-   the average market price of items in Warframe. It compiles orders from the
-   fan website `Warframe Market <https://warframe.market/>`_ and can be used to
-   find the average prices of any tradeable item.
+|  Warframe Market Average Calculator, or WarMAC (/'wɔr'mæk/) for short, is a
+   command-line Python script that can calculate the average market price of any
+   tradeable item in Warframe. It does this by retrieving orders of a specific
+   item from the fan website `Warframe Market <https://warframe.market/>`_, and
+   then calculates then average buy or sell price of that item.
 
-|  WarMAC supports Python versions 3.8 to 3.12.
+|  WarMAC currently supports all Python versions 3.8 to 3.12 inclusive.
 
 .. attention::
 

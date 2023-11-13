@@ -10,7 +10,7 @@
  Usage
 *******
 
-.. code:: console
+.. code-block:: console
 
    $ warmac average [options] item
 
@@ -86,14 +86,14 @@ specific item. It provides the average platinum price for any tradable item.
 
 WarMAC accepts outgoing pipes just like any other tool:
 
-.. code:: console
+.. code-block:: console
 
    $ warmac average -p=ps4 -t=5 -v "bite" | grep "Time Range"
    Time Range Used:             10 days
 
 WarMAC output can also be redirected to a file:
 
-.. code:: console
+.. code-block:: console
 
    $ warmac average -p PC -t 2 -v "vengeful revenant" > warmacOut.txt
    $ cat warmacOut.txt

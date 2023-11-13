@@ -40,7 +40,7 @@ def subcommand_select(args: argparse.Namespace) -> None:
     """
     Select which function to use based on ``args.subparser`` field.
 
-    Use try block and a dictionary to execute the appropriate function
+    Use a try block and a dictionary to execute the appropriate function
     corresponding to the field ``args.subparser``.
 
     :param args: The :py:class:`argparse.Namespace` containing the

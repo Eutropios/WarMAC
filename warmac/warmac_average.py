@@ -49,9 +49,6 @@ headers = {
 }
 
 
-# TODO: Create a typeddict for the crap in each order
-
-
 class _WarMACJSON(TypedDict):
     """
     A :py:class:`~typing.TypedDict` that stores the retrieved JSON.
@@ -79,7 +76,7 @@ def _extract_info(input_json_: Dict[str, Any]) -> _WarMACJSON:
     Extract the necessary information from the retrieved JSON.
 
     Extract the retrieved item's tags, which indicate whether or not
-    the item is a mod, relic, arcane. If the item is a mod or arcane,
+    the item is a mod, relic, or arcane. If the item is a mod or arcane,
     the max rank is stored in max_rank. If the item is not a mod or
     arcane, -1 is stored in max_rank. Finally, a list of dictionaries
     corresponding to each order is also extracted.
@@ -105,10 +102,10 @@ def _get_page(url: str) -> urllib3.BaseHTTPResponse:
     """
     Request the JSON of a desired item from Warframe.Market.
 
-    Request the JSON of a desired item from Warframe.Market using the
+    Request the JSON of a desired item from warframe.market using the
     appropriate formatted URL, along with the appropriate
     :py:data:`.headers`. Raise an error if the status code is not 200,
-    otherwise return the requested page. This page will need to be
+    otherwise, return the requested page. This page will need to be
     decoded into a dictionary.
 
     :param url: The formatted URL of the desired item.
@@ -219,7 +216,7 @@ def _filter_order(
       ``args.use_buyers``
     - if the order is a mod or arcane, whether it's unranked or max rank
       depending on ``args.maxrank``
-    - if the order is a relic, wether it's intact or radiant depending
+    - if the order is a relic, whether it's intact or radiant depending
       on ``args.radiant``
 
     :param order: The order to run the checks against.

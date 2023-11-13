@@ -20,20 +20,20 @@
 
 .. tab:: Unix/macOS
 
-   .. code:: console
+   .. code-block:: console
 
       $ python -m pip install warmac
 
 .. tab:: Windows
 
-   .. code:: console
+   .. code-block:: console
 
       $ py -m pip install warmac
 
 |  You can ensure that you've installed WarMAC correctly by calling its help
    page like so:
 
-.. code:: console
+.. code-block:: console
 
    $ warmac --version
 
@@ -58,7 +58,7 @@
    repository using `git <https://git-scm.com/downloads>`_ with the following
    command:
 
-.. code:: console
+.. code-block:: console
 
    $ git clone https://github.com/Eutropios/WarMAC.git ./some/directory
 

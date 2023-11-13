@@ -74,7 +74,7 @@ class InternalServerError(WarMACHTTPError):
     """
     Thrown if the server has encountered an internal error.
 
-    Thrown on HTTP status code 500, which indicates that server has
+    Thrown on HTTP status code 500, which indicates that the server has
     encountered an internal error that prevents it from fulfilling the
     user's request.
     """
@@ -82,7 +82,7 @@ class InternalServerError(WarMACHTTPError):
     def __init__(self) -> None:
         """Construct a ``MalformedURLError`` exception."""
         super().__init__(
-            "Error 500, Warframe.market servers have encountered an internal error "
+            "Error 500, warframe.market servers have encountered an internal error "
             "while processing this request.",
         )
 
@@ -104,7 +104,7 @@ class MethodNotAllowedError(WarMACHTTPError):
 
 class MalformedURLError(WarMACHTTPError):
     """
-    Thrown if there the item name given to WarMAC doesn't exist.
+    Thrown if the given item does not exist.
 
     Thrown on HTTP status code 404, which indicates that the resource in
     question does not exist.
@@ -123,7 +123,7 @@ class ForbiddenRequestError(WarMACHTTPError):
     Thrown if the server refuses to authorize a request.
 
     Thrown on HTTP status code 403, which indicates that access to the
-    desired resources is forbidden.
+    desired resource is forbidden.
     """
 
     def __init__(self) -> None:

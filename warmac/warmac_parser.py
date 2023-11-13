@@ -75,7 +75,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
 
         Override the ``HelpFormatter._format_action_invocation``
         method to remove the duplicate help metavar for options that
-        have both a short form and long form argument.
+        have both a short-form and a long-form argument.
 
         :param action: The action in which to be formatted.
         :return: The appropriately formatted string.
@@ -119,7 +119,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         action: argparse.Action,
     ) -> Generator[argparse.Action, None, None]:
         """
-        Fix leading indentation for subcommand names in help menu.
+        Fix leading indentation for subcommand names in the help menu.
 
         Override the ``HelpFormatter._iter_indented_subactions``
         method to fix the leading indentation for subcommand names in

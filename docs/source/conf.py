@@ -67,7 +67,7 @@ html_theme = "furo"
 html_css_files = [str(_static_path / "custom.css")]
 htmlhelp_basename = "warmacdoc"
 highlight_language = "python"
-pygments_style = "one-dark"
+pygments_style = "default"
 pygments_dark_style = "one-dark"
 
 html_theme_options = {
