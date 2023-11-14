@@ -80,9 +80,12 @@ specific item. It provides the average platinum price for any tradable item.
    Prints the command line usage and then exits. If ``-h`` or ``--help`` are
    used, WarMAC will ignore all other options.
 
-*****************
- Handling Output
-*****************
+**********
+ Examples
+**********
+
+Handling Output
+===============
 
 WarMAC accepts outgoing pipes just like any other tool:
 
@@ -104,9 +107,3 @@ WarMAC output can also be redirected to a file:
    Max Price:             30 platinum
    Min Price:             4 platinum
    Number of Orders:      38
-
-**********
- Examples
-**********
-
-WIP
