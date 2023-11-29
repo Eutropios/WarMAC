@@ -14,8 +14,8 @@
 
    $ warmac average [options] item
 
-The average command is used to calculate the average platinum price of a
-specific item. It provides the average platinum price for any tradable item.
+|  The average command is used to calculate the average platinum price of a
+   specific item. It provides the average platinum price for any tradable item.
 
 .. important:: 
 
@@ -84,17 +84,19 @@ specific item. It provides the average platinum price for any tradable item.
  Examples
 **********
 
+|  WIP
+
 Handling Output
 ===============
 
-WarMAC accepts outgoing pipes just like any other tool:
+|  WarMAC accepts outgoing pipes just like any other tool:
 
 .. code-block:: console
 
    $ warmac average -p=ps4 -t=5 -v "bite" | grep "Time Range"
    Time Range Used:             10 days
 
-WarMAC output can also be redirected to a file:
+|  WarMAC output can also be redirected to a file:
 
 .. code-block:: console
 

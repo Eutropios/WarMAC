@@ -50,7 +50,7 @@
 
 |  Ready to install WarMAC?
 |  :doc:`Installation Guide </installation>`
-|
+
 |  Need help using WarMAC?
 |  :doc:`Using WarMAC <cli/index>`
 

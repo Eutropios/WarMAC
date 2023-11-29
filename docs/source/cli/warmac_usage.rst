@@ -6,23 +6,23 @@
  Using WarMAC
 ##############
 
-|  WarMAC has a variety of subcommands for users to select from. Each subcommand
-   has its own unique options and arguments. Wherever possible, options that
-   perform similar functions for different subcommands will share the same name.
+|  WarMAC has a variety of commands for users to select from. Each command has
+   its own unique options and arguments. Wherever possible, options that
+   perform similar functions for different commands will share the same name.
 
 .. note::
 
-   WarMAC currently only has the Average subcommand. More subcommands will be
-   added in the future.
+   WarMAC currently only has the Average command. More commands will be added
+   in the future.
 
 ****************
  Running WarMAC
 ****************
 
-|  Every WarMAC subcommand is preceded by ``warmac``. The general help section
-   of the program can be viewed by running :option:`warmac --help`.
+|  Every WarMAC command is preceded by ``warmac``. The general help section of
+   the program can be viewed by running :option:`warmac --help`.
 
-|  The general help section describes each subcommand's function, as well as
+|  The general help section describes each command's function, as well as
    describing the available flags and options.
 
 .. code-block:: console
@@ -39,7 +39,7 @@
 .. option:: -h, --help
 
    Print the command line usage and then exit. Providing this option is
-   identical to calling ``warmac`` without any subcommand. WarMAC will ignore
+   identical to calling ``warmac`` without any command. WarMAC will ignore
    all other options if ``-h`` or ``--help`` is given.
 
 

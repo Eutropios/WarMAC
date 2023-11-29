@@ -19,7 +19,7 @@
 Generic Errors
 ==============
 
-.. autoexception:: warmac_errors.SubcommandError
+.. autoexception:: warmac_errors.CommandError
    :members:
    :undoc-members:
    :show-inheritance:

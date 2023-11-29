@@ -4,8 +4,8 @@
  Average Command
 #################
 
-|  The Average command is the subcommand that handles calculating the
-   statistical average of the specified item.
+|  The Average command is the command that handles calculating the statistical
+   average of the specified item.
 
 .. note::
 
@@ -33,6 +33,8 @@
 .. autoclass:: warmac_average._WarMACJSON
    :members:
    :undoc-members:
+
+.. autofunction:: warmac_average._extract_info
 
 .. autofunction:: warmac_average._get_page
 

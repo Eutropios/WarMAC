@@ -28,7 +28,7 @@ class WarMACBaseError(Exception):
         super().__init__(self.message)
 
 
-class SubcommandError(WarMACBaseError):
+class CommandError(WarMACBaseError):
     """
     Thrown if subparser does not exist in :data:`warmac.SUBCMD_TO_FUNC`.
 
@@ -37,8 +37,8 @@ class SubcommandError(WarMACBaseError):
     """
 
     def __init__(self) -> None:
-        """Construct a ``SubcommandError`` exception."""
-        super().__init__("Not a valid subcommand.")
+        """Construct a ``CommandError`` exception."""
+        super().__init__("Not a valid command.")
 
 
 class NoListingsFoundError(WarMACBaseError):

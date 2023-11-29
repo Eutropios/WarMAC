@@ -45,7 +45,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
 
     Extend :py:class:`argparse.RawDescriptionHelpFormatter` to
     reimplement a few methods. Reimplementations include removing the
-    subcommand metavar tuples, removing the duplicate option metavars,
+    command metavar tuples, removing the duplicate option metavars,
     and correcting the over-indentation on the help menu.
     """
 
@@ -93,17 +93,16 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
 
     def _format_action(self, action: argparse.Action) -> str:
         """
-        Remove subcommand metavar tuple and fix metavar indentation.
+        Remove command metavar tuple and fix metavar indentation.
 
         Override the ``HelpFormatter._format_action``
-        method to remove the subcommand metavar tuple and fix the
+        method to remove the command metavar tuple and fix the
         spacings between the option and its associated metavar.
 
         :param action: The action in which to be formatted.
-        :return: ``HelpFormatter._format_action(action)``.
-            Will be formatted without the metavar tuple, as well as the
-            correct leading indentation if the action is an
-            ``_SubParsersAction``.
+        :return: ``HelpFormatter._format_action(action)``. If the action
+            is a ``_SubParsersAction``, the metavar tuple will be
+            excluded, and the leading indentation will be corrected.
         """
         # Overrides the superclass _format_action method
         # Fix indentation for subclasses
@@ -119,10 +118,10 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         action: argparse.Action,
     ) -> Generator[argparse.Action, None, None]:
         """
-        Fix leading indentation for subcommand names in the help menu.
+        Fix leading indentation for command names in the help menu.
 
         Override the ``HelpFormatter._iter_indented_subactions``
-        method to fix the leading indentation for subcommand names in
+        method to fix the leading indentation for command names in
         the help menu.
 
         :param action: The action to be yielded from.
@@ -130,7 +129,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
             ``action._get_subactions``.
         """
         # Overrides the superclass _iter_indented_subactions method
-        # Fixes indentation on subcommand metavar
+        # Fixes indentation on command metavar
         if isinstance(action, argparse._SubParsersAction):
             try:
                 # Get reference of subclass
@@ -163,7 +162,7 @@ def _int_checking(usr_inp: str, max_val: int) -> int:
     with contextlib.suppress(ValueError):
         if 0 < (casted_int := int(usr_inp)) < max_val:
             return casted_int
-    msg = f"Input '{usr_inp}' must be an integer between 1 and {max_val}."
+    msg = f'Input "{usr_inp}" must be an integer between 1 and {max_val}.'
     raise argparse.ArgumentTypeError(msg)
 
 
@@ -197,7 +196,7 @@ def _create_parser() -> WarMACParser:
 
     Create a :py:class:`.WarMACParser` object that includes global
     --help and --version options. Create subparsers for multiple
-    subcommands to be used within the program.
+    commands to be used within the program.
 
     :return: The constructed :py:class:`.WarMACParser` object.
     """

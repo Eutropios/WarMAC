@@ -10,7 +10,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/warmac)](https://pypi.org/project/warmac/)  
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![MIT License](https://img.shields.io/github/license/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
-![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Eutropios/WarMAC)
+[![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
 
 </div>
 
@@ -76,14 +76,14 @@ WarMAC can then be built by navigating to the directory you cloned WarMAC into, 
 
 Full usage instructions as well as examples can be found in the [official documentation](https://warmac.readthedocs.io/en/).
 
-WarMAC has a variety of subcommands for users to select from. Each subcommand has its own unique options and arguments. Wherever possible, options that perform similar functions for different subcommands will share the same name.
+WarMAC has a variety of commands for users to select from. Each command has its own unique options and arguments. Wherever possible, options that perform similar functions for different commands will share the same name.
 
-Every WarMAC subcommand is preceded by ``warmac``. The general help section of the program can be viewed by running `warmac --help`.
+Every WarMAC command is preceded by ``warmac``. The general help section of the program can be viewed by running `warmac --help`.
 
-To view a specific subcommand's usage from the command line, simply run:
+To view a specific command's usage from the command line, simply run:
 `warmac <command> --help`
 
-For example, to view the usage for the average subcommand, users should run:
+For example, to view the usage for the average command, users should run:
 `warmac average --help`
 
 ### Handling WarMAC Output

@@ -5,7 +5,7 @@ warmac.warmac_average
 Copyright (c) 2023 Noah Jenner under MIT License
 Please see LICENSE.txt for additional licensing information.
 
-File that contains the average subcommand for WarMAC.
+File that contains the average command for WarMAC.
 For information on the main program, please see __init__.py
 
 Date of Creation: January 22, 2023
@@ -16,9 +16,9 @@ from __future__ import annotations
 
 # Argparse is imported normally purely to satisfy Sphinx autodoc
 import argparse
-from datetime import datetime, timezone
-from statistics import geometric_mean, harmonic_mean, mean, median, mode
-from typing import Any, Callable, Dict, List, Sequence, TypedDict, Union
+import datetime
+import statistics
+from typing import Any, Callable, Dict, List, Sequence, TypedDict, Union, overload
 
 import urllib3
 
@@ -29,15 +29,15 @@ _API_ROOT = "https://api.warframe.market/v1"
 
 #: A dictionary that maps user input to its respective function.
 AVG_FUNCS: Dict[str, Callable[[Sequence[int]], float]] = {
-    "geometric": geometric_mean,
-    "harmonic": harmonic_mean,
-    "mean": mean,
-    "median": median,
-    "mode": mode,
+    "geometric": statistics.geometric_mean,
+    "harmonic": statistics.harmonic_mean,
+    "mean": statistics.mean,
+    "median": statistics.median,
+    "mode": statistics.mode,
 }
 
 #: An ISO-8601 timestamp of the current time retrieved on execution.
-CURR_TIME = datetime.now(timezone.utc)
+CURR_TIME = datetime.datetime.now(datetime.timezone.utc)
 
 #: A dictionary containing the headers to be used in the HTTP request.
 headers = {
@@ -49,6 +49,9 @@ headers = {
 }
 
 
+# TODO: Add msgspec
+# TODO: Add pipx to README as recommended method of installation
+# TODO: Add pipx to installation.rst as recc. method of isntallation
 class _WarMACJSON(TypedDict):
     """
     A :py:class:`~typing.TypedDict` that stores the retrieved JSON.
@@ -57,8 +60,6 @@ class _WarMACJSON(TypedDict):
     retrieved item, as well as its associated orders.
 
     :param is_relic: Whether or not the requested item is a relic.
-    :param is_mod_or_arcane: Whether or not the requested item is a mod
-        or arcane enhancement.
     :param max_rank: The maximum rank that the mod or arcane enhancement
         can be. If the item is not a mod or arcane enhancement, then
         this will store -1.
@@ -66,7 +67,6 @@ class _WarMACJSON(TypedDict):
     """
 
     is_relic: bool
-    is_mod_or_arcane: bool
     max_rank: int
     orders: List[Dict[str, Any]]
 
@@ -75,14 +75,13 @@ def _extract_info(input_json_: Dict[str, Any]) -> _WarMACJSON:
     """
     Extract the necessary information from the retrieved JSON.
 
-    Extract the retrieved item's tags, which indicate whether or not
-    the item is a mod, relic, or arcane. If the item is a mod or arcane,
-    the max rank is stored in max_rank. If the item is not a mod or
-    arcane, -1 is stored in max_rank. Finally, a list of dictionaries
+    Extract the retrieved item's tags, which indicate whether or not the
+    item is a mod, relic, or arcane. If the item is a mod or arcane the
+    max rank is stored in max_rank. If the item is not a mod or arcane,
+    -1 is stored in max_rank. Finally, a list of dictionaries
     corresponding to each order is also extracted.
 
-    :param input_json_: The :py:class:`argparse.BaseHTTPResponse`
-        retrieved from the request that has been decoded into a JSON.
+    :param input_json_: A decoded JSON obtained from an HTTP request.
     :return: Return a TypedDict containing the information extracted
         from the JSON.
     """
@@ -91,7 +90,6 @@ def _extract_info(input_json_: Dict[str, Any]) -> _WarMACJSON:
     mod_or_arcane = "mod" in tags or "arcane_enhancement" in tags
     json_: _WarMACJSON = {
         "is_relic": "relic" in tags,
-        "is_mod_or_arcane": mod_or_arcane,
         "max_rank": int(item_info["mod_max_rank"]) if mod_or_arcane else -1,
         "orders": input_json_["payload"]["orders"],
     }
@@ -170,34 +168,43 @@ def _in_time_r(last_updated: str, time_r: int = warmac_parser.DEFAULT_TIME) -> b
     :return: True if ``last_updated ≤ time_r``, False if ``last_updated
         > time_r``.
     """
-    return (CURR_TIME - datetime.fromisoformat(last_updated)).days <= time_r
+    return (CURR_TIME - datetime.datetime.fromisoformat(last_updated)).days <= time_r
+
+
+@overload
+def _comp_val(
+    val: str, true_val: str, false_val: str, *, condition: bool = False
+) -> bool:
+    pass
+
+
+@overload
+def _comp_val(
+    val: int, true_val: int, false_val: int, *, condition: bool = False
+) -> bool:
+    pass
 
 
 def _comp_val(
-    val_to_comp: Union[str, int],
+    val: Union[str, int],
     true_val: Union[str, int],
     false_val: Union[str, int],
     *,
     condition: bool = False,
 ) -> bool:
     """
-    Check if ``val_to_comp`` equals ``true_val`` or ``false_val``.
+    Compare the value ``val`` with either ``true_val`` or ``false_val``
+    based on a given true or false ``condition``.
 
-    Check if ``val_to_comp == true_val`` if ``condition`` is True, or if
-    ``val_to_comp == false_val`` if ``condition`` is False.
-
-    :param val_to_comp: The string to check against.
-    :param true_val: The string that ``val_to_comp`` will be checked
-        against if ``condition`` is True.
-    :param false_val: The string that ``val_to_comp`` will be checked
-        against if ``condition`` is False.
-    :param condition: Whether to check ``val_to_comp`` against
-        ``true_val`` or ``false_val``, defaults to False.
-    :return: Return ``val_to_comp == true_val`` if ``condition`` is
-        True. Return ``val_to_comp == false_val`` if ``condition`` is
-        False.
-    """
-    return val_to_comp == (true_val if condition else false_val)
+    :param val: The value to be compared.
+    :param true_val: The value to be used if ``condition`` is True.
+    :param false_val: The value to be used if ``condition`` is False.
+    :param condition: The condition to determine which value to use,
+        defaults to False.
+    :return: True if ``val`` is equal to ``true_val``, False if ``val``
+        is equal to ``false_val``.
+    """  # noqa: D205
+    return val == (true_val if condition else false_val)
 
 
 def _filter_order(
@@ -234,7 +241,7 @@ def _filter_order(
             # Check if the rank of the mod is the mod's max rank or
             # unranked depending on args.maxrank
             _comp_val(order["mod_rank"], json_["max_rank"], 0, condition=args.maxrank)
-            if json_["is_mod_or_arcane"]
+            if json_["max_rank"] != -1
             else True
         )
         and (
@@ -287,11 +294,10 @@ def _verbose_out(
     # {value:{width}.{precision}}
     space_after_label = 23
     statistic = AVG_FUNCS[args.statistic].__name__.replace("_", " ").title()
-    fixed_item_name = args.item.replace("_", " ").replace(" and ", " & ").title()
+    fixed_item_name = args.item.title().replace("_", " ").replace(" And ", " & ")
     print(f"{'Item:':{space_after_label}}{fixed_item_name}")
     print(f"{'Statistic Found:':{space_after_label}}{statistic}")
-    time_r_message = f"{'Time Range Used:':{space_after_label}}{args.timerange} day"
-    print(f"{time_r_message}s" if args.timerange > 1 else time_r_message)
+    print(f"{'Time Range Used:':{space_after_label}}{args.timerange} days")
     print(f"{f'{statistic} Price:':{space_after_label}}{avg_cost} platinum")
     print(f"{'Max Price:':{space_after_label}}{max(plat_list):.0f} platinum")
     print(f"{'Min Price:':{space_after_label}}{min(plat_list):.0f} platinum")
@@ -311,8 +317,7 @@ def average(args: argparse.Namespace) -> None:
     headers["platform"] = args.platform
     fixed_item: str = args.item.lower().replace(" ", "_").replace("&", "and")
     fixed_url = f"{_API_ROOT}/items/{fixed_item}/orders?include=item"
-    retrieved_json = _extract_info(_get_page(fixed_url).json())
-    plat_list: List[int] = _get_plat_list(retrieved_json, args)
+    plat_list = _get_plat_list(_extract_info(_get_page(fixed_url).json()), args)
     cost = _calc_avg(plat_list, args.statistic)
     _verbose_out(
         args,

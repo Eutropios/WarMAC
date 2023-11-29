@@ -12,8 +12,8 @@
    :type: typing.Dict[str, typing.Callable[[~argparse.Namespace], None]]
    :value: warmac_average.average()
 
-   A dictionary of all subcommands that can be executed by the user.
+   A dictionary of all commands that can be executed by the user.
 
-.. autofunction:: warmac.subcommand_select
+.. autofunction:: warmac.command_select
 
 .. autofunction:: warmac.console_main

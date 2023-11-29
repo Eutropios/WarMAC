@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from typing import Callable, Dict, Literal
+from typing import Literal
 
 from urllib3 import exceptions
 
@@ -30,13 +30,13 @@ __all__ = [
     "warmac_parser",
 ]
 
-#: A dictionary of all possible subcommands
-SUBCMD_TO_FUNC: Dict[str, Callable[[argparse.Namespace], None]] = {
+#: A dictionary of all possible commands
+SUBCMD_TO_FUNC = {
     "average": warmac_average.average,
 }
 
 
-def subcommand_select(args: argparse.Namespace) -> None:
+def command_select(args: argparse.Namespace) -> None:
     """
     Select which function to use based on ``args.subparser`` field.
 
@@ -45,14 +45,14 @@ def subcommand_select(args: argparse.Namespace) -> None:
 
     :param args: The :py:class:`argparse.Namespace` containing the
         user-supplied command line information.
-    :raises SubcommandError: An error indicating that the
-        desired subcommand does not exist within the
-        :py:data:`.SUBCMD_TO_FUNC` dictionary.
+    :raises CommandError: An error indicating that the desired
+        command does not exist within the :py:data:`.SUBCMD_TO_FUNC`
+        dictionary.
     """
     try:
         SUBCMD_TO_FUNC[args.subparser](args)
     except KeyError as err:
-        raise warmac_errors.SubcommandError from err
+        raise warmac_errors.CommandError from err
     except warmac_errors.WarMACBaseError as e:
         print(e)
     except exceptions.MaxRetryError:
@@ -69,15 +69,16 @@ def subcommand_select(args: argparse.Namespace) -> None:
 def console_main() -> Literal[0]:
     """
     Create a :py:data:`warmac_parser.WarMACParser` and run associated
-    subcommand.
+    command.
 
     Call :py:func:`warmac_parser.handle_input` to create and parse a
     :py:class:`warmac_parser.WarMACParser`. Arguments are then used in
     the script's execution, beginning by calling
-    :py:func:`.subcommand_select` with the parsed arguments.
+    :py:func:`.command_select` with the parsed arguments.
+
     :return: Return 0 if everything returns successfully.
     """  # noqa: D205
-    subcommand_select(warmac_parser.handle_input())
+    command_select(warmac_parser.handle_input())
     return 0
 
 
