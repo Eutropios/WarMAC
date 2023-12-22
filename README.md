@@ -6,11 +6,10 @@
 [![Documentation Status](https://readthedocs.org/projects/warmac/badge/?version=latest)](https://warmac.readthedocs.io/en/latest/?badge=latest)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Eutropios/WarMAC/main.svg)](https://results.pre-commit.ci/latest/github/Eutropios/WarMAC/main)  
 [![PyPI](https://img.shields.io/pypi/v/warmac)](https://pypi.org/project/warmac/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dw/warmac)](https://pypi.org/project/warmac/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/warmac)](https://pypi.org/project/warmac/)  
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![MIT License](https://img.shields.io/github/license/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
-[![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
+[![PyPI - Downloads](https://img.shields.io/pypi/dw/warmac)](https://pypi.org/project/warmac/)
 
 </div>
 
@@ -41,11 +40,24 @@
 
 WarMAC only supports Python versions 3.8 to 3.12. There are currently no plans to add support to Python 3.7
 
+### Using pipx
+
+Currently, the primary method of installing WarMAC is by installing it through [pipx](https://pypa.github.io/pipx/). This keeps WarMAC and its dependencies separate from your global Python packages. Installation can be done using the following command:
+
+| Platform | Command |
+|---|---|
+| UNIX/MacOS | `python -m pipx install warmac` |
+| Windows | `py -m pipx install warmac` |
+
+You can ensure that you've installed WarMAC correctly by calling its help page like so:
+
+```bash
+warmac --version
+```
+
 ### Using Pip
 
-Full installation instructions can be found in the official documentation.
-
-Currently, the primary method of installing WarMAC is by installing it through pip. This can be done using the following command:
+Using pip alone to install WarMAC will work just as well. Installation can be done using the following command:
 
 | Platform | Command |
 |---|---|
@@ -54,7 +66,7 @@ Currently, the primary method of installing WarMAC is by installing it through p
 
 You can ensure that you've installed WarMAC correctly by calling its help page like so:
 
-```shell
+```bash
 warmac --version
 ```
 
