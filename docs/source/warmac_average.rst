@@ -24,19 +24,13 @@
 
    An ISO-8601 timestamp of the current time retrieved on execution.
 
-.. py:data:: warmac_average.headers
-   :type: typing.Dict[str, str]
-   :value: {'Accept': 'application/json', 'Accept-Language': 'en', 'Content-Type': 'application/json', 'Host': 'api.warframe.market', 'User-Agent': 'Mozilla/5.0 Gecko/20100101 Firefox/116.0'}
-
-   A dictionary containing the headers to be used in the HTTP request. During execution, another header is added named 'platform', which contains one of ('pc', 'xbox', 'ps4', 'switch') corresponding to the user's platform.
-
 .. autoclass:: warmac_average._WarMACJSON
    :members:
    :undoc-members:
 
 .. autofunction:: warmac_average._extract_info
 
-.. autofunction:: warmac_average._get_page
+.. autofunction:: warmac_average.get_page
 
 .. autofunction:: warmac_average._calc_avg
 

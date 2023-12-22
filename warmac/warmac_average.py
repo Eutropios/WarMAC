@@ -14,11 +14,11 @@ External packages required: urllib3
 
 from __future__ import annotations
 
-# Argparse is imported normally purely to satisfy Sphinx autodoc
-import argparse
+# Argparse is imported normally to satisfy Sphinx autodoc
+import argparse  # noqa: TCH003
 import datetime
 import statistics
-from typing import Any, Callable, Dict, List, Sequence, TypedDict, Union, overload
+from typing import Any, Callable, Dict, List, Sequence, TypedDict, Union
 
 import urllib3
 
@@ -39,19 +39,7 @@ AVG_FUNCS: Dict[str, Callable[[Sequence[int]], float]] = {
 #: An ISO-8601 timestamp of the current time retrieved on execution.
 CURR_TIME = datetime.datetime.now(datetime.timezone.utc)
 
-#: A dictionary containing the headers to be used in the HTTP request.
-headers = {
-    "Accept": "application/json",
-    "Accept-Language": "en",
-    "Content-Type": "application/json",
-    "Host": "api.warframe.market",
-    "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
-}
 
-
-# TODO: Add msgspec
-# TODO: Add pipx to README as recommended method of installation
-# TODO: Add pipx to installation.rst as recc. method of isntallation
 class _WarMACJSON(TypedDict):
     """
     A :py:class:`~typing.TypedDict` that stores the retrieved JSON.
@@ -96,17 +84,17 @@ def _extract_info(input_json_: Dict[str, Any]) -> _WarMACJSON:
     return json_
 
 
-def _get_page(url: str) -> urllib3.BaseHTTPResponse:
+def get_page(url: str, headers: Dict[str, str]) -> urllib3.BaseHTTPResponse:
     """
     Request the JSON of a desired item from Warframe.Market.
 
     Request the JSON of a desired item from warframe.market using the
-    appropriate formatted URL, along with the appropriate
-    :py:data:`.headers`. Raise an error if the status code is not 200,
-    otherwise, return the requested page. This page will need to be
-    decoded into a dictionary.
+    appropriate formatted URL, along with the appropriate headers. Raise
+    an error if the status code is not 200, otherwise, return the
+    requested page. This page will need to be decoded into a dictionary.
 
     :param url: The formatted URL of the desired item.
+    :param headers: The headers to be used in the HTTP request.
     :raises warmac_errors.UnauthorizedAccessError: Error 401.
     :raises warmac_errors.ForbiddenRequestError: Error 403.
     :raises warmac_errors.MalformedURLError: Error 404.
@@ -169,20 +157,6 @@ def _in_time_r(last_updated: str, time_r: int = warmac_parser.DEFAULT_TIME) -> b
         > time_r``.
     """
     return (CURR_TIME - datetime.datetime.fromisoformat(last_updated)).days <= time_r
-
-
-@overload
-def _comp_val(
-    val: str, true_val: str, false_val: str, *, condition: bool = False
-) -> bool:
-    pass
-
-
-@overload
-def _comp_val(
-    val: int, true_val: int, false_val: int, *, condition: bool = False
-) -> bool:
-    pass
 
 
 def _comp_val(
@@ -279,13 +253,12 @@ def _verbose_out(
     plat_list: List[int],
 ) -> None:
     """
-    Output average price, as well as additional information.
+    Display the average price along with additional information.
 
-    Output the statistic type, the calculated average price, the
-    timerange of the request, the maximum and minimum values of the list
-    of prices, and the total number of orders found that match the
-    search criteria. Output the values with their corresponding labels
-    preceding them.
+    Display the calculated average price, along with the average type
+    used, the timerange of the request, the maximum and minimum prices
+    of the orders, and the total number of orders that match the search
+    criteria.
 
     :param args: The user-given command line arguments.
     :param avg_cost: The statistic of the item that was found.
@@ -314,10 +287,17 @@ def average(args: argparse.Namespace) -> None:
     :param args: The :py:class:`argparse.Namespace` containing the
         user-supplied command line information.
     """
-    headers["platform"] = args.platform
+    headers: Dict[str, str] = {
+        "Accept": "application/json",
+        "Accept-Language": "en",
+        "Content-Type": "application/json",
+        "Host": "api.warframe.market",
+        "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
+        "Platform": args.platform,
+    }
     fixed_item: str = args.item.lower().replace(" ", "_").replace("&", "and")
     fixed_url = f"{_API_ROOT}/items/{fixed_item}/orders?include=item"
-    plat_list = _get_plat_list(_extract_info(_get_page(fixed_url).json()), args)
+    plat_list = _get_plat_list(_extract_info(get_page(fixed_url, headers).json()), args)
     cost = _calc_avg(plat_list, args.statistic)
     _verbose_out(
         args,

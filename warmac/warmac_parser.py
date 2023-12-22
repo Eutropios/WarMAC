@@ -80,16 +80,15 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         :param action: The action in which to be formatted.
         :return: The appropriately formatted string.
         """
-        # If option_string is None/zero or nargs is 0
+        # Return super's invocation option_string is None or nargs is 0
         if not action.option_strings or action.nargs == 0:
-            # Return super class' invocation
             return super()._format_action_invocation(action)
-        # Otherwise, get the default options metavar
-        default: str = self._get_default_metavar_for_optional(action)
-        # Assign args_string to _format_args
-        args_string: str = self._format_args(action, default)
-        # Return the option strings joined with the args_string
-        return f"{', '.join(action.option_strings)} {args_string}"
+        # Get the default metavar for optionals
+        default = self._get_default_metavar_for_optional(action)
+        # Return the option strings joined with only one metavar
+        return (
+            f"{', '.join(action.option_strings)} {self._format_args(action, default)}"
+        )
 
     def _format_action(self, action: argparse.Action) -> str:
         """
@@ -104,14 +103,13 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
             is a ``_SubParsersAction``, the metavar tuple will be
             excluded, and the leading indentation will be corrected.
         """
-        # Overrides the superclass _format_action method
         # Fix indentation for subclasses
-        result: str = super()._format_action(action)
-        if isinstance(action, argparse._SubParsersAction):
-            # Return result with leading spaces removed, and
-            # appropriate indentation added.
-            return f"{'':{self._current_indent}}{result.lstrip()}"
-        return result
+        result = super()._format_action(action)
+        return (
+            f"{'':{self._current_indent}}{result.lstrip()}"
+            if isinstance(action, argparse._SubParsersAction)
+            else result
+        )
 
     def _iter_indented_subactions(
         self,
@@ -131,15 +129,9 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         # Overrides the superclass _iter_indented_subactions method
         # Fixes indentation on command metavar
         if isinstance(action, argparse._SubParsersAction):
-            try:
-                # Get reference of subclass
-                subactions = action._get_subactions
-            except AttributeError:
-                # If an exception is found, do nothing
-                pass
-            else:
-                # Yield from the actions list
-                yield from subactions()
+            with contextlib.suppress(AttributeError):
+                # Yield from actions list if action has _get_subactions
+                yield from action._get_subactions()
         else:
             # Yield from superclass' _iter_indented_subactions method
             yield from super()._iter_indented_subactions(action)
@@ -180,8 +172,7 @@ class WarMACParser(argparse.ArgumentParser):
         Modify exit message for :py:class:`argparse.ArgumentError`.
 
         Modify exit message for :py:class:`argparse.ArgumentError`
-        occurrences to print to stderr, and return an
-        exit code of 2.
+        occurrences to print to stderr, and return an exit code of 2.
 
         :param message: The message provided by the standard
             :py:class:`argparse.ArgumentParser` class.
@@ -203,6 +194,10 @@ def _create_parser() -> WarMACParser:
     parser = WarMACParser(
         usage=f"{_PROG_NAME} <command> [options]",
         description=_DESCRIPTION,
+        epilog=(
+            "More help can be found at: "
+            "https://warmac.readthedocs.io/en/latest/cli/warmac_usage.html"
+        ),
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,  # first arg in CL, which is the file's name
             max_help_position=_DEFAULT_WIDTH,
@@ -283,7 +278,7 @@ def _create_parser() -> WarMACParser:
         type=lambda s: s.lower().strip(),
         choices=_PLATFORMS,
         help=(
-            "Specifies which platform to fetch orders for; Can be one of "
+            "Which platform to fetch the item's orders for. Must be one of "
             f"({', '.join(_PLATFORMS)}). (Default: pc)"
         ),
         metavar="<platform>",
@@ -295,8 +290,9 @@ def _create_parser() -> WarMACParser:
         default=DEFAULT_TIME,
         type=lambda x: _int_checking(x, _MAX_TIME_RANGE),
         help=(
-            "Specifies in days how old the orders can be. Must be in range [1, "
-            f"{_MAX_TIME_RANGE}]. (Default: {DEFAULT_TIME})"
+            "Number of days to consider for calculating the average. Value given "
+            "indicates how far back to start the statistic's calculation. Must be in "
+            f"range [1, {_MAX_TIME_RANGE}]. (Default: {DEFAULT_TIME})"
         ),
         metavar="<days>",
         dest="timerange",
@@ -308,8 +304,9 @@ def _create_parser() -> WarMACParser:
         "--maxrank",
         action="store_true",
         help=(
-            "Get price statistic of the mod/arcane at max rank instead of at unranked. "
-            "(Default: False)"
+            "Calculate the price statistic of the mod/arcane at its maximum rank "
+            "instead of when it is unranked. Cannot be used together with the --radiant"
+            " option."
         ),
         dest="maxrank",
     )
@@ -319,8 +316,9 @@ def _create_parser() -> WarMACParser:
         "--radiant",
         action="store_true",
         help=(
-            "Get price statistic of the relic at radiant refinement instead of at"
-            " intact. (Default: False)"
+            "Calculate the price statistic of the relic at a radiant refinement instead"
+            " of at an intact refinement. Cannot be used together with the --maxrank "
+            "option."
         ),
         dest="radiant",
     )
@@ -330,8 +328,8 @@ def _create_parser() -> WarMACParser:
         "--buyers",
         action="store_true",
         help=(
-            "Take the average platinum price from buyer orders instead of "
-            "from seller orders. (Default: False)"
+            "Calculate the price statistic of the item based on orders from buyers "
+            "instead of orders from sellers."
         ),
         dest="use_buyers",
     )
@@ -341,7 +339,10 @@ def _create_parser() -> WarMACParser:
         "--verbose",
         action="count",
         default=0,
-        help="Prints additional information about the program.",
+        help=(
+            "Print additional market information about the requested item, along with "
+            "the specified parameters."
+        ),
         dest="verbose",
     )
 

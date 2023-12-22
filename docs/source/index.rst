@@ -59,3 +59,37 @@ Indices and tables
 
 -  :ref:`genindex`
 -  :ref:`search`
+
+Acknowledgements
+================
+
+|  In addition to the tools listed in `.pre-commit-config.yaml
+   <https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml>`_ and
+   `pyproject.toml
+   <https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml>`_, this
+   project uses the following tools in its development:
+
+-  `autoDocstring <https://github.com/NilsJPWerner/autoDocstring>`_
+-  `Taplo <https://github.com/tamasfe/taplo>`_
+-  `markdownlint <https://github.com/DavidAnson/vscode-markdownlint>`_
+-  `vermin <https://github.com/netromdk/vermin>`_
+
+|  WarMAC is packaged using `Poetry <https://github.com/python-poetry/poetry>`_.
+
+Licensing
+=========
+
+|  **This project is NOT affiliated with Warframe, Digital Extremes, or
+   Warframe Market.**
+
+|  Copyright (c) 2023 Noah Jenner under MIT License
+
+|  For additional licensing information, please see `LICENSE.txt
+   <https://github.com/Eutropios/WarMAC/blob/main/LICENSE.txt>`_
+|  For licensing regarding urllib3, please see `LICENSE-urllib3.txt
+   <https://github.com/Eutropios/WarMAC/blob/main/LICENSE-urllib3.txt>`_
+
+Authors
+=======
+
+|  WarMAC is authored by `Eutropios <https://www.github.com/Eutropios>`_.

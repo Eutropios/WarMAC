@@ -122,7 +122,7 @@
         skip-magic-trailing-comma = false
 
     [tool.ruff.flake8-type-checking]
-        exempt-modules = ["argparse", "typing"]
+        exempt-modules = ["typing"]
         strict         = true
 
     [tool.ruff.isort]

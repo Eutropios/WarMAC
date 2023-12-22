@@ -16,7 +16,7 @@ External packages required: urllib3
 
 from __future__ import annotations
 
-import argparse
+import argparse  # noqa: TCH003
 import sys
 from typing import Literal
 
@@ -45,9 +45,8 @@ def command_select(args: argparse.Namespace) -> None:
 
     :param args: The :py:class:`argparse.Namespace` containing the
         user-supplied command line information.
-    :raises CommandError: An error indicating that the desired
-        command does not exist within the :py:data:`.SUBCMD_TO_FUNC`
-        dictionary.
+    :raises warmac_errors.CommandError: An error indicating that the
+        desired command does not exist in :py:data:`.SUBCMD_TO_FUNC`.
     """
     try:
         SUBCMD_TO_FUNC[args.subparser](args)

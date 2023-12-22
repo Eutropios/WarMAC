@@ -24,9 +24,18 @@
    1. Enclose the item's name within quotation marks. Example: ``"condition overload"``
    2. Replace spaces with underscore characters. Example: ``condition_overload``
 
+.. option:: item
+
+   The item in which to calculate the price statistic for.
+
 *********
  Options
 *********
+
+.. tip:: 
+
+   Options that take an argument can be in the form of ``--foo bar`` or
+   ``--foo=bar``.
 
 .. option:: -s, --stats <statistic>
 
@@ -43,9 +52,9 @@
 .. option:: -t, --timerange <days>
 
    Determines the number of days to consider for calculating the average. The
-   value for <days> indicates how far back to start the average calculation. It
-   must be within the range of 1 to 60. By default, orders up to 10 days old
-   are taken into account.
+   value for <days> indicates how far back to start the statistic calculation.
+   The value given must be within the range of 1 to 60. By default, orders up
+   to 10 days old are taken into account.
 
 .. option:: -m, --maxrank
    
@@ -84,7 +93,19 @@
  Examples
 **********
 
-|  WIP
+|  Calculating the median price of the mod "Primed Continuity" on PS4.
+   Note that the median is calculated as it's the default.
+
+.. code-block:: console
+
+   $ warmac average -p ps4 "primed continuity"
+
+|  Calculating the mode price of the mod "Bite" when it's at max rank on PC.
+   Note that the PC price is calculated as it's the default.
+
+.. code-block:: console
+
+   $ warmac average -s mode -m bite
 
 Handling Output
 ===============
@@ -93,7 +114,7 @@ Handling Output
 
 .. code-block:: console
 
-   $ warmac average -p=ps4 -t=5 -v "bite" | grep "Time Range"
+   $ warmac average -p ps4 -t 5 -v "bite" | grep "Time Range"
    Time Range Used:             10 days
 
 |  WarMAC output can also be redirected to a file:

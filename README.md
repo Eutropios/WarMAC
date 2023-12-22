@@ -111,7 +111,17 @@ Number of Orders:      38
 
 ### Examples
 
-Work In Progress.
+Calculating the median price of the mod "Primed Continuity" on PS4. Note that the median is calculated as it's the default.
+
+```bash
+warmac average -p ps4 "primed continuity"
+```
+
+Calculating the mode price of the mod "Bite" when it's at max rank on PC. Note that the PC price is calculated as it's the default.
+
+```bash
+warmac average -s mode -m bite
+```
 
 ## Documentation<a id="documentation"></a>
 
