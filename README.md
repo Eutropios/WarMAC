@@ -1,15 +1,16 @@
 <div align="center">
 
-# WarMAC Version 0.0.4
+# WarMAC Version 0.0.5
 
-[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Eutropios/WarMAC/main)](https://github.com/Eutropios/WarMAC)
+[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Eutropios/WarMAC/main)](https://github.com/Eutropios/WarMAC/commits/main/)
 [![Documentation Status](https://readthedocs.org/projects/warmac/badge/?version=latest)](https://warmac.readthedocs.io/en/latest/?badge=latest)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Eutropios/WarMAC/main.svg)](https://results.pre-commit.ci/latest/github/Eutropios/WarMAC/main)  
-[![PyPI](https://img.shields.io/pypi/v/warmac)](https://pypi.org/project/warmac/)
+[![PyPI - Package Version](https://img.shields.io/pypi/v/warmac)](https://pypi.org/project/warmac/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/warmac)](https://pypi.org/project/warmac/)  
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![MIT License](https://img.shields.io/github/license/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC)
 [![PyPI - Downloads](https://img.shields.io/pypi/dw/warmac)](https://pypi.org/project/warmac/)
+[![GitHub issues](https://img.shields.io/github/issues/Eutropios/WarMAC)](https://github.com/Eutropios/WarMAC/issues)
 
 </div>
 

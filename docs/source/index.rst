@@ -6,6 +6,10 @@
  WarMAC
 ########
 
+.. container:: badges
+
+   |pypiver| |pythonver| |license|
+
 |  Warframe Market Average Calculator, or WarMAC (/'wɔr'mæk/) for short, is a
    command-line Python script that can calculate the average market price of any
    tradeable item in Warframe. It does this by retrieving orders of a specific
@@ -14,7 +18,7 @@
 
 |  WarMAC currently supports all Python versions 3.8 to 3.12 inclusive.
 
-.. attention::
+.. important::
 
    This project is under active development.
 
@@ -28,17 +32,17 @@
    :caption: User Guide
 
    installation
-   cli/index
+   usage/index
 
 .. toctree::
    :hidden:
    :maxdepth: 2
-   :caption: Documentation
+   :caption: Development
 
-   warmac_main
-   warmac_average
-   warmac_parser
-   warmac_errors
+   reference/warmac_main
+   reference/warmac_average
+   reference/warmac_parser
+   reference/warmac_errors
 
 .. toctree::
    :hidden:
@@ -52,7 +56,7 @@
 |  :doc:`Installation Guide </installation>`
 
 |  Need help using WarMAC?
-|  :doc:`Using WarMAC <cli/index>`
+|  :doc:`Using WarMAC <usage/index>`
 
 Indices and tables
 ==================
@@ -79,8 +83,8 @@ Acknowledgements
 Licensing
 =========
 
-|  **This project is NOT affiliated with Warframe, Digital Extremes, or
-   Warframe Market.**
+|  **This project is NOT affiliated with Warframe, Digital Extremes, or Warframe
+   Market.**
 
 |  Copyright (c) 2023 Noah Jenner under MIT License
 
@@ -93,3 +97,15 @@ Authors
 =======
 
 |  WarMAC is authored by `Eutropios <https://www.github.com/Eutropios>`_.
+
+.. |pypiver| image:: https://img.shields.io/pypi/v/warmac
+   :alt: PyPI - Package Version
+   :target: https://pypi.org/project/warmac/
+
+.. |pythonver| image:: https://img.shields.io/pypi/pyversions/warmac
+   :alt: PyPI - Python Version
+   :target: https://pypi.org/project/warmac/
+
+.. |license| image:: https://img.shields.io/github/license/Eutropios/WarMAC
+   :alt: MIT License
+   :target: https://github.com/Eutropios/WarMAC

@@ -15,3 +15,8 @@ a.reference {
     transition-property: color;
     transition-timing-function: ease-out;
 }
+
+div.badges {
+    margin: auto;
+    text-align: center;
+}

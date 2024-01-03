@@ -20,7 +20,7 @@ sys.path.insert(0, python_path)
 project = "WarMAC"
 copyright = "2023, Noah Jenner"  # noqa: A001
 author = "Noah Jenner"
-release = "0.0.4"
+release = "0.0.5"
 language = "en"
 
 # -- General Config ----------------------------------------------------
@@ -48,8 +48,8 @@ intersphinx_mapping = {
 
 autodoc_default_options = {
     "members": True,
-    "undoc-members": True,
     "private-members": True,
+    "undoc-members": True,
 }
 # autodoc_type_aliases = {str, str}
 nitpicky = True
@@ -82,6 +82,8 @@ html_theme_options = {
         "color-link--hover": "#59e5ee",
     },
     "light_css_variables": {
+        "color-api-name": "#ff6b6b",
+        "color-api-pre-name": "#4ec9b0",
         "color-link--hover": "#35939a",
     },
 }

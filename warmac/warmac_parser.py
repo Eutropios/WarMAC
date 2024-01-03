@@ -23,10 +23,6 @@ from typing import Generator, NoReturn, Union
 DEFAULT_TIME = 10
 #: The statistic types that the average command can use
 _AVG_FUNCS = ("median", "mean", "mode", "harmonic", "geometric")
-#: The minimum width that the help text should take up in the CLI
-_HELP_MIN_WIDTH = 34
-#: Minimum value of _HELP_MIN_WIDTH and the terminal's width
-_DEFAULT_WIDTH = min(_HELP_MIN_WIDTH, shutil.get_terminal_size().columns - 2)
 #: The description of the program
 _DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
 #: The maximum time range that the average command can pull from
@@ -36,7 +32,7 @@ _PLATFORMS = ("pc", "ps4", "xbox", "switch")
 #: The name of the program.
 _PROG_NAME = "warmac"
 #: The current version of WarMAC
-_VERSION = "0.0.4"
+_VERSION = "0.0.5"
 
 
 class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
@@ -191,20 +187,23 @@ def _create_parser() -> WarMACParser:
 
     :return: The constructed :py:class:`.WarMACParser` object.
     """
+    help_min_width = 34  # min width that help text should take up in usage
+    # Min value of help_min_width and terminal's width
+    default_width = min(help_min_width, shutil.get_terminal_size().columns - 2)
     parser = WarMACParser(
         usage=f"{_PROG_NAME} <command> [options]",
         description=_DESCRIPTION,
         epilog=(
             "More help can be found at: "
-            "https://warmac.readthedocs.io/en/latest/cli/warmac_usage.html"
+            "https://warmac.readthedocs.io/en/latest/usage/warmac.html"
         ),
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,  # first arg in CL, which is the file's name
-            max_help_position=_DEFAULT_WIDTH,
+            max_help_position=default_width,
         ),
-        add_help=False,
+        add_help=False,  # don't add default help msg
     )
-    parser._positionals.title = "commands"
+    parser._positionals.title = "commands"  # changing positional header
 
     # ------- Main Parser Arguments -------
     parser.add_argument(
@@ -235,7 +234,7 @@ def _create_parser() -> WarMACParser:
         ),
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,
-            max_help_position=_DEFAULT_WIDTH,
+            max_help_position=default_width,
             # prog refers to the first argument passed in the command
             # line, which is the name of the file in this case.
         ),

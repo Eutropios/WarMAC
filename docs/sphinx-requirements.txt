@@ -1,6 +1,0 @@
-furo >= 2023.9.10
-sphinx >= 7.2.0, < 8.0.0
-sphinx-copybutton >= 0.5.2, < 1.0.0
-sphinx-inline-tabs >= 2023.4.21
-sphinx-notfound-page >= 1.0.0, < 2.0.0
-sphinx_last_updated_by_git >= 0.3.6, < 1.0.0

@@ -9,7 +9,6 @@ File that contains the average command for WarMAC.
 For information on the main program, please see __init__.py
 
 Date of Creation: January 22, 2023
-External packages required: urllib3
 """  # noqa: D205, D400
 
 from __future__ import annotations
@@ -18,7 +17,15 @@ from __future__ import annotations
 import argparse  # noqa: TCH003
 import datetime
 import statistics
-from typing import Any, Callable, Dict, List, Sequence, TypedDict, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Sequence,
+    TypedDict,
+    Union,
+)
 
 import urllib3
 
@@ -27,8 +34,9 @@ from warmac import warmac_errors, warmac_parser
 #: The root URL used for communicating with the API of warframe.market.
 _API_ROOT = "https://api.warframe.market/v1"
 
+# Dict[str, Callable[[Sequence[int]], float]]
 #: A dictionary that maps user input to its respective function.
-AVG_FUNCS: Dict[str, Callable[[Sequence[int]], float]] = {
+FUNC_MAP: Dict[str, Callable[[Sequence[int]], float]] = {
     "geometric": statistics.geometric_mean,
     "harmonic": statistics.harmonic_mean,
     "mean": statistics.mean,
@@ -139,7 +147,7 @@ def _calc_avg(plat_list: List[int], statistic: str, decimals: int = 1) -> float:
     # Handle errors
     if not plat_list:
         raise warmac_errors.NoListingsFoundError from None
-    return round(float(AVG_FUNCS[statistic](plat_list)), decimals)
+    return round(float(FUNC_MAP[statistic](plat_list)), decimals)
 
 
 def _in_time_r(last_updated: str, time_r: int = warmac_parser.DEFAULT_TIME) -> bool:
@@ -266,7 +274,7 @@ def _verbose_out(
     """
     # {value:{width}.{precision}}
     space_after_label = 23
-    statistic = AVG_FUNCS[args.statistic].__name__.replace("_", " ").title()
+    statistic = FUNC_MAP[args.statistic].__name__.replace("_", " ").title()
     fixed_item_name = args.item.title().replace("_", " ").replace(" And ", " & ")
     print(f"{'Item:':{space_after_label}}{fixed_item_name}")
     print(f"{'Statistic Found:':{space_after_label}}{statistic}")

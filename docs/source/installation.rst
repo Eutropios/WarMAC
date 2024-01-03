@@ -44,7 +44,7 @@
 
    $ warmac --version
 
-|  Once you've installed WarMAC, check out :doc:`Usage </cli/index>` for details
+|  Once you've installed WarMAC, check out :doc:`Usage </usage/index>` for details
    on how to use WarMAC.
 
 ***********
@@ -73,7 +73,7 @@
 
    $ warmac --version
 
-|  Once you've installed WarMAC, check out :doc:`Usage </cli/index>` for details
+|  Once you've installed WarMAC, check out :doc:`Usage </usage/index>` for details
    on how to use WarMAC.
 
 **************
@@ -108,5 +108,5 @@
 
    $ warmac --version
 
-|  Once you've installed WarMAC, check out :doc:`Usage </cli/index>` for details
+|  Once you've installed WarMAC, check out :doc:`Usage </usage/index>` for details
    on how to use WarMAC.
