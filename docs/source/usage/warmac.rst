@@ -57,6 +57,6 @@
 .. option:: average
 
    Calculates the average platinum price of an item. It can find the median,
-   mean, mode, geometric mean, or harmonic mean of the specified item. It's
-   also able to target specific platforms, use buyer listings instead of
-   seller listings, and filter out older orders.
+   mean, mode, or geometric mean of the specified item. It's also able to
+   target specific platforms, use buyer listings instead of seller listings,
+   and filter out older orders.

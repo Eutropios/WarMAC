@@ -45,6 +45,7 @@
 [tool.poetry.group.docs]
     optional = true
 [tool.poetry.group.docs.dependencies]
+    esbonio = "*"
     furo = ">=2023.9"
     sphinx = [ # 6 is lower bound because of furo
         {version = ">=6,<7.2", python = "~3.8"},
@@ -94,19 +95,12 @@
         "DJ",
         "ERA001",
         "FIX",
-        "INT",
         "ISC001",
         "ISC002",
         "NPY",
         "PD",
-        "PT",
         "SLF001",
-        "SLOT",
         "T20",
-        "TD",
-        "UP006",
-        "UP007",
-        "UP035",
     ]
     indent-width = 4
     line-length = 88
@@ -165,3 +159,6 @@
 
 [tool.ruff.lint.mccabe]
     max-complexity = 7
+
+[tool.ruff.lint.flake8-type-checking]
+    strict = true

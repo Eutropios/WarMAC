@@ -18,7 +18,7 @@ python_path = str(Path("../../warmac/").resolve())
 sys.path.insert(0, python_path)
 
 project = "WarMAC"
-copyright = "2023, Noah Jenner"  # noqa: A001
+copyright = "2023 Noah Jenner"  # noqa: A001
 author = "Noah Jenner"
 release = "0.0.5"
 language = "en"

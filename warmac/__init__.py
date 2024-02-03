@@ -1,7 +1,7 @@
 """
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Warframe Market Average Calculator (WarMAC) 0.0.5
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Warframe Market Average Calculator (WarMAC)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Copyright (c) 2023 Noah Jenner under MIT License
 Please see LICENSE.txt for additional licensing information.
@@ -22,12 +22,12 @@ from typing import Literal
 
 from urllib3 import exceptions
 
-from warmac import warmac_average, warmac_errors, warmac_parser
+from warmac import cli_parser, warmac_average, warmac_errors
 
 __all__ = [
+    "cli_parser",
     "warmac_average",
     "warmac_errors",
-    "warmac_parser",
 ]
 
 #: A dictionary of all possible commands
@@ -67,17 +67,17 @@ def command_select(args: argparse.Namespace) -> None:
 
 def console_main() -> Literal[0]:
     """
-    Create a :py:data:`warmac_parser.WarMACParser` and run associated
+    Create a :py:data:`cli_parser.WarMACParser` and run associated
     command.
 
-    Call :py:func:`warmac_parser.handle_input` to create and parse a
-    :py:class:`warmac_parser.WarMACParser`. Arguments are then used in
+    Call :py:func:`cli_parser.handle_input` to create and parse a
+    :py:class:`cli_parser.WarMACParser`. Arguments are then used in
     the script's execution, beginning by calling
     :py:func:`.command_select` with the parsed arguments.
 
     :return: Return 0 if everything returns successfully.
     """  # noqa: D205
-    command_select(warmac_parser.handle_input())
+    command_select(cli_parser.handle_input())
     return 0
 
 

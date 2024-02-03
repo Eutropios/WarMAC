@@ -1,4 +1,4 @@
-.. _warmac_parser:
+.. _cli_parser:
 
 ###############
  WarMAC Parser
@@ -13,28 +13,27 @@
    Only global variables and constants that are public are documented. Please
    see the source code for private variable/constant documentation.
 
-.. py:data:: warmac_parser.DEFAULT_TIME
+.. py:data:: cli_parser.DEFAULT_TIME
    :type: int
    :value: 10
 
    The default time that will be used for calculating listing ages.
 
-.. autoclass:: warmac_parser.CustomHelpFormat
+.. autoclass:: cli_parser.CustomHelpFormat
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
    :special-members: __init__
 
-.. autoclass:: warmac_parser.WarMACParser
+.. autoclass:: cli_parser.WarMACParser
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
-   :special-members: __init__
 
-.. autofunction:: warmac_parser._int_checking
+.. autofunction:: cli_parser._int_checking
 
-.. autofunction:: warmac_parser._create_parser
+.. autofunction:: cli_parser._create_parser
 
-.. autofunction:: warmac_parser.handle_input
+.. autofunction:: cli_parser.handle_input

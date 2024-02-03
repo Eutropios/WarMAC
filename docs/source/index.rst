@@ -41,7 +41,7 @@
 
    reference/warmac_main
    reference/warmac_average
-   reference/warmac_parser
+   reference/cli_parser
    reference/warmac_errors
 
 .. toctree::

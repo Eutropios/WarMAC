@@ -40,8 +40,8 @@
 .. option:: -s, --stats <statistic>
 
    Specifies the type of statistical average to calculate for the item. It can
-   be one of median, mean, mode, harmonic, or geometric. By default, the
-   calculated statistic is the item's median price.
+   be one of median, mean, mode, or geometric. By default, the calculated
+   statistic is the item's median price.
 
 .. option:: -p, --platform <platform>
 

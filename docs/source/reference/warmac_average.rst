@@ -14,7 +14,7 @@
 
 .. py:data:: warmac_average.FUNC_MAP
    :type: typing.Dict[str, typing.Callable[[typing.Sequence[int]], float]]
-   :value: {'geometric': statistics.geometric_mean, 'harmonic': statistics.harmonic_mean, 'mean': statistics.mean, 'median': statistics.median, 'mode': statistics.mode}
+   :value: {'geometric': statistics.geometric_mean, 'mean': statistics.mean, 'median': statistics.median, 'mode': statistics.mode}
 
    A dictionary that maps user input to its respective function.
 
@@ -22,7 +22,7 @@
    :type: ~datetime.datetime
    :value: datetime.datetime.now(datetime.timezone.utc)
 
-   An ISO-8601 timestamp of the current time retrieved on execution.
+   An ISO8601 timestamp of the current time retrieved on execution.
 
 .. autoclass:: warmac_average._WarMACJSON
    :members:

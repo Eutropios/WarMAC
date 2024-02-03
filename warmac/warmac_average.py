@@ -17,34 +17,28 @@ from __future__ import annotations
 import argparse  # noqa: TCH003
 import datetime
 import statistics
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    List,
-    Sequence,
-    TypedDict,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, TypedDict
 
 import urllib3
 
-from warmac import warmac_errors, warmac_parser
+from warmac import cli_parser, warmac_errors
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Sequence
 
 #: The root URL used for communicating with the API of warframe.market.
 _API_ROOT = "https://api.warframe.market/v1"
 
-# Dict[str, Callable[[Sequence[int]], float]]
+# dict[str, Callable[[Sequence[int]], float]]
 #: A dictionary that maps user input to its respective function.
-FUNC_MAP: Dict[str, Callable[[Sequence[int]], float]] = {
+FUNC_MAP: dict[str, Callable[[Sequence[int]], float]] = {
     "geometric": statistics.geometric_mean,
-    "harmonic": statistics.harmonic_mean,
     "mean": statistics.mean,
     "median": statistics.median,
     "mode": statistics.mode,
 }
 
-#: An ISO-8601 timestamp of the current time retrieved on execution.
+#: An ISO 8601 timestamp of the current time retrieved on execution.
 CURR_TIME = datetime.datetime.now(datetime.timezone.utc)
 
 
@@ -64,10 +58,10 @@ class _WarMACJSON(TypedDict):
 
     is_relic: bool
     max_rank: int
-    orders: List[Dict[str, Any]]
+    orders: list[dict[str, Any]]
 
 
-def _extract_info(input_json_: Dict[str, Any]) -> _WarMACJSON:
+def _extract_info(input_json_: dict[str, Any]) -> _WarMACJSON:
     """
     Extract the necessary information from the retrieved JSON.
 
@@ -81,8 +75,8 @@ def _extract_info(input_json_: Dict[str, Any]) -> _WarMACJSON:
     :return: Return a TypedDict containing the information extracted
         from the JSON.
     """
-    item_info: Dict[str, Any] = input_json_["include"]["item"]["items_in_set"][0]
-    tags: List[str] = item_info["tags"]
+    item_info: dict[str, Any] = input_json_["include"]["item"]["items_in_set"][0]
+    tags: list[str] = item_info["tags"]
     mod_or_arcane = "mod" in tags or "arcane_enhancement" in tags
     json_: _WarMACJSON = {
         "is_relic": "relic" in tags,
@@ -92,7 +86,7 @@ def _extract_info(input_json_: Dict[str, Any]) -> _WarMACJSON:
     return json_
 
 
-def get_page(url: str, headers: Dict[str, str]) -> urllib3.BaseHTTPResponse:
+def get_page(url: str, headers: dict[str, str]) -> urllib3.BaseHTTPResponse:
     """
     Request the JSON of a desired item from Warframe.Market.
 
@@ -128,7 +122,7 @@ def get_page(url: str, headers: Dict[str, str]) -> urllib3.BaseHTTPResponse:
     raise warmac_errors.UnknownError(page.status)
 
 
-def _calc_avg(plat_list: List[int], statistic: str, decimals: int = 1) -> float:
+def _calc_avg(plat_list: list[int], statistic: str, decimals: int = 1) -> float:
     """
     Calculate the desired statistic of the price of an item.
 
@@ -150,7 +144,7 @@ def _calc_avg(plat_list: List[int], statistic: str, decimals: int = 1) -> float:
     return round(float(FUNC_MAP[statistic](plat_list)), decimals)
 
 
-def _in_time_r(last_updated: str, time_r: int = warmac_parser.DEFAULT_TIME) -> bool:
+def _in_time_r(last_updated: str, time_r: int = cli_parser.DEFAULT_TIME) -> bool:
     """
     Check if order is younger than ``time_r`` days.
 
@@ -160,7 +154,7 @@ def _in_time_r(last_updated: str, time_r: int = warmac_parser.DEFAULT_TIME) -> b
     :param last_updated: The date and time that the order was last
         updated at.
     :param time_r: The oldest an order can be to be accepted, defaults
-        to :py:const:`warmac_parser.DEFAULT_TIME`.
+        to :py:const:`cli_parser.DEFAULT_TIME`.
     :return: True if ``last_updated ≤ time_r``, False if ``last_updated
         > time_r``.
     """
@@ -168,9 +162,9 @@ def _in_time_r(last_updated: str, time_r: int = warmac_parser.DEFAULT_TIME) -> b
 
 
 def _comp_val(
-    val: Union[str, int],
-    true_val: Union[str, int],
-    false_val: Union[str, int],
+    val: str | int,
+    true_val: str | int,
+    false_val: str | int,
     *,
     condition: bool = False,
 ) -> bool:
@@ -190,7 +184,7 @@ def _comp_val(
 
 
 def _filter_order(
-    order: Dict[str, Any],
+    order: dict[str, Any],
     json_: _WarMACJSON,
     args: argparse.Namespace,
 ) -> bool:
@@ -236,7 +230,7 @@ def _filter_order(
     )
 
 
-def _get_plat_list(json_: _WarMACJSON, args: argparse.Namespace) -> List[int]:
+def _get_plat_list(json_: _WarMACJSON, args: argparse.Namespace) -> list[int]:
     """
     Return a filtered list of platinum prices.
 
@@ -258,7 +252,7 @@ def _get_plat_list(json_: _WarMACJSON, args: argparse.Namespace) -> List[int]:
 def _verbose_out(
     args: argparse.Namespace,
     avg_cost: float,
-    plat_list: List[int],
+    plat_list: list[int],
 ) -> None:
     """
     Display the average price along with additional information.
@@ -295,7 +289,7 @@ def average(args: argparse.Namespace) -> None:
     :param args: The :py:class:`argparse.Namespace` containing the
         user-supplied command line information.
     """
-    headers: Dict[str, str] = {
+    headers: dict[str, str] = {
         "Accept": "application/json",
         "Accept-Language": "en",
         "Content-Type": "application/json",

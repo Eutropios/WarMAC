@@ -1,5 +1,5 @@
 """
-warmac.warmac_parser
+warmac.cli_parser
 ~~~~~~~~~~~~~~~~~~~~~
 
 Copyright (c) 2023 Noah Jenner under MIT License
@@ -17,27 +17,18 @@ import argparse
 import contextlib
 import shutil
 import sys
-from typing import Generator, NoReturn, Union
+from collections.abc import Generator  # noqa: TCH003
+from typing import NoReturn
 
 #: The default time to collect orders until
 DEFAULT_TIME = 10
-#: The statistic types that the average command can use
-_AVG_FUNCS = ("median", "mean", "mode", "harmonic", "geometric")
-#: The description of the program
-_DESCRIPTION = "A program to fetch the average market cost of an item in Warframe."
-#: The maximum time range that the average command can pull from
-_MAX_TIME_RANGE = 60
-#: The platforms that the user can choose from
-_PLATFORMS = ("pc", "ps4", "xbox", "switch")
-#: The name of the program.
-_PROG_NAME = "warmac"
 #: The current version of WarMAC
 _VERSION = "0.0.5"
 
 
 class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
     """
-    Custom help formatter for :py:class:`warmac_parser.WarMACParser`.
+    Custom help formatter for :py:class:`cli_parser.WarMACParser`.
 
     Extend :py:class:`argparse.RawDescriptionHelpFormatter` to
     reimplement a few methods. Reimplementations include removing the
@@ -50,7 +41,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         prog: str,
         indent_increment: int = 2,
         max_help_position: int = 24,
-        width: Union[int, None] = None,
+        width: int | None = None,
     ) -> None:
         """
         Construct a :py:class:`.CustomHelpFormat` object.
@@ -187,12 +178,18 @@ def _create_parser() -> WarMACParser:
 
     :return: The constructed :py:class:`.WarMACParser` object.
     """
-    help_min_width = 34  # min width that help text should take up in usage
+    # Min width that help text should take up in usage
+    help_min_width = 34
     # Min value of help_min_width and terminal's width
     default_width = min(help_min_width, shutil.get_terminal_size().columns - 2)
+    # Platforms the user can choose from
+    platforms = ("pc", "ps4", "xbox", "switch")
+
     parser = WarMACParser(
-        usage=f"{_PROG_NAME} <command> [options]",
-        description=_DESCRIPTION,
+        usage="warmac <command> [options]",
+        description=(
+            "A program to fetch the average market cost of an item in Warframe."
+        ),
         epilog=(
             "More help can be found at: "
             "https://warmac.readthedocs.io/en/latest/usage/warmac.html"
@@ -218,19 +215,19 @@ def _create_parser() -> WarMACParser:
         "--version",
         action="version",
         help="Show the program's version number and exit.",
-        version=f"{_PROG_NAME} {_VERSION}",
+        version=f"warmac {_VERSION}",
     )
 
     # ======= Sub-Commands =======
     subparsers = parser.add_subparsers(dest="subparser", metavar="")
 
-    # ------- Average -------
+    # ------- Average Subcommand -------
     avg_parser = subparsers.add_parser(
         "average",
         help="Calculate the average platinum price of an item.",
         description=(
             "Calculate the average platinum price of an item. Able to find the median,"
-            " mean, mode, geometric mean, and harmonic mean of the specified item."
+            " mean, mode, and geometric mean of the specified item."
         ),
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,
@@ -240,10 +237,16 @@ def _create_parser() -> WarMACParser:
         ),
         add_help=False,
         usage=(
-            f"{_PROG_NAME} average [-s <stat>] [-p <platform>] [-t <days>] [-m | -r]"
-            " [-b] [-v] item"
+            "warmac average [-s <stat>] [-p <platform>] [-t <days>] [-m | -r] [-b] "
+            "[-v] item"
         ),
     )
+    # ---- Average default settings ----
+
+    # The statistic types that the average command can use
+    avg_funcs = ("median", "mean", "mode", "geometric")
+    # The maximum time range that the average command can pull from
+    max_time_range = 60
 
     # Option characters used: s, p, t, m, r, b, v, h
 
@@ -261,10 +264,10 @@ def _create_parser() -> WarMACParser:
         "--stats",
         default="median",
         type=lambda s: s.lower().strip(),
-        choices=_AVG_FUNCS,
+        choices=avg_funcs,
         help=(
             "Specifies which statistic to return; Can be one of "
-            f"({', '.join(_AVG_FUNCS)}). (Default: median)"
+            f"({', '.join(avg_funcs)}). (Default: median)"
         ),
         metavar="<stat>",
         dest="statistic",
@@ -275,10 +278,10 @@ def _create_parser() -> WarMACParser:
         "--platform",
         default="pc",
         type=lambda s: s.lower().strip(),
-        choices=_PLATFORMS,
+        choices=platforms,
         help=(
             "Which platform to fetch the item's orders for. Must be one of "
-            f"({', '.join(_PLATFORMS)}). (Default: pc)"
+            f"({', '.join(platforms)}). (Default: pc)"
         ),
         metavar="<platform>",
     )
@@ -287,11 +290,11 @@ def _create_parser() -> WarMACParser:
         "-t",
         "--timerange",
         default=DEFAULT_TIME,
-        type=lambda x: _int_checking(x, _MAX_TIME_RANGE),
+        type=lambda x: _int_checking(x, max_time_range),
         help=(
             "Number of days to consider for calculating the average. Value given "
             "indicates how far back to start the statistic's calculation. Must be in "
-            f"range [1, {_MAX_TIME_RANGE}]. (Default: {DEFAULT_TIME})"
+            f"range [1, {max_time_range}]. (Default: {DEFAULT_TIME})"
         ),
         metavar="<days>",
         dest="timerange",
