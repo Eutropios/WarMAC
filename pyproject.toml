@@ -63,8 +63,9 @@
         optional = true
         [tool.poetry.group.docs.dependencies]
             sphinx = [
-                {version = ">=7.2,<8", python = "~3.9"},
-                {version = "^8", python = ">=3.10"},
+                {version = ">=7.2,<8.0", python = ">=3.9,<3.10"},
+                {version = ">=8.0,<8.2", python = ">=3.10,<3.11"},
+                {version = ">=8.2", python = ">=3.11"},
             ]
 
             docutils                   = ">=0.18.1"
