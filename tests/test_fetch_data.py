@@ -1,7 +1,6 @@
 """
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Warframe Market Average Calculator (WarMAC)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests.test_cli_parser
+~~~~~~~~~~~~~~~~~~~~~
 
 WarMAC — https://github.com/Eutropios/WarMAC
 Copyright (C) 2024  Noah Jenner
@@ -18,15 +17,17 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 -----------------------------------------------------------------------
 
-Module information of warmac.
-Describes what modules are visible for imports.
+Test file for cli_parser.py
 """  # noqa: D205, D400
 
 from __future__ import annotations
 
-from warmac import average, cli_parser, fetch_data, main, schema
+# import argparse
+# import shutil
+# import sys
 
-__all__ = ["average", "cli_parser", "fetch_data", "main", "schema"]
+# import pytest
+
+# from warmac import fetch_data

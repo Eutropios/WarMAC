@@ -161,12 +161,13 @@ class TestStdlibMonkeyPatching:
     # argparse subcommand title is correct
     @staticmethod
     def test_positionals_header_is_correct() -> None:
-        parser = cli_parser._create_parser()  # noqa: SLF001
+        parser = cli_parser.create_parser()
         expected_title = "commands"
         assert parser._positionals.title == expected_title  # noqa: SLF001
 
+    # overridden methods of subclass are formatted correctly
     @staticmethod
-    def test_overrideden_help_formatter() -> None:
+    def test_overridden_help_formatter() -> None:
         help_min_width = 34
         default_width = min(help_min_width, shutil.get_terminal_size().columns - 2)
         some_parser = cli_parser.WarMACParser(

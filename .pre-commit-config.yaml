@@ -1,36 +1,37 @@
 repos:
     - repo: https://github.com/DavidAnson/markdownlint-cli2
-      rev: "v0.16.0"
+      rev: "v0.18.1"
       hooks:
           - id: markdownlint-cli2
 
     - repo: https://github.com/abravalheri/validate-pyproject
-      rev: "v0.23"
+      rev: "v0.24.1"
       hooks:
           - id: validate-pyproject
 
-    #- repo: https://github.com/PyCQA/docformatter
-    #  rev: "master"
-    #  hooks:
-    #      - id: docformatter
-    #        additional_dependencies: [tomli]
-    #        args: [-i, -e ./tests]
+    - repo: https://github.com/PyCQA/docformatter
+      rev: "v1.7.7"
+      hooks:
+          - id: docformatter
+            additional_dependencies: [tomli]
+            args: [-i, -e ./tests]
 
     - repo: https://github.com/astral-sh/ruff-pre-commit
-      rev: "v0.8.3"
+      rev: "v0.11.11"
       hooks:
-          - id: ruff
+          - id: ruff-check
             args: [--exit-non-zero-on-fix]
           - id: ruff-format
 
     - repo: https://github.com/pre-commit/mirrors-mypy
-      rev: "v1.13.0"
+      rev: "v1.15.0"
       hooks:
           - id: mypy
             args: [--strict, --ignore-missing-imports]
+            additional_dependencies: [msgspec==0.19.0]
 
     - repo: https://github.com/rhysd/actionlint
-      rev: v1.7.4
+      rev: v1.7.7
       hooks:
           - id: actionlint
 

@@ -160,10 +160,7 @@ def str_to_int_bounds_check(val: str, min_val: int, max_val: int) -> int:
 
 
 class WarMACParser(argparse.ArgumentParser):
-    """
-    Extend :class:`argparse.ArgumentParser` to reimplement the error
-    method.
-    """  # noqa: D205
+    """Extend :class:`argparse.ArgumentParser` to reimplement method."""
 
     def error(self, message: str) -> NoReturn:
         """
@@ -179,7 +176,7 @@ class WarMACParser(argparse.ArgumentParser):
         # stdout, then exit with code 1
 
 
-def _create_parser() -> WarMACParser:
+def create_parser() -> WarMACParser:
     """
     Create the command-line parser for the program.
 
@@ -197,6 +194,7 @@ def _create_parser() -> WarMACParser:
     default_width = min(help_min_width, shutil.get_terminal_size().columns - 2)
     # Platforms the user can choose from
     platforms: Final = ("pc", "ps4", "xbox", "switch")
+    # I'm already modifying state in this function. Just keep this here.
 
     parser = WarMACParser(
         usage="warmac <command> [options]",
@@ -262,8 +260,7 @@ def _create_parser() -> WarMACParser:
     min_time_range: Final = 1
     # The maximum time that str_to_int_bounds_check checks against
     max_time_range: Final = 60
-    # NOTE: Potential to make function more "pure" by passing these two
-    # variables in as parameters. A config file may help too.
+    # See above comment about state.
 
     # Option characters used: s, p, t, m, r, b, d, h
 
@@ -400,6 +397,7 @@ def _create_parser() -> WarMACParser:
         usage="warmac help subcommand",
     )
     possible_subcommands = ("average", "help")
+    # See above comment about already modifying state in this function.
 
     help_parser.add_argument(
         "subcommand",
@@ -435,7 +433,7 @@ def handle_input(args: list[str] | None = None) -> argparse.Namespace:
     :param args: Substituted command line arguments, defaults to None
     :return: The parsed command-line arguments.
     """
-    parser = _create_parser()
+    parser = create_parser()
 
     # If function is called with nothing and only "warmac" is called,
     # or if an empty list is passed in with `handle_input`

@@ -39,5 +39,6 @@ def main(args: argparse.Namespace) -> float:
     :return: Average price of item.
     """
     print(args.item)  # NOTE: Just debug stuff
+
     # do some validation with msgspec
     return 0.1
