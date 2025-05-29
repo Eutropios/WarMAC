@@ -37,119 +37,107 @@ _EXIT_CODE_GENERIC_ERROR = 1
 _EXIT_CODE_SHELL_BUILTIN_ERROR = 2
 
 
-class TestIntCastInterface:
-    # Valid params
-    @staticmethod
-    def test_input_cast_to_int_with_valid_params() -> None:
-        expected_output = 5
-        assert cli_parser.str_to_int_bounds_check("5", 1, 10) == expected_output
-
-    # min > max
-    @staticmethod
-    def test_min_greater_than_max_throws_error() -> None:
-        with pytest.raises(argparse.ArgumentTypeError):
-            cli_parser.str_to_int_bounds_check("5", 10, 1)
-
-
 class TestIntCastInputBounds:
-    # Input == min
     @staticmethod
-    def test_input_val_equal_to_min_val() -> None:
-        expected_output = 1
-        assert cli_parser.str_to_int_bounds_check("1", 1, 10) == expected_output
-
-    # Input < min
-    @staticmethod
-    def test_below_min_value_input_throws_error() -> None:
-        with pytest.raises(argparse.ArgumentTypeError):
-            cli_parser.str_to_int_bounds_check("0", 1, 10)
-
-    # Input == max
-    @staticmethod
-    def test_input_val_equal_to_max_val_throws_error() -> None:
-        with pytest.raises(argparse.ArgumentTypeError):
-            cli_parser.str_to_int_bounds_check("10", 1, 10)
-
-    # Input > max
-    @staticmethod
-    def test_above_max_value_input_throws_error() -> None:
-        with pytest.raises(argparse.ArgumentTypeError):
-            cli_parser.str_to_int_bounds_check("11", 1, 10)
+    @pytest.mark.parametrize(
+        (
+            "input_str",
+            "min_bound",
+            "max_bound",
+            "expected_result",
+            "should_raise_error",
+        ),
+        [
+            # --- Successful cases ---
+            ("1", 1, 10, 1, False),  # Input == min_bound
+            ("5", 1, 10, 5, False),  # Input within bounds
+            # --- Error cases (outside value bounds) ---
+            ("0", 1, 10, None, True),  # Input < min_bound
+            ("11", 1, 10, None, True),  # Input > max_bound
+            ("5", 10, 1, None, True),  # min_bound > max_bound
+            ("10", 1, 10, None, True),  # Input == max_bound
+        ],
+    )
+    def test_str_to_int_bounds_check(
+        input_str: str,
+        min_bound: int,
+        max_bound: int,
+        expected_result: int | None,
+        *,
+        should_raise_error: bool,
+    ) -> None:
+        """Test str_to_int_bounds_check for edge-case integers wrt
+        bounds, asserting either correct conversion or
+        ArgumentTypeError."""  # noqa: D205, D209
+        if should_raise_error:
+            with pytest.raises(argparse.ArgumentTypeError):
+                cli_parser.str_to_int_bounds_check(input_str, min_bound, max_bound)
+        else:
+            actual_output = cli_parser.str_to_int_bounds_check(
+                input_str, min_bound, max_bound
+            )
+            assert actual_output == expected_result
 
 
 class TestIntCastInputParamTypes:
-    # Input is a float
     @staticmethod
-    def test_float_input_throws_error() -> None:
+    @pytest.mark.parametrize(
+        "invalid_input_string",
+        [
+            "1.5",  # Input is a float-like string
+            "33foobar",  # Input is a mixed string
+            "True",  # Input is a boolean-like string
+            "None",  # Input is a None-like string
+            "invalid",  # General invalid string
+            "",  # Empty string
+        ],
+    )
+    def test_invalid_input_strings_throw_argument_type_error(
+        invalid_input_string: str,
+    ) -> None:
+        """Test invalid string inputs for str_to_int_bounds_check to
+        ensure argparse.ArgumentTypeError is raised."""  # noqa: D205, D209
+        min_bound = 1
+        max_bound = 10
         with pytest.raises(argparse.ArgumentTypeError):
-            cli_parser.str_to_int_bounds_check("1.5", 1, 10)
-
-    # Input is a mixed string
-    @staticmethod
-    def test_mixed_string_input_throws_error() -> None:
-        with pytest.raises(argparse.ArgumentTypeError):
-            cli_parser.str_to_int_bounds_check("33foobar", 1, 10)
-
-    # Input is a boolean
-    @staticmethod
-    def test_boolean_input_throws_error() -> None:
-        with pytest.raises(argparse.ArgumentTypeError):
-            cli_parser.str_to_int_bounds_check("True", 1, 10)
-
-    # Input is None
-    @staticmethod
-    def test_none_input_throws_error() -> None:
-        with pytest.raises(argparse.ArgumentTypeError):
-            cli_parser.str_to_int_bounds_check("None", 1, 10)
+            cli_parser.str_to_int_bounds_check(
+                invalid_input_string, min_bound, max_bound
+            )
 
 
 class TestHandleInputInterface:
-    # exit code 1 when "warmac" is called
     @staticmethod
-    def test_bare_command_with_empty_list_exit_code_one() -> None:
-        with pytest.raises(SystemExit) as exit_code:
-            cli_parser.handle_input([])
-        assert exit_code.value.code == _EXIT_CODE_GENERIC_ERROR
+    @pytest.mark.parametrize(
+        ("input_args", "expected_exit_code"),
+        [
+            # Exit code 1 scenarios
+            ([], _EXIT_CODE_GENERIC_ERROR),
+            (None, _EXIT_CODE_GENERIC_ERROR),
+            (["average"], _EXIT_CODE_GENERIC_ERROR),
+            # Exit code 0 scenarios
+            (["help"], _EXIT_CODE_ALL_GOOD),
+            (["help", "average"], _EXIT_CODE_ALL_GOOD),
+            (["--help"], _EXIT_CODE_ALL_GOOD),
+        ],
+    )
+    def test_cli_exit_codes(
+        input_args: list[str] | None, expected_exit_code: int
+    ) -> None:
+        """Test command-line inputs to ensure correct exit code."""
+        with pytest.raises(SystemExit) as excinfo:
+            (
+                cli_parser.handle_input()
+                if input_args is None
+                else cli_parser.handle_input(input_args)
+            )
+        assert excinfo.value.code == expected_exit_code
 
-    # exit code 1 when "warmac" is called, dupe from above
-    @staticmethod
-    def test_bare_command__with_none_input_exit_code_one() -> None:
-        with pytest.raises(SystemExit) as exit_code:
-            cli_parser.handle_input()
-        assert exit_code.value.code == _EXIT_CODE_GENERIC_ERROR
-
-    # exit code 1 when "warmac average" is called
-    @staticmethod
-    def test_bare_average_command_exit_code_one() -> None:
-        with pytest.raises(SystemExit) as exit_code:
-            cli_parser.handle_input(["average"])
-        assert exit_code.value.code == _EXIT_CODE_GENERIC_ERROR
-
-    # exit code 0 when "warmac help" is called
-    @staticmethod
-    def test_bare_help_command_exit_code_zero() -> None:
-        with pytest.raises(SystemExit) as exit_code:
-            cli_parser.handle_input(["help"])
-        assert exit_code.value.code == _EXIT_CODE_ALL_GOOD
-
-    # exit code 0 when "warmac help average" is called
-    @staticmethod
-    def test_help_with_arg_exit_code_zero() -> None:
-        with pytest.raises(SystemExit) as exit_code:
-            cli_parser.handle_input(["help", "average"])
-        assert exit_code.value.code == _EXIT_CODE_ALL_GOOD
-
-    # exit code 0 when "warmac --help" is called
-    @staticmethod
-    def test_bare_command_with_help_option_exit_code_zero() -> None:
-        with pytest.raises(SystemExit) as exit_code:
-            cli_parser.handle_input(["--help"])
-        assert exit_code.value.code == _EXIT_CODE_ALL_GOOD
-
-    # valid parsed content
     @staticmethod
     def test_valid_command_returns_parsed_args() -> None:
+        """Test valid command to ensure it returns expected
+        argparse.Namespace object."""  # noqa: D205, D209
         parsed_args = cli_parser.handle_input(["average", "bite"])
+        assert isinstance(parsed_args, argparse.Namespace)
         assert parsed_args.subparser == "average"
         assert parsed_args.item == "bite"
 

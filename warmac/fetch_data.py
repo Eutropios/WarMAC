@@ -65,6 +65,26 @@ SCHEMA_TO_URL: dict[type[schema.Base], str] = {
 }
 
 
+def http_code_check(status_code: int) -> None:
+    """
+    Check an HTTP status code and raise the appropriate WarMACHTTPError.
+
+    Check an HTTP status code and raise the corresponding
+    WarMACHTTPError if not 200.
+
+    :param status_code: The HTTP status code to check.
+    :raises WarMACHTTPError: Raise an error from HTTP_ERROR_DICT if HTTP
+        status code is not 200.
+    :raises errors.UnknownError: Raised as fallback if HTTP status code
+        is not in HTTP_ERROR_DICT.
+    """
+    if status_code == 200:  # noqa: PLR2004
+        return
+    with contextlib.suppress(KeyError):
+        raise HTTP_ERROR_DICT[status_code]
+    raise errors.UnknownError(status_code)
+
+
 def get_page(url: str, headers: dict[str, str]) -> urllib3.BaseHTTPResponse:
     """
     Make an HTTP request to warframe.market.
@@ -76,19 +96,15 @@ def get_page(url: str, headers: dict[str, str]) -> urllib3.BaseHTTPResponse:
 
     :param url: The formatted URL used in the request.
     :param headers: The headers to be used in the HTTP request.
-    :raises HTTP_ERROR_DICT: Raise an error from HTTP_ERROR_DICT given
+    :raises WarMACHTTPError: Raise an error from HTTP_ERROR_DICT given
         the HTTP response code.
     :raises errors.UnknownError: Fallback raised if the error code is
         not present in HTTP_ERROR_DICT.
     :return: The requested JSON.
     """
     page = urllib3.request("GET", url, headers=headers, timeout=5)
-    status = page.status
-    if status == 200:  # noqa: PLR2004
-        return page
-    with contextlib.suppress(KeyError):
-        raise HTTP_ERROR_DICT[status]
-    raise errors.UnknownError(status)
+    http_code_check(page.status)
+    return page
 
 
 def get_data(item: str, request_schema: type[T]) -> T:
@@ -108,4 +124,9 @@ def get_data(item: str, request_schema: type[T]) -> T:
     return msgspec.json.decode(data_raw, type=request_schema)
 
 
-get_data("bite", schema.OrderResponse)
+# handle errors in main.py
+
+# create reports.py in which something subclasses off of
+# something else and the details of extended report get stored
+
+# create output.py maybe?

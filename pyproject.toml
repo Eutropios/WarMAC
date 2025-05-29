@@ -80,8 +80,9 @@
     [tool.poetry.group.test]
         optional = true
         [tool.poetry.group.test.dependencies]
-            coverage = "^7.6"
-            pytest   = ">=8.0" # large dependency, watch for size
+            coverage    = "^7.6"
+            pytest      = ">=8.0"  # large dependency, watch for size
+            pytest-mock = ">=3.14"
 
 [tool.coverage]
     [tool.coverage.run]

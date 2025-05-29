@@ -27,6 +27,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from warmac import fetch_data, schema
+
 if TYPE_CHECKING:
     import argparse
 
@@ -38,7 +40,11 @@ def main(args: argparse.Namespace) -> float:
     :param args: Parsed command-line args.
     :return: Average price of item.
     """
+    # gotta do some error checking here
+    item = args.item
+    order_data = fetch_data.get_data(item, schema.OrderResponse)
     print(args.item)  # NOTE: Just debug stuff
+    print(order_data)
 
     # do some validation with msgspec
     return 0.1
