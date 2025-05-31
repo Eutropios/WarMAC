@@ -70,23 +70,12 @@ class TestGetPage:
         mock_urllib_request = mocker.patch(
             "urllib3.request", return_value=mock_response
         )
-        result = fetch_data.get_page("http://example.com/test", headers=headers)
+        result = fetch_data.get_page("https://httpstat.us/200", headers=headers)
         mock_urllib_request.assert_called_once_with(
-            "GET", "http://example.com/test", headers=headers, timeout=5
+            "GET", "https://httpstat.us/200", headers=headers, timeout=5
         )
         assert result is mock_response
         assert result.data == b"{'message': 'success'}"
-
-    @staticmethod
-    def test_get_page_raises_forbidden_error_on_403_status(mocker: MagicMock) -> None:
-        """Test that get_page correctly propagates a
-        ForbiddenRequestError when urllib3.request returns a 403
-        status."""  # noqa: D205, D209
-        mock_response = mocker.MagicMock(spec=urllib3.BaseHTTPResponse)
-        mock_response.status = 403
-        mocker.patch("urllib3.request", return_value=mock_response)
-        with pytest.raises(errors.ForbiddenRequestError):
-            fetch_data.get_page("http://example.com/forbidden", headers=headers)
 
     @staticmethod
     @pytest.mark.parametrize(
@@ -109,11 +98,9 @@ class TestGetPage:
         based on the status code returned by urllib3.request."""  # noqa: D205, D209
         mock_response = mocker.MagicMock(spec=urllib3.BaseHTTPResponse)
         mock_response.status = status_code
-
         mocker.patch("urllib3.request", return_value=mock_response)
-
         with pytest.raises(expected_error_type) as excinfo:
-            fetch_data.get_page("http://example.com/error_test", headers=headers)
+            fetch_data.get_page(f"https://httpstat.us/{status_code}", headers=headers)
 
         if expected_error_type is errors.UnknownError:
             expected_message = (
