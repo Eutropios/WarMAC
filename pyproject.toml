@@ -1,6 +1,6 @@
 [build-system]
-    build-backend = "pdm.backend"
-    requires      = ["pdm-backend"]
+    build-backend = "hatchling.build"
+    requires      = ["hatchling"]
 
 [project]
     authors = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
@@ -47,20 +47,11 @@
         documentation = "https://warmac.readthedocs.io/en/"
         repository    = "https://github.com/Eutropios/WarMAC"
 
-[tool.pdm.build]
-    includes = ["warmac"]
-
 [dependency-groups]
-    dev = [
-        "esbonio>=0.16",
-        "mypy",
-        "pip",
-        "pipdeptree",
-        "vermin",
-        "viztracer>=1.0.0",
-    ]
+    dev = ["mypy", "pipdeptree", "vermin", "viztracer>=1.0.0"]
     docs = [
         "docutils>=0.18.1",
+        "esbonio>=0.16",
         "furo>=2023.9",
         "sphinx-copybutton>=0.5.2",
         "sphinx-inline-tabs>=2023.4.21",
@@ -213,11 +204,11 @@
             max-complexity = 5
 
         [tool.ruff.lint.per-file-ignores]
-            "docs/source/conf.py"  = ["D100", "D104", "I002", "INP001"]
-            "tests/**.py"          = ["D101", "D102", "D103", "I002", "S101"]
-            "warmac/__init__.py"   = ["D100", "D104", "I002"]
-            "warmac/__main__.py"   = ["D100", "D104", "I002"]
-            "warmac/cli_parser.py" = ["SLF001"]
+            "docs/source/conf.py"      = ["D100", "D104", "I002", "INP001"]
+            "src/warmac/__init__.py"   = ["D100", "D104", "I002"]
+            "src/warmac/__main__.py"   = ["D100", "D104", "I002"]
+            "src/warmac/cli_parser.py" = ["SLF001"]
+            "tests/**.py"              = ["D101", "D102", "D103", "I002", "S101"]
             # *IMPORTANT* - A dirty hack in cli_parser.py uses private components
 
         [tool.ruff.lint.pycodestyle]
