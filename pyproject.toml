@@ -1,6 +1,6 @@
 [build-system]
-    build-backend = "poetry.core.masonry.api"
-    requires      = ["poetry-core>=1.0.0"]
+    build-backend = "pdm.backend"
+    requires      = ["pdm-backend"]
 
 [project]
     authors = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
@@ -22,7 +22,7 @@
         "Typing :: Typed",
     ]
 
-    dependencies = ["msgspec (>=0.19.0)", "urllib3 (>=2.0.4)"]
+    dependencies = ["msgspec>=0.19.0", "urllib3>=2.0.4"]
     description  = "An average platinum price calculator for tradeable items in Warframe."
     # include = [""]
 
@@ -47,42 +47,32 @@
         documentation = "https://warmac.readthedocs.io/en/"
         repository    = "https://github.com/Eutropios/WarMAC"
 
-[tool.poetry]
-    packages = [{include = "warmac"}]
+[tool.pdm.build]
+    includes = ["warmac"]
 
-    [tool.poetry.group.dev]
-        optional = true
-        [tool.poetry.group.dev.dependencies]
-            esbonio    = ">=0.16"
-            mypy       = "*"
-            pipdeptree = "*"       # watch this dependency as it pulls in pip
-            vermin     = "*"
-            viztracer  = ">=1.0.0"
+[dependency-groups]
+    dev = [
+        "esbonio>=0.16",
+        "mypy",
+        "pip",
+        "pipdeptree",
+        "vermin",
+        "viztracer>=1.0.0",
+    ]
+    docs = [
+        "docutils>=0.18.1",
+        "furo>=2023.9",
+        "sphinx-copybutton>=0.5.2",
+        "sphinx-inline-tabs>=2023.4.21",
+        "sphinx-last-updated-by-git>=0.3.6",
+        "sphinx-lint>=1",
+        "sphinx-notfound-page>=1",
+        "sphinx<8.0,>=7.2; python_version < '3.10' and python_version >= '3.9'",
+        "sphinx<8.2,>=8.0; python_version >= '3.10' and python_version < '3.11'",
+        "sphinx>=8.2; python_version >= '3.11'",
+    ]
+    test = ["coverage<8.0,>=7.6", "pytest-mock>=3.14", "pytest>=8.0"]
 
-    [tool.poetry.group.docs]
-        optional = true
-        [tool.poetry.group.docs.dependencies]
-            sphinx = [
-                {version = ">=7.2,<8.0", python = ">=3.9,<3.10"},
-                {version = ">=8.0,<8.2", python = ">=3.10,<3.11"},
-                {version = ">=8.2", python = ">=3.11"},
-            ]
-
-            docutils                   = ">=0.18.1"
-            furo                       = ">=2023.9"
-            python                     = ">=3.9"
-            sphinx-copybutton          = ">=0.5.2"
-            sphinx-inline-tabs         = ">=2023.4.21"
-            sphinx-lint                = ">=1"
-            sphinx-notfound-page       = ">=1"
-            sphinx_last_updated_by_git = ">=0.3.6"
-
-    [tool.poetry.group.test]
-        optional = true
-        [tool.poetry.group.test.dependencies]
-            coverage    = "^7.6"
-            pytest      = ">=8.0"  # large dependency, watch for size
-            pytest-mock = ">=3.14"
 
 [tool.coverage]
     [tool.coverage.run]

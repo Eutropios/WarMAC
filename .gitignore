@@ -5,6 +5,13 @@
 # *.[oa]
 # *~
 
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
 .bzr
 .coverage
 .direnv
@@ -24,12 +31,10 @@
 .svn
 .venv
 .vscode
-__pycache__
 __pypackages__
 _build
 buck-out
 build
-dist
 docs/_build
 htmlcov
 node_modules
