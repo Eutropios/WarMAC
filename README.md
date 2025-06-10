@@ -43,14 +43,23 @@ mods, and arcane enhancements.
 
 WarMAC only supports Python versions 3.9 to 3.13.
 
-### Using pipx
-
-Currently, the primary method of installing WarMAC is by installing it through [pipx](https://pypa.github.io/pipx/).
+The primary method of installing WarMAC is by installing it through [pipx](https://pypa.github.io/pipx/)
+or through [uv](https://docs.astral.sh/uv/guides/tools/).
 This keeps WarMAC and its dependencies separate from your global Python
-packages. Installation can be done using the following command:
+packages. Installation can be done using one of the following commands:
+
+### Using pipx
 
 ```bash
 pipx install warmac
+```
+
+### Using uv (or uvx)
+
+```bash
+uv install warmac
+# or
+uvx warmac
 ```
 
 You can ensure that you've installed WarMAC correctly by calling its help page
@@ -155,7 +164,7 @@ warmac average -s mode -m bite
 ## Documentation<a id="documentation"></a>
 
 Full documentation for installation, usage, and contribution guidelines can be
-found [here](https://warmac.readthedocs.io/en/).
+found on [WarMAC's readthedocs page](https://warmac.readthedocs.io/en/).
 
 ## Contributing<a id="contributing"></a>
 

@@ -114,7 +114,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
     def _iter_indented_subactions(
         self,
         action: argparse.Action,
-    ) -> Generator[argparse.Action, None, None]:
+    ) -> Generator[argparse.Action]:
         """
         Fix leading indentation for command names in the help menu.
 

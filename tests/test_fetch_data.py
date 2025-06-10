@@ -44,9 +44,10 @@ headers: dict[str, str] = {
 }
 
 # get_page:
+# use mocking to do the following:
 #  url is not correctly formatted throws error. Test each case
-#  test headers are accepted by wfm
-# figure out how to induce http codes
+#  schema types are the same
+#  schema not in dict
 # correct
 
 
@@ -109,6 +110,8 @@ class TestGetPage:
             )
             assert str(excinfo.value) == expected_message
 
+
+class TestHTTPCodeCheck:
     @staticmethod
     @pytest.mark.parametrize(
         ("status_code", "expected_error"),

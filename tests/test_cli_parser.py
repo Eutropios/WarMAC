@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import shutil
 import sys
+import textwrap
 
 import pytest
 
@@ -146,17 +147,68 @@ class TestStdlibMonkeyPatching:
     # these checks need to be done because the internals are being
     # altered and/or inherited from, which is inherently unsafe
 
-    # argparse subcommand title is correct
     @staticmethod
     def test_positionals_header_is_correct() -> None:
+        """Test that argparse subcommand is altered correctly."""
         parser = cli_parser.create_parser()
         expected_title = "commands"
         assert parser._positionals.title == expected_title  # noqa: SLF001
 
     # overridden methods of subclass are formatted correctly
     @staticmethod
-    def test_overridden_help_formatter() -> None:
+    @pytest.mark.parametrize(
+        ("terminal_width", "expected_output_pattern"),
+        [
+            (
+                40,  # Narrow terminal, triggers line wrapping for help text
+                textwrap.dedent(
+                    """\
+                usage: usage here
+
+                some description
+
+                positional arguments:
+                  stuff       More stuff.
+
+                options:
+                  -h, --help  Show this message and
+                              exit.
+                """
+                ),
+            ),
+            (
+                80,  # Wider terminal, less/no line wrapping for help text
+                textwrap.dedent(
+                    """\
+                usage: usage here
+
+                some description
+
+                positional arguments:
+                  stuff       More stuff.
+
+                options:
+                  -h, --help  Show this message and exit.
+                """
+                ),
+            ),
+        ],
+    )
+    def test_overridden_help_formatter(
+        monkeypatch: pytest.MonkeyPatch,
+        terminal_width: int,
+        expected_output_pattern: str,
+    ) -> None:
+        """Test finished output for metavar tuples, poor leading
+        indents, and incorrect help text spacing."""  # noqa: D205, D209
+
+        class MockTerminalSize:
+            columns = terminal_width
+            lines = 24
+
+        monkeypatch.setattr(shutil, "get_terminal_size", MockTerminalSize)
         help_min_width = 34
+        # Uses mocked terminal_width
         default_width = min(help_min_width, shutil.get_terminal_size().columns - 2)
         some_parser = cli_parser.WarMACParser(
             prog="progname",
@@ -187,12 +239,7 @@ class TestStdlibMonkeyPatching:
             help="Show this message and exit.",
         )
         some_help = some_parser.format_help()
-        assert (
-            some_help
-            == "usage: usage here\n\nsome description\n\npositional arguments:\n"
-            "  stuff       More stuff.\n\noptions:\n  -h, --help  Show this message"
-            " and exit.\n"
-        )
+        assert some_help == expected_output_pattern.strip() + "\n"
 
 
 if __name__ == "__main__":
