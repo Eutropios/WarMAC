@@ -25,9 +25,7 @@ Test file for cli_parser.py
 from __future__ import annotations
 
 import argparse
-import shutil
 import sys
-import textwrap
 
 import pytest
 
@@ -154,62 +152,46 @@ class TestStdlibMonkeyPatching:
         expected_title = "commands"
         assert parser._positionals.title == expected_title  # noqa: SLF001
 
-    # overridden methods of subclass are formatted correctly
     @staticmethod
     @pytest.mark.parametrize(
-        ("terminal_width", "expected_output_pattern"),
+        ("terminal_width", "expected_output", "test_subparser"),
         [
             (
-                40,  # Narrow terminal, triggers line wrapping for help text
-                textwrap.dedent(
-                    """\
-                usage: usage here
-
-                some description
-
-                positional arguments:
-                  stuff       More stuff.
-
-                options:
-                  -h, --help  Show this message and
-                              exit.
-                """
-                ),
+                60,
+                "usage: usage here\n\nsome description\n\npositional arguments:\n"
+                "  stuff       More stuff.\n\noptions:\n  -h, --help  Show this message"
+                " and exit.\n",
+                False,
+            ),  # full-width output
+            (
+                10,
+                "usage: usage here\n\nsome description\n\npositional arguments:\n"
+                "  stuff   More stuff.\n\noptions:\n  -h, --help\n          Show this"
+                " message and exit.\n",
+                False,
+            ),  # Intentionally forcing a reformatting for help text
+            (
+                60,
+                "usage: usage here stuff [-h]\n\nStuff description\n\noptions:\n"
+                "  -h, --help  Show this message and exit.\n",
+                True,
             ),
             (
-                80,  # Wider terminal, less/no line wrapping for help text
-                textwrap.dedent(
-                    """\
-                usage: usage here
-
-                some description
-
-                positional arguments:
-                  stuff       More stuff.
-
-                options:
-                  -h, --help  Show this message and exit.
-                """
-                ),
+                10,
+                "usage: usage here stuff [-h]\n\nStuff description\n\noptions:\n"
+                "  -h, --help\n          Show this message and exit.\n",
+                True,
             ),
         ],
     )
     def test_overridden_help_formatter(
-        monkeypatch: pytest.MonkeyPatch,
-        terminal_width: int,
-        expected_output_pattern: str,
+        terminal_width: int, expected_output: str, *, test_subparser: bool
     ) -> None:
         """Test finished output for metavar tuples, poor leading
         indents, and incorrect help text spacing."""  # noqa: D205, D209
-
-        class MockTerminalSize:
-            columns = terminal_width
-            lines = 24
-
-        monkeypatch.setattr(shutil, "get_terminal_size", MockTerminalSize)
         help_min_width = 34
         # Uses mocked terminal_width
-        default_width = min(help_min_width, shutil.get_terminal_size().columns - 2)
+        default_width = min(help_min_width, terminal_width)
         some_parser = cli_parser.WarMACParser(
             prog="progname",
             usage="usage here",
@@ -222,24 +204,25 @@ class TestStdlibMonkeyPatching:
         )
 
         subparsers = some_parser.add_subparsers(dest="subparser", metavar="")
-        subparsers.add_parser(
+        stuff_parser = subparsers.add_parser(
             "stuff",
             help="More stuff.",
             formatter_class=lambda prog: cli_parser.CustomHelpFormat(
                 prog=prog,
                 max_help_position=default_width,
             ),
+            description="Stuff description",
             add_help=False,
         )
+        target_parser = stuff_parser if test_subparser else some_parser
 
-        some_parser.add_argument(
-            "-h",
-            "--help",
-            action="help",
-            help="Show this message and exit.",
+        # Add the help argument to the chosen parser
+        target_parser.add_argument(
+            "-h", "--help", action="help", help="Show this message and exit."
         )
-        some_help = some_parser.format_help()
-        assert some_help == expected_output_pattern.strip() + "\n"
+
+        # Assert the formatted help output matches the expected output
+        assert target_parser.format_help() == expected_output
 
 
 if __name__ == "__main__":

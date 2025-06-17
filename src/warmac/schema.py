@@ -35,6 +35,10 @@ class Base(msgspec.Struct):
     """Base Struct for all schemas to subclass from."""
 
 
+class ResponseBase(msgspec.Struct):
+    """Base struct for all response schemas to subclass from."""
+
+
 class UserShort(Base, rename="camel"):
     """
     Shortened model of a user excluding irrelevant information.
@@ -125,7 +129,7 @@ class OrderWithUser(Base, rename="camel"):
     vosfor: int | None = None
 
 
-class OrderResponse(Base, rename="camel"):
+class OrderResponse(ResponseBase, rename="camel"):
     """
     Response received from making the HTTP request to the API.
 
@@ -190,7 +194,7 @@ class Item(Base, rename="camel"):
     trading_tax: int | None = None
 
 
-class ItemResponse(Base, rename="camel"):
+class ItemResponse(ResponseBase, rename="camel"):
     """
     Response received from making the HTTP request to the API.
 

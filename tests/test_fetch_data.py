@@ -25,14 +25,18 @@ Test file for cli_parser.py
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from unittest.mock import MagicMock, Mock
 
+import msgspec
 import pytest
 import urllib3
 
-from warmac import errors, fetch_data
+from warmac import errors, fetch_data, schema
 
 if TYPE_CHECKING:
+    from typing import Any
     from unittest.mock import MagicMock
+
 
 headers: dict[str, str] = {
     "Accept": "application/json",
@@ -43,30 +47,205 @@ headers: dict[str, str] = {
     "Platform": "ps4",
 }
 
-# get_page:
-# use mocking to do the following:
-#  url is not correctly formatted throws error. Test each case
-#  schema types are the same
-#  schema not in dict
-# correct
-
 
 class TestGetData:
     @staticmethod
-    def test_param_and_return_type_match() -> None:
-        pass
+    def _get_expected_url(
+        item_name: str, schema_type: type[schema.ResponseBase]
+    ) -> str:
+        return (
+            f"{fetch_data.API_ROOT}{fetch_data.SCHEMA_TO_URL[schema_type]}{item_name}"
+        )
+
+    @staticmethod
+    def test_schema_not_in_dict() -> None:
+        """Test that ResponseBase throws error if passed into dict."""
+        with pytest.raises(KeyError):
+            fetch_data.get_data("foo", schema.ResponseBase)
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("schema_type", "expected_url_fragment"),
+        [
+            (schema.OrderResponse, "orders/item/"),
+            (schema.ItemResponse, "item/"),
+        ],
+    )
+    def test_schema_in_dict_gives_correct_url_fragment(
+        schema_type: type[schema.ResponseBase], expected_url_fragment: str
+    ) -> None:
+        assert fetch_data.SCHEMA_TO_URL[schema_type] == expected_url_fragment
+
+    @staticmethod
+    @pytest.fixture
+    def mock_get_page(mocker: MagicMock) -> Any:  # noqa: ANN401
+        """Fixture that patches fetch_data.get_page, preventing real
+        HTTP requests during tests."""  # noqa: D205, D209
+        return mocker.patch("warmac.fetch_data.get_page")
+
+    def test_get_data_success_item_response(self, mock_get_page: MagicMock) -> None:
+        """Verify get_data successfully fetches and decodes requested
+        data for an ItemResponse."""  # noqa: D205, D209
+        test_item_name = "rhino_prime_set"
+        mock_raw_data = b"""
+            {
+                "apiVersion": "2.1.0",
+                "error": null,
+                "data": {
+                    "id": "123",
+                    "slug": "rhino_prime_set",
+                    "ducats": 100,
+                    "tags": [
+                        "prime"
+                    ]
+                }
+            }
+        """
+        mock_http_response = Mock()
+        mock_http_response.data = mock_raw_data
+        mock_get_page.return_value = mock_http_response
+
+        expected_url = self._get_expected_url(test_item_name, schema.ItemResponse)
+
+        result = fetch_data.get_data(test_item_name, schema.ItemResponse)
+
+        mock_get_page.assert_called_once_with(expected_url, headers=headers)
+        assert isinstance(result, schema.ItemResponse)
+        assert result.api_version == "2.1.0"
+        assert isinstance(result.data, schema.Item)
+        assert result.data.id == "123"
+        assert result.data.slug == "rhino_prime_set"
+        assert result.error is None
+
+    def test_get_data_success_order_response(self, mock_get_page: MagicMock) -> None:
+        """Verify get_data successfully fetches and decodes requested
+        data for an OrderResponse."""  # noqa: D205, D209
+        test_item_name = "prime_fissure_orders"
+        mock_raw_data = b"""
+            {
+                "apiVersion": "2.1.0",
+                "data": [
+                    {
+                        "id": "a",
+                        "type": "buy",
+                        "platinum": 10,
+                        "quantity": 1,
+                        "perTrade": 1,
+                        "createdAt": "2024-06-16T10:00:00.000Z",
+                        "cyanStars": null,
+                        "rank": 0,
+                        "updatedAt": "2024-06-16T10:05:00.000Z",
+                        "vosfor": 20,
+                        "subtype": "relic",
+                        "itemId": "5a4dd0561502476579f18a5e",
+                        "charges": null,
+                        "amberStars": null,
+                        "user": {
+                            "id": "user1",
+                            "ingameName": "joe",
+                            "reputation": 10,
+                            "platform": "ps4",
+                            "crossplay": true
+                        }
+                    },
+                    {
+                        "id": "b",
+                        "type": "sell",
+                        "platinum": 20,
+                        "quantity": 5,
+                        "perTrade": 5,
+                        "createdAt": "2024-06-15T12:00:00.000Z",
+                        "cyanStars": 3,
+                        "vosfor": null,
+                        "updatedAt": "2024-06-15T12:10:00.000Z",
+                        "rank": 3,
+                        "subtype": null,
+                        "itemId": "5e1f0e42f61e88002a2432d5",
+                        "charges": 3,
+                        "amberStars": 2,
+                        "user": {
+                            "id": "user2",
+                            "ingameName": "JaneDoe",
+                            "reputation": 50,
+                            "platform": "pc",
+                            "crossplay": false
+                        }
+                    }
+                ]
+            }
+        """
+
+        mock_http_response = Mock()
+        mock_http_response.data = mock_raw_data
+        mock_get_page.return_value = mock_http_response
+
+        expected_url = self._get_expected_url(test_item_name, schema.OrderResponse)
+
+        result = fetch_data.get_data(test_item_name, schema.OrderResponse)
+
+        mock_get_page.assert_called_once_with(expected_url, headers=headers)
+        assert isinstance(result, schema.OrderResponse)
+
+        assert result.api_version == "2.1.0"
+        assert result.error is None
+
+        assert isinstance(result.data[0], schema.OrderWithUser)
+        assert result.data[0].id == "a"
+        assert result.data[0].platinum == 10  # noqa: PLR2004
+        assert result.data[0].type == "buy"
+
+    def test_get_data_http_error_from_get_page(self, mock_get_page: MagicMock) -> None:
+        """Test that get_data correctly propagates a MalformedURLError
+        raised by get_page."""  # noqa: D205, D209
+        test_item_name = "non_existent_item"
+        mock_get_page.side_effect = errors.MalformedURLError
+        with pytest.raises(errors.MalformedURLError):
+            fetch_data.get_data(test_item_name, schema.ItemResponse)
+        expected_url = self._get_expected_url(test_item_name, schema.ItemResponse)
+        mock_get_page.assert_called_once_with(expected_url, headers=headers)
+
+    def test_get_data_decoding_error_due_to_malformed_data(
+        self,
+        mock_get_page: MagicMock,
+    ) -> None:
+        """Test that get_data raises a msgspec.ValidationError if raw
+        response data is a valid JSON, but does not conform to the
+        expected schema."""  # noqa: D205, D209
+        test_item_name = "missing_api_version_item"
+        # missing api_version field to induce error
+        mock_raw_data = b"""
+            {
+                "data": {
+                    "id": "123",
+                    "slug": "test_item",
+                    "tags": [
+                    "prime"
+                    ]
+                },
+                "error": null
+            }
+        """
+
+        mock_http_response = Mock()
+        mock_http_response.data = mock_raw_data
+        mock_get_page.return_value = mock_http_response
+
+        with pytest.raises(msgspec.ValidationError) as excinfo:
+            fetch_data.get_data(test_item_name, schema.ItemResponse)
+
+        assert "Object missing required field `apiVersion`" in str(excinfo.value)
+
+        expected_url = self._get_expected_url(test_item_name, schema.ItemResponse)
+        mock_get_page.assert_called_once_with(expected_url, headers=headers)
 
 
-# test if the param type matches return type
-# test if schema_to_url correctly throws error
-# test if schema_to_url throws no error on valid type
-# test if get_data returns a decoded struct on valid req
 class TestGetPage:
     @staticmethod
     def test_get_page_returns_response_on_200(mocker: MagicMock) -> None:
+        """Verify that a response is returned when HTTP code is 200."""
         mock_response = mocker.MagicMock(spec=urllib3.BaseHTTPResponse)
         mock_response.status = 200
-        mock_response.data = b"{'message': 'success'}"  # Example data
+        mock_response.data = b"{'message': 'success'}"
 
         mock_urllib_request = mocker.patch(
             "urllib3.request", return_value=mock_response
