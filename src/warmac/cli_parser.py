@@ -34,10 +34,19 @@ if TYPE_CHECKING:
     from collections.abc import Generator
     from typing import Final, NoReturn
 
+
 # The default time to collect orders until
 DEFAULT_TIME: Final = 10
 # The current version of WarMAC
 _VERSION: Final = "0.0.5"
+
+http_headers: dict[str, str] = {
+    "Accept": "application/json",
+    "Accept-Language": "en",
+    "Content-Type": "application/json",
+    "Host": "api.warframe.market",
+    "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
+}
 
 
 class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
@@ -193,7 +202,7 @@ def create_parser() -> WarMACParser:
     # Min value of help_min_width and terminal's width
     default_width = min(help_min_width, shutil.get_terminal_size().columns - 2)
     # Platforms the user can choose from
-    platforms: Final = ("pc", "ps4", "xbox", "switch")
+    platforms: Final = ("pc", "ps4", "xbox", "switch", "mobile")
     # I'm already modifying state in this function. Just keep this here.
 
     parser = WarMACParser(
@@ -262,7 +271,7 @@ def create_parser() -> WarMACParser:
     max_time_range: Final = 60
     # See above comment about state.
 
-    # Option characters used: s, p, t, m, r, b, d, h
+    # Option characters used: s, p, t, m, r, b, d, h, S
 
     avg_parser.add_argument(
         "item",
@@ -295,9 +304,24 @@ def create_parser() -> WarMACParser:
         choices=platforms,
         help=(
             "Which platform to fetch the item's orders for. Must be one of "
-            f"({', '.join(platforms)}). (Default: pc)"
+            f"({', '.join(platforms)}). Cross-play orders are enabled by default. Use "
+            "the --same-platform option to restrict orders to this platform only. "
+            "(Default: pc)"
         ),
         metavar="<platform>",
+    )
+
+    avg_parser.add_argument(
+        "-S",
+        "--same-platform",
+        action="store_false",
+        help=(
+            "Collect orders from only the platform specified by the --platform option"
+            " instead of from cross-platform. If passed without --platform, "
+            "--same-platform will be ignored, and cross-platform orders will be "
+            "collected."
+        ),
+        dest="crossplay",
     )
 
     avg_parser.add_argument(
@@ -365,7 +389,7 @@ def create_parser() -> WarMACParser:
         "--porcelain",
         action="store_true",
         help=(
-            "Print numeric output separated with colons. If  passed without "
+            "Print numeric output separated with colons. If passed without "
             "--detail-report, --porcelain will be ignored."
         ),
         dest="porcelain",
@@ -430,6 +454,11 @@ def handle_input(args: list[str] | None = None) -> argparse.Namespace:
     (excluding "help" subcommand). Print to stdout if "--help" option is
     used, or if the help subcommand is called (even if it's bare).
 
+    When calling as a function, omit leading "warmac" and supply the
+    remaining arguments accordingly.
+    Ex:
+    ``handle_input(["average", "bite"])``
+
     :param args: Substituted command line arguments, defaults to None
     :return: The parsed command-line arguments.
     """
@@ -441,13 +470,19 @@ def handle_input(args: list[str] | None = None) -> argparse.Namespace:
         parser.print_help(sys.stderr)
         sys.exit(1)
 
+    # at this point, we know for sure that at least "warmac" is present
+    # in the command line arguments.
+
+    # printing sys.argv[1] would print the subcommand
     # parse args
     parsed_args = parser.parse_args(args)
     if parsed_args.subparser == "help":
         # user requested help text, so not being written to stderr
         if parsed_args.subcommand:
-            # This returns nothing. It exits after printing help
+            # if a subcommand is passed after help, parse the subcommand
+            # with its `--help` flag.
             parser.parse_args([parsed_args.subcommand, "--help"])
+            # Code exits here as per argparse help code
         parser.print_help(sys.stdout)
         sys.exit(0)
     return parsed_args

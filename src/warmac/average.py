@@ -33,7 +33,11 @@ if TYPE_CHECKING:
     import argparse
 
 
-def main(args: argparse.Namespace) -> float:
+# Iterate through dictionary and delete all members that do not match
+# the parameters set out by args
+
+
+def main(args: argparse.Namespace, http_headers: dict[str, str]) -> float:
     """
     Calculate average price of an item from warframe.market.
 
@@ -42,9 +46,11 @@ def main(args: argparse.Namespace) -> float:
     """
     # gotta do some error checking here
     item = args.item
-    order_data = fetch_data.get_data(item, schema.OrderResponse)
-    print(args.item)  # NOTE: Just debug stuff
-    print(order_data)
+    item_data = fetch_data.get_data(item, schema.ItemResponse, http_headers)
+    order_data = fetch_data.get_data(item, schema.OrderResponse, http_headers)
+    print(item)  # NOTE: Just debug stuff
+    print(f"ITEM DATA:{item_data}\n\n")
+    print(f"ORDER DATA:{order_data}")
 
     # do some validation with msgspec
     return 0.1

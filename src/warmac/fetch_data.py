@@ -48,21 +48,22 @@ HTTP_ERROR_DICT: Final[Mapping[int, type[errors.WarMACHTTPError]]] = {
     500: errors.InternalServerError,
 }
 
-headers: dict[str, str] = {
-    "Accept": "application/json",
-    "Accept-Language": "en",
-    "Content-Type": "application/json",
-    "Host": "api.warframe.market",
-    "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
-    "Platform": "ps4",
-}
-
 API_ROOT = "https://api.warframe.market/v2/"
 
 SCHEMA_TO_URL: Mapping[type[schema.ResponseBase], str] = {
     schema.OrderResponse: "orders/item/",
     schema.ItemResponse: "item/",
 }
+
+
+def item_url(item: str) -> str:
+    """
+    Replace spaces with underscores and ampersands with "and".
+
+    :param item: The string to manipulate.
+    :return: The manipulated string.
+    """
+    return item.lower().replace(" ", "_").replace("&", "and")
 
 
 def http_code_check(status_code: int) -> None:
@@ -85,29 +86,29 @@ def http_code_check(status_code: int) -> None:
     raise errors.UnknownError(status_code)
 
 
-def get_page(url: str, headers: dict[str, str]) -> urllib3.BaseHTTPResponse:
+def get_page(url: str, http_headers: dict[str, str]) -> urllib3.BaseHTTPResponse:
     """
     Make an HTTP request to warframe.market.
 
     Make an HTTP request to warframe.market using the appropriate
-    formatted URL, along with the appropriate headers. Raise an error if
-    the status code is not 200, otherwise, return the requested page.
-    This page will need to be decoded into a dictionary.
+    formatted URL, along with the appropriate http headers. Raise an
+    error if the status code is not 200, otherwise, return the requested
+    page. This page will need to be decoded into a dictionary.
 
     :param url: The formatted URL used in the request.
-    :param headers: The headers to be used in the HTTP request.
+    :param http_headers: The headers to be used in the HTTP request.
     :raises WarMACHTTPError: Raise an error from HTTP_ERROR_DICT given
         the HTTP response code.
     :raises errors.UnknownError: Fallback raised if the error code is
         not present in HTTP_ERROR_DICT.
     :return: The requested JSON.
     """
-    page = urllib3.request("GET", url, headers=headers, timeout=5)
+    page = urllib3.request("GET", url, headers=http_headers, timeout=5)
     http_code_check(page.status)
     return page
 
 
-def get_data(item: str, request_schema: type[T]) -> T:
+def get_data(item: str, request_schema: type[T], http_headers: dict[str, str]) -> T:
     """
     Fetch provided item's data from API and decode it using the schema.
 
@@ -120,13 +121,5 @@ def get_data(item: str, request_schema: type[T]) -> T:
     :return: WarMAC Struct corresponding to the request_schema.
     """
     url_partial = SCHEMA_TO_URL[request_schema]
-    data_raw = get_page(f"{API_ROOT}{url_partial}{item}", headers=headers).data
-    return msgspec.json.decode(data_raw, type=request_schema)
-
-
-# handle errors in main.py
-
-# create reports.py in which something subclasses off of
-# something else and the details of extended report get stored
-
-# create output.py maybe?
+    raw = get_page(f"{API_ROOT}{url_partial}{item}", http_headers=http_headers).data
+    return msgspec.json.decode(raw, type=request_schema)

@@ -33,9 +33,35 @@ if TYPE_CHECKING:
     # import argparse
     from typing import Literal
 
+
 SUBCMD_TO_FUNC = {
     "average": average.main,
 }
+
+http_headers: dict[str, str] = {
+    "Accept": "application/json",
+    "Accept-Language": "en",
+    "Content-Type": "application/json",
+    "Host": "api.warframe.market",
+    "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
+}
+
+
+def fix_http_headers(
+    http_headers: dict[str, str],
+    platform: Literal["pc", "ps4", "xbox", "switch", "mobile"] = "pc",
+    *,
+    crossplay: bool = True,
+) -> None:
+    """
+    Append the platform name and crossplay status to HTTP headers dict.
+
+    :param http_headers: The HTTP headers dictionary.
+    :param platform: The desired platform, defaults to "pc".
+    :param crossplay: Crossplay status, defaults to True.
+    """
+    http_headers["Platform"] = platform
+    http_headers["Crossplay"] = str(crossplay).lower()
 
 
 def main(args: list[str] | None = None) -> Literal[0]:
@@ -49,7 +75,9 @@ def main(args: list[str] | None = None) -> Literal[0]:
     :return: Return 0 if everything returns successfully.
     """
     cli_args = cli_parser.handle_input(args)
-    output_val = SUBCMD_TO_FUNC[cli_args.subparser](cli_args)
+    fix_http_headers(http_headers, cli_args.platform, crossplay=cli_args.crossplay)
+    print(cli_args.crossplay)
+    output_val = SUBCMD_TO_FUNC[cli_args.subparser](cli_args, http_headers)
     print(output_val)
     return 0
 

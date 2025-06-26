@@ -38,7 +38,7 @@ if TYPE_CHECKING:
     from unittest.mock import MagicMock
 
 
-headers: dict[str, str] = {
+http_headers: dict[str, str] = {
     "Accept": "application/json",
     "Accept-Language": "en",
     "Content-Type": "application/json",
@@ -61,7 +61,7 @@ class TestGetData:
     def test_schema_not_in_dict() -> None:
         """Test that ResponseBase throws error if passed into dict."""
         with pytest.raises(KeyError):
-            fetch_data.get_data("foo", schema.ResponseBase)
+            fetch_data.get_data("foo", schema.ResponseBase, http_headers)
 
     @staticmethod
     @pytest.mark.parametrize(
@@ -106,10 +106,9 @@ class TestGetData:
         mock_get_page.return_value = mock_http_response
 
         expected_url = self._get_expected_url(test_item_name, schema.ItemResponse)
+        result = fetch_data.get_data(test_item_name, schema.ItemResponse, http_headers)
 
-        result = fetch_data.get_data(test_item_name, schema.ItemResponse)
-
-        mock_get_page.assert_called_once_with(expected_url, headers=headers)
+        mock_get_page.assert_called_once_with(expected_url, http_headers=http_headers)
         assert isinstance(result, schema.ItemResponse)
         assert result.api_version == "2.1.0"
         assert isinstance(result.data, schema.Item)
@@ -181,9 +180,9 @@ class TestGetData:
 
         expected_url = self._get_expected_url(test_item_name, schema.OrderResponse)
 
-        result = fetch_data.get_data(test_item_name, schema.OrderResponse)
+        result = fetch_data.get_data(test_item_name, schema.OrderResponse, http_headers)
 
-        mock_get_page.assert_called_once_with(expected_url, headers=headers)
+        mock_get_page.assert_called_once_with(expected_url, http_headers=http_headers)
         assert isinstance(result, schema.OrderResponse)
 
         assert result.api_version == "2.1.0"
@@ -200,9 +199,9 @@ class TestGetData:
         test_item_name = "non_existent_item"
         mock_get_page.side_effect = errors.MalformedURLError
         with pytest.raises(errors.MalformedURLError):
-            fetch_data.get_data(test_item_name, schema.ItemResponse)
+            fetch_data.get_data(test_item_name, schema.ItemResponse, http_headers)
         expected_url = self._get_expected_url(test_item_name, schema.ItemResponse)
-        mock_get_page.assert_called_once_with(expected_url, headers=headers)
+        mock_get_page.assert_called_once_with(expected_url, http_headers=http_headers)
 
     def test_get_data_decoding_error_due_to_malformed_data(
         self,
@@ -231,12 +230,12 @@ class TestGetData:
         mock_get_page.return_value = mock_http_response
 
         with pytest.raises(msgspec.ValidationError) as excinfo:
-            fetch_data.get_data(test_item_name, schema.ItemResponse)
+            fetch_data.get_data(test_item_name, schema.ItemResponse, http_headers)
 
         assert "Object missing required field `apiVersion`" in str(excinfo.value)
 
         expected_url = self._get_expected_url(test_item_name, schema.ItemResponse)
-        mock_get_page.assert_called_once_with(expected_url, headers=headers)
+        mock_get_page.assert_called_once_with(expected_url, http_headers=http_headers)
 
 
 class TestGetPage:
@@ -250,9 +249,11 @@ class TestGetPage:
         mock_urllib_request = mocker.patch(
             "urllib3.request", return_value=mock_response
         )
-        result = fetch_data.get_page("https://httpstat.us/200", headers=headers)
+        result = fetch_data.get_page(
+            "https://httpstat.us/200", http_headers=http_headers
+        )
         mock_urllib_request.assert_called_once_with(
-            "GET", "https://httpstat.us/200", headers=headers, timeout=5
+            "GET", "https://httpstat.us/200", headers=http_headers, timeout=5
         )
         assert result is mock_response
         assert result.data == b"{'message': 'success'}"
@@ -280,7 +281,9 @@ class TestGetPage:
         mock_response.status = status_code
         mocker.patch("urllib3.request", return_value=mock_response)
         with pytest.raises(expected_error_type) as excinfo:
-            fetch_data.get_page(f"https://httpstat.us/{status_code}", headers=headers)
+            fetch_data.get_page(
+                f"https://httpstat.us/{status_code}", http_headers=http_headers
+            )
 
         if expected_error_type is errors.UnknownError:
             expected_message = (
