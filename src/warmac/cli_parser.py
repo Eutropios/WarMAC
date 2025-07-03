@@ -164,7 +164,7 @@ def str_to_int_bounds_check(val: str, min_val: int, max_val: int) -> int:
     with contextlib.suppress(ValueError):
         if min_val <= (casted_int := int(val)) < max_val:
             return casted_int
-    msg = f'"{val}" is not an integer in the valid range of [{min_val}, {max_val}).'
+    msg = f"'{val}' is not an integer in the valid range of [{min_val}, {max_val})."
     raise argparse.ArgumentTypeError(msg)
 
 
@@ -476,13 +476,13 @@ def handle_input(args: list[str] | None = None) -> argparse.Namespace:
     # printing sys.argv[1] would print the subcommand
     # parse args
     parsed_args = parser.parse_args(args)
-    if parsed_args.subparser == "help":
-        # user requested help text, so not being written to stderr
-        if parsed_args.subcommand:
-            # if a subcommand is passed after help, parse the subcommand
-            # with its `--help` flag.
-            parser.parse_args([parsed_args.subcommand, "--help"])
-            # Code exits here as per argparse help code
-        parser.print_help(sys.stdout)
-        sys.exit(0)
-    return parsed_args
+    if parsed_args.subparser != "help":
+        return parsed_args
+    # user requested help text, so not being written to stderr
+    if parsed_args.subcommand:
+        # if a subcommand is passed after help, parse the subcommand
+        # with its `--help` flag.
+        parser.parse_args([parsed_args.subcommand, "--help"])
+        # Code exits here as per argparse help code
+    parser.print_help(sys.stdout)
+    sys.exit(0)

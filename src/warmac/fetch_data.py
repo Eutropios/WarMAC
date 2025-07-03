@@ -63,7 +63,7 @@ def item_url(item: str) -> str:
     :param item: The string to manipulate.
     :return: The manipulated string.
     """
-    return item.lower().replace(" ", "_").replace("&", "and")
+    return item.strip().lower().replace(" ", "_").replace("&", "and")
 
 
 def http_code_check(status_code: int) -> None:

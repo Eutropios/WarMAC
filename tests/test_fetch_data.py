@@ -48,6 +48,27 @@ http_headers: dict[str, str] = {
 }
 
 
+class TestItemUrl:
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("input_item", "expected_output"),
+        [
+            ("Gauss Prime Set", "gauss_prime_set"),  # test space to _
+            ("Silva & aegis", "silva_and_aegis"),  # test & to and
+            ("  ack & BRUNT ", "ack_and_brunt"),  # test trim and lower
+            ("", ""),  # test empty string
+            ("   ", ""),  # test only spaces strips
+            ("&&&", "andandand"),  # test only ampersands
+            ("B1g (#_|NGv$ ", "b1g_(#_|ngv$"),  # test other chars unchanged
+        ],
+    )
+    def test_item_url_transformations(input_item: str, expected_output: str) -> None:
+        """Test that function strips preceding and succeeding
+        whitespace, makes characters lowercase, replaces spaces with
+        underscores, and replaces ampersands with "and"."""  # noqa: D205, D209
+        assert fetch_data.item_url(input_item) == expected_output
+
+
 class TestGetData:
     @staticmethod
     def _get_expected_url(
@@ -203,10 +224,7 @@ class TestGetData:
         expected_url = self._get_expected_url(test_item_name, schema.ItemResponse)
         mock_get_page.assert_called_once_with(expected_url, http_headers=http_headers)
 
-    def test_get_data_decoding_error_due_to_malformed_data(
-        self,
-        mock_get_page: MagicMock,
-    ) -> None:
+    def test_get_data_malformed_data_error(self, mock_get_page: MagicMock) -> None:
         """Test that get_data raises a msgspec.ValidationError if raw
         response data is a valid JSON, but does not conform to the
         expected schema."""  # noqa: D205, D209
@@ -270,7 +288,7 @@ class TestGetPage:
             (418, errors.UnknownError),  # random unmapped code
         ],
     )
-    def test_get_page_raises_correct_error_for_status(
+    def test_get_page_correctly_propagates_errors(
         mocker: MagicMock,
         status_code: int,
         expected_error_type: type[errors.WarMACHTTPError],
@@ -287,8 +305,8 @@ class TestGetPage:
 
         if expected_error_type is errors.UnknownError:
             expected_message = (
-                f"Unknown Error; HTTP Code {status_code}. Please open a "
-                "new issue on the Github page (link in README.md file)."
+                f"Unknown Error; HTTP Code {status_code}. Please open a new issue on "
+                "the Github page (link in README.md file)."
             )
             assert str(excinfo.value) == expected_message
 
@@ -308,7 +326,7 @@ class TestHTTPCodeCheck:
     def test_http_code_check_raises_mapped_errors(
         status_code: int, expected_error: type[errors.WarMACHTTPError]
     ) -> None:
-        """Verify http_code_check raises the correct specific error."""
+        """Verify http_code_check raises the correct error."""
         with pytest.raises(expected_error):
             fetch_data.http_code_check(status_code)
 
@@ -319,6 +337,9 @@ class TestHTTPCodeCheck:
         with pytest.raises(errors.UnknownError) as excinfo:
             fetch_data.http_code_check(499)
         assert str(excinfo.value) == (
-            "Unknown Error; HTTP Code 499. "
-            "Please open a new issue on the Github page (link in README.md file)."
+            "Unknown Error; HTTP Code 499. Please open a new issue on the Github page "
+            "(link in README.md file)."
         )
+
+
+# TODO: Finish coverage on this test file, then begin work on average
