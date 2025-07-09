@@ -305,8 +305,8 @@ class TestGetPage:
 
         if expected_error_type is errors.UnknownError:
             expected_message = (
-                f"Unknown Error; HTTP Code {status_code}. Please open a new issue on "
-                "the Github page (link in README.md file)."
+                f"Unknown Error - HTTP Code {status_code}: Please open a new issue on "
+                "the GitHub page (link in README.md file)."
             )
             assert str(excinfo.value) == expected_message
 
@@ -337,7 +337,7 @@ class TestHTTPCodeCheck:
         with pytest.raises(errors.UnknownError) as excinfo:
             fetch_data.http_code_check(499)
         assert str(excinfo.value) == (
-            "Unknown Error; HTTP Code 499. Please open a new issue on the Github page "
+            "Unknown Error - HTTP Code 499: Please open a new issue on the GitHub page "
             "(link in README.md file)."
         )
 
