@@ -43,7 +43,7 @@
     repository    = "https://github.com/Eutropios/WarMAC"
 
 [dependency-groups]
-  dev = ["mypy", "pipdeptree", "vermin", "viztracer>=1.0.0"]
+  dev = ["mypy", "pipdeptree", "ty", "vermin", "viztracer>=1.0.0"]
   docs = [
     "docutils>=0.18.1",
     "esbonio>=0.16",
@@ -223,3 +223,40 @@
     [tool.ruff.lint.pydocstyle]
       # waiting on sphinx convention being added
       convention = "pep257"
+
+[tool.ty]
+  [tool.ty.environment]
+    python          = "./.venv"
+    python-platform = "all"
+    python-version  = "3.13"
+
+  [tool.ty.src]
+    exclude = [
+      ".bzr",
+      ".direnv",
+      ".eggs",
+      ".git",
+      ".git-rewrite",
+      ".hg",
+      ".ipynb_checkpoints",
+      ".mypy_cache",
+      ".nox",
+      ".pants.d",
+      ".pyenv",
+      ".pytest_cache",
+      ".pytype",
+      ".ruff_cache",
+      ".svn",
+      ".tox",
+      ".venv",
+      ".vscode",
+      "__pypackages__",
+      "_build",
+      "buck-out",
+      "build",
+      "dist",
+      "htmlcov",
+      "node_modules",
+      "site-packages",
+      "venv",
+    ]

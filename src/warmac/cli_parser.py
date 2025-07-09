@@ -69,12 +69,12 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         """
         Construct a :class:`.CustomHelpFormat` object.
 
-        :param prog: The name of the program.
+        :param prog: Name of the program.
         :param indent_increment: How much space should come before the
             options on the help screen, defaults to 2.
-        :param max_help_position: The width between ``indent_increment``
-            and the help text, defaults to 24.
-        :param width: The maximum width that the help screen is able to
+        :param max_help_position: Width between ``indent_increment`` and
+            the help text, defaults to 24.
+        :param width: Maximum width that the help screen is able to
             occupy in the terminal, defaults to None.
         """
         super().__init__(prog, indent_increment, max_help_position, width)
@@ -87,8 +87,8 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         method to remove the duplicate help metavar for options that
         have both a short-form and a long-form argument.
 
-        :param action: The action in which to be formatted.
-        :return: The appropriately formatted string.
+        :param action: Action in which to be formatted.
+        :return: Appropriately formatted string.
         """
         # Return super's invocation option_string is None or nargs is 0
         if not action.option_strings or action.nargs == 0:
@@ -108,7 +108,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         method to remove the command metavar tuple and fix the
         spacings between the option and its associated metavar.
 
-        :param action: The action in which to be formatted.
+        :param action: Action in which to be formatted.
         :return: ``HelpFormatter._format_action(action)``. If the action
             is a ``_SubParsersAction``, the metavar tuple will be
             excluded, and the leading indentation will be corrected.
@@ -131,7 +131,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         method to fix the leading indentation for command names in
         the help menu.
 
-        :param action: The action to be yielded from.
+        :param action: Action to be yielded from.
         :yield: Actions from a list returned by
             ``action._get_subactions``.
         """
@@ -154,9 +154,9 @@ def str_to_int_bounds_check(val: str, min_val: int, max_val: int) -> int:
     is not ``min_val <= val < max_val``, then raise an
     :exc:`argparse.ArgumentTypeError`.
 
-    :param val: The user's input as a string.
-    :param min_val: The minimum value that ``int(val)`` can be.
-    :param max_val: The maximum value that ``int(val)`` can be.
+    :param val: User's input as a string.
+    :param min_val: Minimum value that ``int(val)`` can be.
+    :param max_val: Maximum value that ``int(val)`` can be.
     :raises argparse.ArgumentTypeError: Raised if ``val`` is not an
         integer or is not ``min_val <= int(val) < max_val``.
     :return: Return ``val`` as an integer.
@@ -176,7 +176,7 @@ class WarMACParser(argparse.ArgumentParser):
         Modify exit message for :class:`argparse.ArgumentError`
         occurrences to print to stderr, and return an exit code of 1.
 
-        :param message: The message provided by the standard
+        :param message: Message provided by the standard
             :class:`argparse.ArgumentParser` class.
         :return: A value is never returned by this function.
         """  # noqa: D205
@@ -193,7 +193,7 @@ def create_parser() -> WarMACParser:
     --help and --version options. Create subparsers for multiple
     commands to be used within the program.
 
-    :return: The constructed :class:`.WarMACParser` object.
+    :return: Constructed :class:`.WarMACParser` object.
     """
     # These two variables inherently involve state, so it doesn't make
     # much sense to have them be passed in as parameters
@@ -323,6 +323,7 @@ def create_parser() -> WarMACParser:
         ),
         dest="crossplay",
     )
+    # TODO: Convert to `store_const` and `const` possibly?
 
     avg_parser.add_argument(
         "-t",
@@ -350,6 +351,7 @@ def create_parser() -> WarMACParser:
         ),
         dest="maxrank",
     )
+    # TODO: Convert to `store_const` and `const`
 
     max_or_rad.add_argument(
         "-r",
@@ -362,6 +364,7 @@ def create_parser() -> WarMACParser:
         ),
         dest="radiant",
     )
+    # TODO: Convert to `store_const` and `const`
 
     avg_parser.add_argument(
         "-b",
@@ -373,6 +376,7 @@ def create_parser() -> WarMACParser:
         ),
         dest="use_buyers",
     )
+    # TODO: Convert to `store_const` and `const`
 
     avg_parser.add_argument(
         "-d",
@@ -460,7 +464,7 @@ def handle_input(args: list[str] | None = None) -> argparse.Namespace:
     ``handle_input(["average", "bite"])``
 
     :param args: Substituted command line arguments, defaults to None
-    :return: The parsed command-line arguments.
+    :return: Parsed command-line arguments.
     """
     parser = create_parser()
 

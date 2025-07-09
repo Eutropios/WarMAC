@@ -27,14 +27,14 @@ from __future__ import annotations
 
 
 class WarMACBaseError(Exception):
-    """Base exception thrown in WarMAC."""
+    """Base error raised in WarMAC."""
 
     def __init__(self, msg: str = "WarMAC Error.") -> None:
         """
-        Construct a ``WarMAC`` exception.
+        Construct a WarMACBaseError.
 
-        :param msg: The exception's message, defaults to the phrase
-            "WarMAC Error".
+        :param msg: Error's message, defaults to the phrase "WarMAC
+            Error."
         """
         self.message = msg
         super().__init__(self.message)
@@ -42,27 +42,28 @@ class WarMACBaseError(Exception):
 
 class CommandError(WarMACBaseError):
     """
-    Thrown if subparser does not exist in :data:`warmac.SUBCMD_TO_FUNC`.
+    Raised if subparser does not exist in :data:`warmac.SUBCMD_TO_FUNC`.
 
-    Thrown if the ``subparser`` field of ``argparse.Namespace`` does not
+    Raised if the ``subparser`` field of ``argparse.Namespace`` does not
     exist within the global dictionary :data:`warmac.SUBCMD_TO_FUNC`.
+    This should never be raised if WarMAC executes as expected.
     """
 
     def __init__(self) -> None:
-        """Construct a ``CommandError`` exception."""
+        """Construct a ``CommandError`` error."""
         super().__init__("Not a valid command.")
 
 
 class NoListingsFoundError(WarMACBaseError):
     """
-    Thrown if no listings were found.
+    Raised if no listings were found.
 
-    Thrown if no order listings are found given the set of parameters
+    Raised if no order listings are found given the set of parameters
     that the user gives the program.
     """
 
     def __init__(self) -> None:
-        """Construct a ``NoListingsFoundError`` exception."""
+        """Construct a ``NoListingsFoundError`` error."""
         super().__init__("There are no listings matching your search parameters.")
 
 
@@ -71,108 +72,108 @@ class NoListingsFoundError(WarMACBaseError):
 
 class WarMACHTTPError(WarMACBaseError):
     """
-    Thrown if the request experienced an error or gave a bad response.
+    Raised if the request experienced an error or gave a bad response.
 
-    Thrown if the request made by the user returned an HTTP Status code
+    Raised if the request made by the user returned an HTTP Status code
     that was not 200.
     """
 
     def __init__(self, message: str) -> None:
-        """Construct a ``WarMACHTTPError`` exception."""
+        """Construct a ``WarMACHTTPError`` error."""
         super().__init__(message)
 
 
 class InternalServerError(WarMACHTTPError):
     """
-    Thrown if the server has encountered an internal error.
+    Raised if the server has encountered an internal error.
 
-    Thrown on HTTP status code 500, which indicates that the server has
+    Raised on HTTP status code 500, which indicates that the server has
     encountered an internal error that prevents it from fulfilling the
     user's request.
     """
 
     def __init__(self) -> None:
-        """Construct a ``MalformedURLError`` exception."""
+        """Construct a ``MalformedURLError`` error."""
         super().__init__(
-            "Error 500, warframe.market servers have encountered an internal error "
+            "Error 500: warframe.market servers have encountered an internal error "
             "while processing this request.",
         )
 
 
 class MethodNotAllowedError(WarMACHTTPError):
     """
-    Thrown if the target resource doesn't support the desired method.
+    Raised if the target resource doesn't support the desired method.
 
-    Thrown on HTTP status code 405, which indicates that the server
+    Raised on HTTP status code 405, which indicates that the server
     knows the method, but the target resource doesn't support it.
     """
 
     def __init__(self) -> None:
-        """Construct a ``MethodNotAllowedError`` exception."""
+        """Construct a ``MethodNotAllowedError`` error."""
         super().__init__(
-            "Error 405, the target resource does not support this function.",
+            "Error 405: The target resource does not support this function.",
         )
 
 
 class MalformedURLError(WarMACHTTPError):
     """
-    Thrown if the given item does not exist.
+    Raised if the given item does not exist.
 
-    Thrown on HTTP status code 404, which indicates that the resource in
+    Raised on HTTP status code 404, which indicates that the resource in
     question does not exist.
     """
 
     def __init__(self) -> None:
-        """Construct a ``MalformedURLError`` exception."""
+        """Construct a ``MalformedURLError`` error."""
         super().__init__(
-            "This item does not exist. Please check your spelling, and remember to use "
-            "quotations if the item is multiple words.",
+            "This item does not exist on Warframe Market. Please check your spelling "
+            "and remember to use quotations if the item is multiple words.",
         )
 
 
 class ForbiddenRequestError(WarMACHTTPError):
     """
-    Thrown if the server refuses to authorize a request.
+    Raised if the server refuses to authorize a request.
 
-    Thrown on HTTP status code 403, which indicates that access to the
+    Raised on HTTP status code 403, which indicates that access to the
     desired resource is forbidden.
     """
 
     def __init__(self) -> None:
-        """Construct a ``ForbiddenRequestError`` exception."""
+        """Construct a ``ForbiddenRequestError`` error."""
         super().__init__(
-            "Error 403, the URL you've requested is forbidden. You do not have"
+            "Error 403: The URL you've requested is forbidden. You do not have"
             " authorization to access it.",
         )
 
 
 class UnauthorizedAccessError(WarMACHTTPError):
     """
-    Thrown if the user doesn't have the correct credentials.
+    Raised if the user doesn't have the correct credentials.
 
-    Thrown on HTTP status code 401, which indicates that authorization
+    Raised on HTTP status code 401, which indicates that authorization
     via proper user credentials is needed to access this resource.
     """
 
     def __init__(self) -> None:
-        """Construct a ``ForbiddenRequestError`` exception."""
+        """Construct a ``ForbiddenRequestError`` error."""
         super().__init__(
-            "Error 401, insufficient credentials. Please log in to before making this "
+            "Error 401: Insufficient credentials. Please log in to before making this "
             "transaction.",
         )
 
 
 class UnknownError(WarMACHTTPError):
     """
-    Thrown if the HTTP Response Code is not covered.
+    Raised if the HTTP Response Code is not covered.
 
-    Thrown if the HTTP Response Code is not covered by any other error
+    Raised if the HTTP Response Code is not covered by any other error
     previously stated.
     """
 
     def __init__(self, status_code: int) -> None:
-        """Construct an ``UnknownError`` exception."""
+        """Construct an ``UnknownError`` error."""
         super().__init__(
-            f"Unknown Error; HTTP Code {status_code}. Please open a new issue on the "
-            "Github page (link in README.md file).",
+            f"Unknown Error - HTTP Code {status_code}: Please open a new issue on the "
+            "GitHub page (link in README.md file).",
         )

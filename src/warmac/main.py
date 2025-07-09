@@ -27,10 +27,9 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING
 
-from warmac import average, cli_parser
+from warmac import average, cli_parser, errors
 
 if TYPE_CHECKING:
-    # import argparse
     from typing import Literal
 
 
@@ -56,15 +55,15 @@ def fix_http_headers(
     """
     Append the platform name and crossplay status to HTTP headers dict.
 
-    :param http_headers: The HTTP headers dictionary.
-    :param platform: The desired platform, defaults to "pc".
+    :param http_headers: HTTP headers dictionary.
+    :param platform: Desired platform, defaults to "pc".
     :param crossplay: Crossplay status, defaults to True.
     """
     http_headers["Platform"] = platform
     http_headers["Crossplay"] = str(crossplay).lower()
 
 
-def main(args: list[str] | None = None) -> Literal[0]:
+def main(args: list[str] | None = None) -> Literal[0, 1]:
     """
     Create a :data:`cli_parser.WarMACParser` and run associated command.
 
@@ -74,11 +73,15 @@ def main(args: list[str] | None = None) -> Literal[0]:
 
     :return: Return 0 if everything returns successfully.
     """
-    cli_args = cli_parser.handle_input(args)
-    fix_http_headers(http_headers, cli_args.platform, crossplay=cli_args.crossplay)
-    print(cli_args.crossplay)
-    output_val = SUBCMD_TO_FUNC[cli_args.subparser](cli_args, http_headers)
-    print(output_val)
+    try:
+        cli_args = cli_parser.handle_input(args)
+        fix_http_headers(http_headers, cli_args.platform, crossplay=cli_args.crossplay)
+        SUBCMD_TO_FUNC[cli_args.subparser](cli_args, http_headers)
+    except KeyError as err:
+        raise errors.CommandError from err
+    except errors.WarMACBaseError as err:
+        print(err, file=sys.stderr)
+        return 1
     return 0
 
 

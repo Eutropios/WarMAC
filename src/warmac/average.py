@@ -25,16 +25,159 @@ Logic for average subcommand.
 
 from __future__ import annotations
 
+import datetime
+import statistics
 from typing import TYPE_CHECKING
 
-from warmac import fetch_data, schema
+from warmac import cli_parser, errors, fetch_data, schema
 
 if TYPE_CHECKING:
     import argparse
+    from collections.abc import Callable, Sequence
+    from typing import TypeVar
+
+    T = TypeVar("T", int, str)
+
+# : dict[str, Callable[[Sequence[int]], float]]
+AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
+    "geometric": statistics.geometric_mean,
+    "mean": statistics.mean,
+    "median": statistics.median,
+    "mode": statistics.mode,
+}
+
+#: An ISO-8601 timestamp of the current time retrieved on execution.
+CURR_TIME = datetime.datetime.now(datetime.timezone.utc)
 
 
-# Iterate through dictionary and delete all members that do not match
-# the parameters set out by args
+def calc_avg(plat_list: list[int], statistic: str, decimals: int = 1) -> float:
+    """
+    Calculate the specified statistic for a list of prices.
+
+    Given a list of integers of prices associated with an item,
+    calculate and return the desired statistic, rounded to the specified
+    number of decimal places.
+
+    :param plat_list: Prices in platinum of each order.
+    :param statistic: Statistic to be calculated.
+    :param decimals: Number of decimals to which the calculated
+        statistic should be rounded, defaults to 1.
+    :raises warmac_errors.NoListingsFoundError: If ``plat_list`` has no
+        contents.
+    :return: Desired statistic of the specified item.
+    """
+    # Handle errors
+    if not plat_list:
+        raise errors.NoListingsFoundError from None
+    return round(float(AVG_FUNCS[statistic](plat_list)), decimals)
+
+
+def in_time_range(last_updated: str, time_range: int = cli_parser.DEFAULT_TIME) -> bool:
+    """
+    Check if order is younger than ``time_range`` days.
+
+    Subtract last_updated field from :py:data:`.CURR_TIME` to check if
+    the difference in days is less than or equal to ``time_range``.
+
+    :param last_updated: ISO-8601 timestamp of when the order was
+        last updated.
+    :param time_range: Maximum age, in days, that an order can be to
+        be accepted, defaults to :py:const:`warmac_parser.DEFAULT_TIME`.
+    :return: True if ``last_updated ≤ time_range``, False if
+        ``last_updated > time_range``.
+    """
+    timestamp = datetime.datetime.fromisoformat(last_updated)
+    return (CURR_TIME - timestamp).days <= time_range
+
+
+def comp_val(
+    val: T,
+    true_val: T,
+    false_val: T,
+    *,
+    condition: bool = False,
+) -> bool:
+    """
+    Compare a given value against one of two possible values based on a
+    condition.
+
+    Check for equality between ``val`` and ``true_val`` (if
+    ``condition`` is True), or between ``val`` and ``false_val`` (if
+    ``condition`` is False).
+
+    :param val: Value to be compared.
+    :param true_val: Value to compare ``val`` against if
+        ``condition`` is True.
+    :param false_val: Value to compare ``val`` against if
+    ``condition`` is False.
+    :param condition: Whether to compare ``val`` against ``true_val`` or
+        ``false_val``. If True, ``val`` is compared to ``true_val``. If
+        False, ``val`` is compared to ``false_val``. Defaults to False.
+    :return: True if ``val`` matches the selected comparison value,
+        False otherwise.
+    """  # noqa: D205
+    return val == (true_val if condition else false_val)
+
+
+def filter_order(
+    order: schema.OrderWithUser,
+    item_info: schema.Item,
+    args: argparse.Namespace,
+) -> bool:
+    """
+    Check if an order meets all user-specified criteria.
+
+    Check if an meets all user-defined conditions:
+
+    - The order's last update must be within ``args.timerange`` days.
+    - The order must be a "buy" or "sell" type, depending on
+        ``args.use_buyers``.
+    - If the item is a mod or arcane, its rank must be unranked or the
+        maximum rank, based on ``args.maxrank``.
+    - If the item is a relic, its refinement must be intact or radiant,
+        based on``args.radiant``.
+
+    :param order: Order to be checked.
+    :param item_info: Object containing details about the item.
+    :param args: Command-line arguments provided by the user.
+    :return: True if all specified conditions are met, False otherwise.
+    """
+    if order.type != {True: "buy", False: "sell"}[args.use_buyers]:
+        return False
+    if (
+        order.rank is not None
+        and item_info.max_rank is not None
+        and order.rank != {True: item_info.max_rank, False: 0}[args.maxrank]
+    ):
+        return False
+    if (
+        order.subtype is not None
+        and order.subtype != {True: "radiant", False: "intact"}[args.radiant]
+    ):
+        return False
+
+    return in_time_range(order.updated_at, args.timerange)
+
+
+def get_plat_list(
+    order_data: list[schema.OrderWithUser],
+    item_info: schema.Item,
+    args: argparse.Namespace,
+) -> list[int]:
+    """
+    Return a filtered list of platinum prices.
+
+    Return a filtered list of platinum prices given a list of
+    :py:class:`schema.OrderWithUser`s, a :py:class:`schema.Item`, and
+    the user's command-line arguments.
+
+    :param order_data: List of :py:class:`schema.OrderWithUser`s
+        containing information about each individual order.
+    :param item_info: Object containing information about the item.
+    :param args: User-given command line arguments.
+    :return: List of the platinum prices from the filtered listings.
+    """
+    return [i.platinum for i in order_data if filter_order(i, item_info, args)]
 
 
 def main(args: argparse.Namespace, http_headers: dict[str, str]) -> float:
@@ -48,9 +191,8 @@ def main(args: argparse.Namespace, http_headers: dict[str, str]) -> float:
     item = args.item
     item_data = fetch_data.get_data(item, schema.ItemResponse, http_headers)
     order_data = fetch_data.get_data(item, schema.OrderResponse, http_headers)
-    print(item)  # NOTE: Just debug stuff
-    print(f"ITEM DATA:{item_data}\n\n")
-    print(f"ORDER DATA:{order_data}")
-
-    # do some validation with msgspec
+    plat_list = get_plat_list(order_data.data, item_data.data, args)
+    print(plat_list)
+    stat = calc_avg(plat_list, args.statistic, 1)
+    print(stat)
     return 0.1

@@ -60,8 +60,8 @@ def item_url(item: str) -> str:
     """
     Replace spaces with underscores and ampersands with "and".
 
-    :param item: The string to manipulate.
-    :return: The manipulated string.
+    :param item: String to manipulate.
+    :return: Manipulated string.
     """
     return item.strip().lower().replace(" ", "_").replace("&", "and")
 
@@ -73,7 +73,7 @@ def http_code_check(status_code: int) -> None:
     Check an HTTP status code and raise the corresponding
     WarMACHTTPError if not 200.
 
-    :param status_code: The HTTP status code to check.
+    :param status_code: HTTP status code to check.
     :raises WarMACHTTPError: Raise an error from HTTP_ERROR_DICT if HTTP
         status code is not 200.
     :raises errors.UnknownError: Raised as fallback if HTTP status code
@@ -95,13 +95,13 @@ def get_page(url: str, http_headers: dict[str, str]) -> urllib3.BaseHTTPResponse
     error if the status code is not 200, otherwise, return the requested
     page. This page will need to be decoded into a dictionary.
 
-    :param url: The formatted URL used in the request.
-    :param http_headers: The headers to be used in the HTTP request.
+    :param url: Formatted URL used in the request.
+    :param http_headers: Headers to be used in the HTTP request.
     :raises WarMACHTTPError: Raise an error from HTTP_ERROR_DICT given
         the HTTP response code.
     :raises errors.UnknownError: Fallback raised if the error code is
         not present in HTTP_ERROR_DICT.
-    :return: The requested JSON.
+    :return: Requested JSON.
     """
     page = urllib3.request("GET", url, headers=http_headers, timeout=5)
     http_code_check(page.status)
@@ -121,5 +121,6 @@ def get_data(item: str, request_schema: type[T], http_headers: dict[str, str]) -
     :return: WarMAC Struct corresponding to the request_schema.
     """
     url_partial = SCHEMA_TO_URL[request_schema]
-    raw = get_page(f"{API_ROOT}{url_partial}{item}", http_headers=http_headers).data
+    complete_url = f"{API_ROOT}{url_partial}{item_url(item)}"
+    raw = get_page(complete_url, http_headers=http_headers).data
     return msgspec.json.decode(raw, type=request_schema)
