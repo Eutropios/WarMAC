@@ -34,9 +34,6 @@ from warmac import cli_parser, errors, fetch_data, schema
 if TYPE_CHECKING:
     import argparse
     from collections.abc import Callable, Sequence
-    from typing import TypeVar
-
-    T = TypeVar("T", int, str)
 
 # : dict[str, Callable[[Sequence[int]], float]]
 AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
@@ -90,35 +87,6 @@ def in_time_range(last_updated: str, time_range: int = cli_parser.DEFAULT_TIME) 
     return (CURR_TIME - timestamp).days <= time_range
 
 
-def comp_val(
-    val: T,
-    true_val: T,
-    false_val: T,
-    *,
-    condition: bool = False,
-) -> bool:
-    """
-    Compare a given value against one of two possible values based on a
-    condition.
-
-    Check for equality between ``val`` and ``true_val`` (if
-    ``condition`` is True), or between ``val`` and ``false_val`` (if
-    ``condition`` is False).
-
-    :param val: Value to be compared.
-    :param true_val: Value to compare ``val`` against if
-        ``condition`` is True.
-    :param false_val: Value to compare ``val`` against if
-    ``condition`` is False.
-    :param condition: Whether to compare ``val`` against ``true_val`` or
-        ``false_val``. If True, ``val`` is compared to ``true_val``. If
-        False, ``val`` is compared to ``false_val``. Defaults to False.
-    :return: True if ``val`` matches the selected comparison value,
-        False otherwise.
-    """  # noqa: D205
-    return val == (true_val if condition else false_val)
-
-
 def filter_order(
     order: schema.OrderWithUser,
     item_info: schema.Item,
@@ -129,31 +97,28 @@ def filter_order(
 
     Check if an meets all user-defined conditions:
 
-    - The order's last update must be within ``args.timerange`` days.
-    - The order must be a "buy" or "sell" type, depending on
+    - Whether the order's last update is within ``args.timerange`` days.
+    - Whether the order is of "buy" or "sell" type, depending on
         ``args.use_buyers``.
-    - If the item is a mod or arcane, its rank must be unranked or the
-        maximum rank, based on ``args.maxrank``.
-    - If the item is a relic, its refinement must be intact or radiant,
-        based on``args.radiant``.
+    - If the item is a mod or arcane, whether its rank is unranked or
+        the maximum rank, based on ``args.maxrank``.
+    - If the item is a relic, whether its refinement is intact or
+        radiant, based on``args.radiant``.
 
     :param order: Order to be checked.
     :param item_info: Object containing details about the item.
     :param args: Command-line arguments provided by the user.
     :return: True if all specified conditions are met, False otherwise.
     """
-    if order.type != {True: "buy", False: "sell"}[args.use_buyers]:
+    if order.type != args.use_buyers:
         return False
     if (
         order.rank is not None
         and item_info.max_rank is not None
-        and order.rank != {True: item_info.max_rank, False: 0}[args.maxrank]
+        and order.rank != item_info.max_rank * args.maxrank
     ):
         return False
-    if (
-        order.subtype is not None
-        and order.subtype != {True: "radiant", False: "intact"}[args.radiant]
-    ):
+    if order.subtype is not None and order.subtype != args.radiant:
         return False
 
     return in_time_range(order.updated_at, args.timerange)
@@ -180,7 +145,36 @@ def get_plat_list(
     return [i.platinum for i in order_data if filter_order(i, item_info, args)]
 
 
-def main(args: argparse.Namespace, http_headers: dict[str, str]) -> float:
+def output(plat_list: list[int], args: argparse.Namespace) -> None:
+    """
+    Display the average price along with additional information.
+
+    Display the calculated average price, along with the average type
+    used, the timerange of the request, the maximum and minimum prices
+    of the orders, and the total number of orders that match the search
+    criteria.
+
+    :param plat_list: List of prices of the item.
+    :param args: User-given command line arguments.
+    """
+    # {value:{width}.{precision}}
+    stat = calc_avg(plat_list, args.statistic, 1)
+    if not args.detailed_report:
+        print(stat)
+    else:
+        space_after_label = 23
+        statistic = AVG_FUNCS[args.statistic].__name__.replace("_", " ").title()
+        fixed_item_name = args.item.title().replace("_", " ").replace(" And ", " & ")
+        print(f"{'Item:':{space_after_label}}{fixed_item_name}")
+        print(f"{'Statistic Found:':{space_after_label}}{statistic}")
+        print(f"{'Time Range Used:':{space_after_label}}{args.timerange} days")
+        print(f"{f'{statistic} Price:':{space_after_label}}{stat} platinum")
+        print(f"{'Max Price:':{space_after_label}}{max(plat_list):.0f} platinum")
+        print(f"{'Min Price:':{space_after_label}}{min(plat_list):.0f} platinum")
+        print(f"{'Number of Orders:':{space_after_label}}{len(plat_list)}")
+
+
+def main(args: argparse.Namespace, http_headers: dict[str, str]) -> None:
     """
     Calculate average price of an item from warframe.market.
 
@@ -192,7 +186,4 @@ def main(args: argparse.Namespace, http_headers: dict[str, str]) -> float:
     item_data = fetch_data.get_data(item, schema.ItemResponse, http_headers)
     order_data = fetch_data.get_data(item, schema.OrderResponse, http_headers)
     plat_list = get_plat_list(order_data.data, item_data.data, args)
-    print(plat_list)
-    stat = calc_avg(plat_list, args.statistic, 1)
-    print(stat)
-    return 0.1
+    output(plat_list, args)

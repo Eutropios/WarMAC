@@ -323,7 +323,6 @@ def create_parser() -> WarMACParser:
         ),
         dest="crossplay",
     )
-    # TODO: Convert to `store_const` and `const` possibly?
 
     avg_parser.add_argument(
         "-t",
@@ -343,7 +342,9 @@ def create_parser() -> WarMACParser:
     max_or_rad.add_argument(
         "-m",
         "--maxrank",
-        action="store_true",
+        action="store_const",
+        const=1,
+        default=0,
         help=(
             "Calculate the price statistic of the mod/arcane at its maximum rank "
             "instead of unranked. Does nothing if used with an item that is not a mod. "
@@ -356,7 +357,9 @@ def create_parser() -> WarMACParser:
     max_or_rad.add_argument(
         "-r",
         "--radiant",
-        action="store_true",
+        action="store_const",
+        const="radiant",
+        default="intact",
         help=(
             "Calculate the price statistic of the relic at a radiant refinement instead"
             " of at an intact refinement. Does nothing if used with an item that is not"
@@ -364,19 +367,19 @@ def create_parser() -> WarMACParser:
         ),
         dest="radiant",
     )
-    # TODO: Convert to `store_const` and `const`
 
     avg_parser.add_argument(
         "-b",
         "--buyers",
-        action="store_true",
+        action="store_const",
+        const="buy",
+        default="sell",
         help=(
             "Calculate the price statistic of the item based on orders from buyers "
             "instead of orders from sellers."
         ),
         dest="use_buyers",
     )
-    # TODO: Convert to `store_const` and `const`
 
     avg_parser.add_argument(
         "-d",

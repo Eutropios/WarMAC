@@ -23,7 +23,10 @@
   ]
 
   dependencies = ["msgspec>=0.19.0", "urllib3>=2.0.4"]
-  description  = "An average platinum price calculator for tradeable items in Warframe."
+  # come time to introduce logging, some options are:
+  # The logging stdlib module, Loguru, structlog, picologging, logbook, Eliot
+  # Do research on all options to see which is best fit
+  description = "An average platinum price calculator for tradeable items in Warframe."
   # include = [""]
 
   keywords = ["platinum", "warframe calculator", "warframe market", "warframe"]

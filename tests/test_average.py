@@ -21,3 +21,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Test file for average.py
 """  # noqa: D205, D400
+
+
+class TestCalcAvg:
+    pass
+
+
+class TestInTimeRange:
+    pass
+
+
+class TestFilterOrder:
+    pass
+
+
+class TestGetPlatList:
+    pass
+
+
+class TestOutput:
+    pass
+
+
+class TestAverageMain:
+    pass

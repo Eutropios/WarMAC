@@ -340,6 +340,3 @@ class TestHTTPCodeCheck:
             "Unknown Error - HTTP Code 499: Please open a new issue on the GitHub page "
             "(link in README.md file)."
         )
-
-
-# TODO: Finish coverage on this test file, then begin work on average
