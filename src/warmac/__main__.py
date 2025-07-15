@@ -23,8 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Entry point for console when `python -m warmac` is called.
 """  # noqa: D205, D400
 
-from __future__ import annotations
-
 import sys
 
 from warmac import main

@@ -40,8 +40,6 @@ SUBCMD_TO_FUNC = {
 http_headers: dict[str, str] = {
     "Accept": "application/json",
     "Accept-Language": "en",
-    "Content-Type": "application/json",
-    "Host": "api.warframe.market",
     "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
 }
 

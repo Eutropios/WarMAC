@@ -38,12 +38,12 @@
   requires-python = ">=3.9"
   version         = "0.0.5"
 
-  [project.scripts]
-    warmac = "warmac.main:main"
-  [project.urls]
-    "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
-    documentation = "https://warmac.readthedocs.io/en/"
-    repository    = "https://github.com/Eutropios/WarMAC"
+[project.scripts]
+  warmac = "warmac.main:main"
+[project.urls]
+  "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
+  documentation = "https://warmac.readthedocs.io/en/"
+  repository    = "https://github.com/Eutropios/WarMAC"
 
 [dependency-groups]
   dev = ["mypy", "pipdeptree", "ty", "vermin", "viztracer>=1.0.0"]
@@ -67,18 +67,17 @@
     "pytest>=8.0",
   ]
 
+[tool.coverage.run]
+  command_line = "-m pytest -vv ./tests"
+  plugins      = ["covdefaults"]
 
-[tool.coverage]
-  [tool.coverage.run]
-    command_line = "-m pytest -vv ./tests"
-    plugins      = ["covdefaults"]
-  [tool.coverage.report]
-    exclude_also = [
-      # Don't complain if non-runnable code isn't run:
-      "if TYPE_CHECKING:",
-      "if __name__ == .__main__.:",
-    ]
-    precision = 2
+[tool.coverage.report]
+  exclude_also = [
+    # Don't complain if non-runnable code isn't run:
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+  ]
+  precision = 2
 
 [tool.docformatter]
   black               = true
@@ -89,35 +88,7 @@
   wrap-summaries      = 72
 
 [tool.mypy]
-  exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".ipynb_checkpoints",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".pyenv",
-    ".pytest_cache",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    ".vscode",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "htmlcov",
-    "node_modules",
-    "site-packages",
-    "venv",
-  ]
+  exclude = ["_build", "buck-out", "build", "dist", "htmlcov"]
 
   python_version = "3.13"
   strict         = true
@@ -128,138 +99,89 @@
   typeCheckingMode = "strict"
 
 [tool.ruff]
+  extend-exclude = [
+    ".ipynb_checkpoints",
+    ".pyenv",
+    ".pytest_cache",
+    ".vscode",
+    "build",
+    "htmlcov",
+    "site-packages",
+  ]
+
   indent-width   = 4
   line-length    = 88
   preview        = true
   show-fixes     = true
   target-version = "py39"
 
-  [tool.ruff.format]
-    exclude = [
-      ".bzr",
-      ".direnv",
-      ".eggs",
-      ".git",
-      ".git-rewrite",
-      ".hg",
-      ".ipynb_checkpoints",
-      ".mypy_cache",
-      ".nox",
-      ".pants.d",
-      ".pyenv",
-      ".pytest_cache",
-      ".pytype",
-      ".ruff_cache",
-      ".svn",
-      ".tox",
-      ".venv",
-      ".vscode",
-      "__pypackages__",
-      "_build",
-      "buck-out",
-      "build",
-      "dist",
-      "htmlcov",
-      "node_modules",
-      "site-packages",
-      "venv",
-    ]
+[tool.ruff.format]
+  indent-style              = "space"
+  line-ending               = "auto"
+  quote-style               = "double"
+  skip-magic-trailing-comma = false
 
-    indent-style              = "space"
-    line-ending               = "auto"
-    quote-style               = "double"
-    skip-magic-trailing-comma = false
+[tool.ruff.lint]
+  # NOTE: Some rules are turned off by Ruff due to `target-version` being set to Py 3.9
+  explicit-preview-rules = false
+  ignore = [
+    "AIR",    # I don't use airflow
+    "COM812", # Must be turned off for formatter
+    "DJ",     # Django rules (N/A for project)
+    "DOC",    # Turn this off for now until DOC supports sphinx-style
+    "ERA001", # Commented out code (I do this during development, the warning is annoying)
+    "FAST",   # FastAPI rules (N/A for project)
+    "FIX",    # I don't use these types of comments
+    "ISC001", # Must be turned off for formatter
+    "ISC002", # Must be turned off for formatter
+    "NPY",    # Numpy rules (N/A for project)
+    "PD",     # Pandas rules (N/A for project)
+    "T20",    # This ruleset flags printing, which my program inherently does
+    "TD",     # I don't do TODOs
+  ]
 
-  [tool.ruff.lint]
-    # NOTE: Some rules are turned off by Ruff due to `target-version` to Py 3.9
-    explicit-preview-rules = false
-    ignore = [
-      "AIR",    # Apache Airflow (What even is this?).
-      "COM812", # Must be turned off for formatter
-      "DJ",     # Django rules (N/A for project)
-      "DOC",    # Turn this off for now until DOC supports sphinx-style
-      "ERA001", # Commented out code (I do this during development, the warning is annoying)
-      "FAST",   # FastAPI rules (N/A for project)
-      "FIX",    # I don't use this
-      "ISC001", # Must be turned off for formatter
-      "ISC002", # Must be turned off for formatter
-      "NPY",    # Numpy rules (N/A for project)
-      "PD",     # Pandas rules (N/A for project)
-      "T20",    # This ruleset flags printing, which my program inherently does
-      "TD",     # I don't do TODOs
-    ]
+  preview = true
+  select  = ["ALL"]
 
-    preview = true
-    select  = ["ALL"]
+[tool.ruff.lint.flake8-copyright]
+  author = "Noah Jenner"
 
-    [tool.ruff.lint.flake8-copyright]
-      author = "Noah Jenner"
+[tool.ruff.lint.flake8-implicit-str-concat]
+  allow-multiline = true
 
-    [tool.ruff.lint.flake8-implicit-str-concat]
-      allow-multiline = true
+[tool.ruff.lint.flake8-quotes]
+  docstring-quotes = "double"
+  inline-quotes    = "double"
+  multiline-quotes = "double"
 
-    [tool.ruff.lint.flake8-quotes]
-      docstring-quotes = "double"
-      inline-quotes    = "double"
-      multiline-quotes = "double"
+[tool.ruff.lint.flake8-type-checking]
+  strict = true
 
-    [tool.ruff.lint.flake8-type-checking]
-      strict = true
+[tool.ruff.lint.isort]
+  required-imports = ["from __future__ import annotations"]
 
-    [tool.ruff.lint.isort]
-      required-imports = ["from __future__ import annotations"]
+[tool.ruff.lint.mccabe]
+  max-complexity = 5
 
-    [tool.ruff.lint.mccabe]
-      max-complexity = 5
+[tool.ruff.lint.per-file-ignores]
+  "docs/source/conf.py"      = ["INP001"]
+  "src/warmac/__init__.py"   = ["I002"]
+  "src/warmac/__main__.py"   = ["I002"]
+  "src/warmac/cli_parser.py" = ["SLF001"]
+  "tests/**.py"              = ["D101", "S101"]
+  # *IMPORTANT* - A dirty hack in cli_parser.py uses private components
 
-    [tool.ruff.lint.per-file-ignores]
-      "docs/source/conf.py"      = ["D100", "D104", "I002", "INP001"]
-      "src/warmac/__init__.py"   = ["D100", "D104", "I002"]
-      "src/warmac/__main__.py"   = ["D100", "D104", "I002"]
-      "src/warmac/cli_parser.py" = ["SLF001"]
-      "tests/**.py"              = ["D101", "D102", "D103", "I002", "S101"]
-      # *IMPORTANT* - A dirty hack in cli_parser.py uses private components
+[tool.ruff.lint.pycodestyle]
+  max-doc-length = 72
 
-    [tool.ruff.lint.pycodestyle]
-      max-doc-length = 72
+[tool.ruff.lint.pydocstyle]
+  # waiting on sphinx convention being added
+  convention = "pep257"
 
-    [tool.ruff.lint.pydocstyle]
-      # waiting on sphinx convention being added
-      convention = "pep257"
+[tool.ty.environment]
+  python          = "./.venv"
+  python-platform = "all"
+  python-version  = "3.13"
 
-[tool.ty]
-  [tool.ty.environment]
-    python          = "./.venv"
-    python-platform = "all"
-    python-version  = "3.13"
-
-  [tool.ty.src]
-    exclude = [
-      ".bzr",
-      ".direnv",
-      ".eggs",
-      ".git",
-      ".git-rewrite",
-      ".hg",
-      ".ipynb_checkpoints",
-      ".mypy_cache",
-      ".nox",
-      ".pants.d",
-      ".pyenv",
-      ".pytest_cache",
-      ".pytype",
-      ".ruff_cache",
-      ".svn",
-      ".tox",
-      ".venv",
-      ".vscode",
-      "__pypackages__",
-      "_build",
-      "buck-out",
-      "build",
-      "dist",
-      "htmlcov",
-      "node_modules",
-      "site-packages",
-      "venv",
-    ]
+[tool.ty.src]
+  include = ["src", "tests"]

@@ -41,8 +41,6 @@ if TYPE_CHECKING:
 http_headers: dict[str, str] = {
     "Accept": "application/json",
     "Accept-Language": "en",
-    "Content-Type": "application/json",
-    "Host": "api.warframe.market",
     "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
     "Platform": "ps4",
 }
@@ -95,6 +93,7 @@ class TestGetData:
     def test_schema_in_dict_gives_correct_url_fragment(
         schema_type: type[schema.ResponseBase], expected_url_fragment: str
     ) -> None:
+        """Test that strings in the SCHEMA_TO_URL dict are correct."""
         assert fetch_data.SCHEMA_TO_URL[schema_type] == expected_url_fragment
 
     @staticmethod

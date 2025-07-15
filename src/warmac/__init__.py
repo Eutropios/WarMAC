@@ -25,8 +25,6 @@ Module information of warmac.
 Describes what modules are visible for imports.
 """  # noqa: D205, D400
 
-from __future__ import annotations
-
 from warmac import average, cli_parser, fetch_data, main, schema
 
 __all__ = ["average", "cli_parser", "fetch_data", "main", "schema"]

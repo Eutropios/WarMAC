@@ -22,6 +22,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Test file for average.py
 """  # noqa: D205, D400
 
+from __future__ import annotations
+
+# from typing import TYPE_CHECKING
+# from unittest.mock import MagicMock, Mock
+
+# import pytest
+
+# from warmac import average
+
 
 class TestCalcAvg:
     pass

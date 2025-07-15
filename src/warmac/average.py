@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     import argparse
     from collections.abc import Callable, Sequence
 
-# : dict[str, Callable[[Sequence[int]], float]]
+
 AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
     "geometric": statistics.geometric_mean,
     "mean": statistics.mean,
@@ -45,6 +45,8 @@ AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
 
 #: An ISO-8601 timestamp of the current time retrieved on execution.
 CURR_TIME = datetime.datetime.now(datetime.timezone.utc)
+# When Python 3.10 EOL, change to:
+# CURR_TIME = datetime.datetime.now(datetime.UTC)
 
 
 def calc_avg(plat_list: list[int], statistic: str, decimals: int = 1) -> float:
