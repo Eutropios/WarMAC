@@ -33,7 +33,6 @@ from warmac import cli_parser
 
 _EXIT_CODE_ALL_GOOD = 0
 _EXIT_CODE_GENERIC_ERROR = 1
-_EXIT_CODE_SHELL_BUILTIN_ERROR = 2
 
 
 class TestIntCastInputBounds:
@@ -55,6 +54,14 @@ class TestIntCastInputBounds:
             ("11", 1, 10, None, True),  # Input > max_bound
             ("5", 10, 1, None, True),  # min_bound > max_bound
             ("10", 1, 10, None, True),  # Input == max_bound
+        ],
+        ids=[
+            "input_equals_min-bound",
+            "input_within_bounds",
+            "input_lt_min_error",
+            "input_gt_max_error",
+            "min_gt_max_error",
+            "input_equals_max",
         ],
     )
     def test_str_to_int_bounds_check(
@@ -90,8 +97,16 @@ class TestIntCastInputParamTypes:
             "invalid",  # General invalid string
             "",  # Empty string
         ],
+        ids=[
+            "input_float-like_str",
+            "input_mixed_str",
+            "input_bool-like_str",
+            "input_None_str",
+            "invalid_str",
+            "empty_str",
+        ],
     )
-    def test_invalid_input_strings_throw_argument_type_error(
+    def test_invalid_input_strings_throw_error(
         invalid_input_string: str,
     ) -> None:
         """Test invalid string inputs for str_to_int_bounds_check to
@@ -117,6 +132,14 @@ class TestHandleInputInterface:
             (["help"], _EXIT_CODE_ALL_GOOD),
             (["help", "average"], _EXIT_CODE_ALL_GOOD),
             (["--help"], _EXIT_CODE_ALL_GOOD),
+        ],
+        ids=[
+            "no_args_raise_err",
+            "None_arg_raise_err",
+            "only_subcommand_raise_err",
+            "help_subcommand_only",
+            "help_with_subcommand",
+            "help_flag",
         ],
     )
     def test_cli_exit_codes(
@@ -182,6 +205,12 @@ class TestStdlibMonkeyPatching:
                 "  -h, --help\n          Show this message and exit.\n",
                 True,
             ),
+        ],
+        ids=[
+            "intended_cli_bare",
+            "cramped_cli_bare",
+            "intended_cli_subcommand",
+            "cramped_cli_subcommand",
         ],
     )
     def test_overridden_help_formatter(

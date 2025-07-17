@@ -146,25 +146,25 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
             yield from super()._iter_indented_subactions(action)
 
 
-def str_to_int_bounds_check(val: str, min_val: int, max_val: int) -> int:
+def str_to_int_bounds_check(inp_val: str, min_val: int, max_val: int) -> int:
     """
-    Return ``val`` as an integer if ``min_val <= val <  max_val``.
+    Return ``inp_val`` as an int if ``min_val <= inp_val <  max_val``.
 
-    Cast ``val`` to an integer. If ``val`` is not an integer or
-    is not ``min_val <= val < max_val``, then raise an
+    Cast ``inp_val`` to an integer. If ``inp_val`` is not an integer or
+    is not ``min_val <= inp_val < max_val``, then raise an
     :exc:`argparse.ArgumentTypeError`.
 
-    :param val: User's input as a string.
-    :param min_val: Minimum value that ``int(val)`` can be.
-    :param max_val: Maximum value that ``int(val)`` can be.
-    :raises argparse.ArgumentTypeError: Raised if ``val`` is not an
-        integer or is not ``min_val <= int(val) < max_val``.
-    :return: Return ``val`` as an integer.
+    :param inp_val: User's input as a string.
+    :param min_val: Minimum value that ``int(inp_val)`` can be.
+    :param max_val: Maximum value that ``int(inp_val)`` can be.
+    :raises argparse.ArgumentTypeError: Raised if ``inp_val`` is not an
+        integer or is not ``min_val <= int(inp_val) < max_val``.
+    :return: Return ``inp_val`` as an integer.
     """
     with contextlib.suppress(ValueError):
-        if min_val <= (casted_int := int(val)) < max_val:
+        if min_val <= (casted_int := int(inp_val)) < max_val:
             return casted_int
-    msg = f"'{val}' is not an integer in the valid range of [{min_val}, {max_val})."
+    msg = f"'{inp_val}' is not an integer in the valid range of [{min_val}, {max_val})."
     raise argparse.ArgumentTypeError(msg)
 
 
@@ -315,6 +315,7 @@ def create_parser() -> WarMACParser:
         "-S",
         "--same-platform",
         action="store_false",
+        default=True,
         help=(
             "Collect orders from only the platform specified by the --platform option"
             " instead of from cross-platform. If passed without --platform, "
@@ -342,9 +343,8 @@ def create_parser() -> WarMACParser:
     max_or_rad.add_argument(
         "-m",
         "--maxrank",
-        action="store_const",
-        const=1,
-        default=0,
+        action="store_true",
+        default=False,
         help=(
             "Calculate the price statistic of the mod/arcane at its maximum rank "
             "instead of unranked. Does nothing if used with an item that is not a mod. "
@@ -352,7 +352,6 @@ def create_parser() -> WarMACParser:
         ),
         dest="maxrank",
     )
-    # TODO: Convert to `store_const` and `const`
 
     max_or_rad.add_argument(
         "-r",
@@ -385,6 +384,7 @@ def create_parser() -> WarMACParser:
         "-d",
         "--detailed-report",
         action="store_true",
+        default=False,
         help=(
             "Print additional market information about the requested item, along with "
             "the specified parameters."
@@ -395,6 +395,7 @@ def create_parser() -> WarMACParser:
     avg_parser.add_argument(
         "--porcelain",
         action="store_true",
+        default=False,
         help=(
             "Print numeric output separated with colons. If passed without "
             "--detail-report, --porcelain will be ignored."

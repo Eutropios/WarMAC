@@ -33,10 +33,11 @@ from warmac import cli_parser, errors, fetch_data, schema
 
 if TYPE_CHECKING:
     import argparse
-    from collections.abc import Callable, Sequence
+    from collections.abc import Callable, Mapping, Sequence
+    from typing import Literal
 
 
-AVG_FUNCS: dict[str, Callable[[Sequence[int]], float]] = {
+AVG_FUNCS: Mapping[str, Callable[[Sequence[int]], float]] = {
     "geometric": statistics.geometric_mean,
     "mean": statistics.mean,
     "median": statistics.median,
@@ -71,33 +72,84 @@ def calc_avg(plat_list: list[int], statistic: str, decimals: int = 1) -> float:
     return round(float(AVG_FUNCS[statistic](plat_list)), decimals)
 
 
-def in_time_range(last_updated: str, time_range: int = cli_parser.DEFAULT_TIME) -> bool:
+def in_time_range(
+    last_updated: str,
+    current_time: datetime.datetime,
+    time_range: int = cli_parser.DEFAULT_TIME,
+) -> bool:
     """
     Check if order is younger than ``time_range`` days.
 
-    Subtract last_updated field from :py:data:`.CURR_TIME` to check if
-    the difference in days is less than or equal to ``time_range``.
+    Subtract last_updated field from current_time to check if the
+    difference in days is less than or equal to ``time_range``.
 
     :param last_updated: ISO-8601 timestamp of when the order was
         last updated.
+    :param current_time: Current UTC time.
     :param time_range: Maximum age, in days, that an order can be to
         be accepted, defaults to :py:const:`warmac_parser.DEFAULT_TIME`.
     :return: True if ``last_updated ≤ time_range``, False if
         ``last_updated > time_range``.
     """
     timestamp = datetime.datetime.fromisoformat(last_updated)
-    return (CURR_TIME - timestamp).days <= time_range
+    return 0 <= (current_time - timestamp).days <= time_range
+
+
+def check_mod_arcane_rank(
+    order_rank: int | None,
+    item_max_rank: int | None,
+    *,
+    use_maxrank: bool,
+) -> bool:
+    """
+    Check if an order's rank matches user-specified rank level.
+
+    Check if an order's rank equals the rank specified by the user. If
+    the item isn't a mod or arcane, ``order_rank`` and ``item_max_rank``
+    should both be ``None``.
+    :param order_rank: Rank of the order.
+    :param item_max_rank: Maximum possible rank for the item.
+    :param use_maxrank: User-specified rank of mod or arcane. If True,
+        the maximum potential rank of the item will be use. If False,
+        the unranked item will be used.
+    :return: True if the order's rank matches
+        ``item_max_rank * use_maxrank``, False otherwise.
+    """
+    if order_rank is None or item_max_rank is None:
+        return True
+    return order_rank == item_max_rank * use_maxrank
+
+
+def check_relic_subtype(
+    subtype: str | None, use_radiant: Literal["intact", "radiant"]
+) -> bool:
+    """
+    Check if an order's subtype matches user-specified refinement level.
+
+    Check if an order's subtype equals the refinement level specified by
+    the user. If the item isn't a relic, ``subtype`` should be ``None``.
+
+    :param subtype: Subtype of the order.
+    :param use_radiant: User-specified refinement level to compare
+    against. Can be either "radiant" or "intact".
+    :return: True if the order's subtype matches ``use_radiant`` or if
+        subtype is None, False otherwise.
+    """
+    if subtype is None:
+        return True
+    return subtype == use_radiant
 
 
 def filter_order(
     order: schema.OrderWithUser,
     item_info: schema.Item,
+    current_time: datetime.datetime,
     args: argparse.Namespace,
 ) -> bool:
     """
     Check if an order meets all user-specified criteria.
 
-    Check if an meets all user-defined conditions:
+    Check if an order meets all user-defined conditions:
 
     - Whether the order's last update is within ``args.timerange`` days.
     - Whether the order is of "buy" or "sell" type, depending on
@@ -108,27 +160,26 @@ def filter_order(
         radiant, based on``args.radiant``.
 
     :param order: Order to be checked.
-    :param item_info: Object containing details about the item.
+    :param item_info: Details about the item.
+    :param current_time: Current time.
     :param args: Command-line arguments provided by the user.
     :return: True if all specified conditions are met, False otherwise.
     """
     if order.type != args.use_buyers:
         return False
-    if (
-        order.rank is not None
-        and item_info.max_rank is not None
-        and order.rank != item_info.max_rank * args.maxrank
+    if not check_mod_arcane_rank(
+        order.rank, item_info.max_rank, use_maxrank=args.maxrank
     ):
         return False
-    if order.subtype is not None and order.subtype != args.radiant:
+    if not check_relic_subtype(order.subtype, args.radiant):
         return False
+    return in_time_range(order.updated_at, current_time, args.timerange)
 
-    return in_time_range(order.updated_at, args.timerange)
 
-
-def get_plat_list(
+def filtered_plat_list(
     order_data: list[schema.OrderWithUser],
     item_info: schema.Item,
+    current_time: datetime.datetime,
     args: argparse.Namespace,
 ) -> list[int]:
     """
@@ -141,10 +192,13 @@ def get_plat_list(
     :param order_data: List of :py:class:`schema.OrderWithUser`s
         containing information about each individual order.
     :param item_info: Object containing information about the item.
+    :param current_time: Current time.
     :param args: User-given command line arguments.
     :return: List of the platinum prices from the filtered listings.
     """
-    return [i.platinum for i in order_data if filter_order(i, item_info, args)]
+    return [
+        i.platinum for i in order_data if filter_order(i, item_info, current_time, args)
+    ]
 
 
 def output(plat_list: list[int], args: argparse.Namespace) -> None:
@@ -176,16 +230,22 @@ def output(plat_list: list[int], args: argparse.Namespace) -> None:
         print(f"{'Number of Orders:':{space_after_label}}{len(plat_list)}")
 
 
-def main(args: argparse.Namespace, http_headers: dict[str, str]) -> None:
+def main(
+    args: argparse.Namespace,
+    http_headers: dict[str, str],
+    current_time: datetime.datetime = CURR_TIME,
+) -> None:
     """
     Calculate average price of an item from warframe.market.
 
     :param args: Parsed command-line args.
+    :param http_headers: Headers to be used in the HTTP request.
+    :param current_time: Current time, defaults to ``CURR_TIME``.
     :return: Average price of item.
     """
     # gotta do some error checking here
     item = args.item
     item_data = fetch_data.get_data(item, schema.ItemResponse, http_headers)
     order_data = fetch_data.get_data(item, schema.OrderResponse, http_headers)
-    plat_list = get_plat_list(order_data.data, item_data.data, args)
+    plat_list = filtered_plat_list(order_data.data, item_data.data, current_time, args)
     output(plat_list, args)

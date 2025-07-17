@@ -34,7 +34,6 @@ import urllib3
 from warmac import errors, fetch_data, schema
 
 if TYPE_CHECKING:
-    from typing import Any
     from unittest.mock import MagicMock
 
 
@@ -58,6 +57,15 @@ class TestItemUrl:
             ("   ", ""),  # test only spaces strips
             ("&&&", "andandand"),  # test only ampersands
             ("B1g (#_|NGv$ ", "b1g_(#_|ngv$"),  # test other chars unchanged
+        ],
+        ids=[
+            "space_to_underscore",
+            "ampersand_to_and",
+            "strip_leading_spaces",
+            "empty_str",
+            "sstrip_before_space_replace",
+            "all_ampersand_to_and",
+            "random_symbols",
         ],
     )
     def test_item_url_transformations(input_item: str, expected_output: str) -> None:
@@ -98,7 +106,7 @@ class TestGetData:
 
     @staticmethod
     @pytest.fixture
-    def mock_get_page(mocker: MagicMock) -> Any:  # noqa: ANN401
+    def mock_get_page(mocker: MagicMock) -> object:
         """Fixture that patches fetch_data.get_page, preventing real
         HTTP requests during tests."""  # noqa: D205, D209
         return mocker.patch("warmac.fetch_data.get_page")

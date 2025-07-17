@@ -118,6 +118,7 @@ def get_data(item: str, request_schema: type[T], http_headers: dict[str, str]) -
     :param item: Item to retrieve.
     :param request_schema: Schema to use for decoding the API response.
         Determines the expected structure of the returned data.
+    :param http_headers: Headers to be used in the HTTP request.
     :return: WarMAC Struct corresponding to the request_schema.
     """
     url_partial = SCHEMA_TO_URL[request_schema]

@@ -69,6 +69,7 @@ def main(args: list[str] | None = None) -> Literal[0, 1]:
     :class:`cli_parser.WarMACParser`. Arguments are then used in
     the script's execution.
 
+    :param args: Optional cli args. Should be used for testing.
     :return: Return 0 if everything returns successfully.
     """
     try:
