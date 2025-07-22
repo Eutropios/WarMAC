@@ -36,6 +36,8 @@ from warmac import errors, fetch_data, schema
 if TYPE_CHECKING:
     from unittest.mock import MagicMock
 
+    ResponseKind = fetch_data.ResponseKind
+
 
 http_headers: dict[str, str] = {
     "Accept": "application/json",
@@ -77,18 +79,10 @@ class TestItemUrl:
 
 class TestGetData:
     @staticmethod
-    def _get_expected_url(
-        item_name: str, schema_type: type[schema.ResponseBase]
-    ) -> str:
+    def _get_expected_url(item_name: str, schema_type: ResponseKind) -> str:
         return (
             f"{fetch_data.API_ROOT}{fetch_data.SCHEMA_TO_URL[schema_type]}{item_name}"
         )
-
-    @staticmethod
-    def test_schema_not_in_dict() -> None:
-        """Test that ResponseBase throws error if passed into dict."""
-        with pytest.raises(KeyError):
-            fetch_data.get_data("foo", schema.ResponseBase, http_headers)
 
     @staticmethod
     @pytest.mark.parametrize(
@@ -99,7 +93,7 @@ class TestGetData:
         ],
     )
     def test_schema_in_dict_gives_correct_url_fragment(
-        schema_type: type[schema.ResponseBase], expected_url_fragment: str
+        schema_type: ResponseKind, expected_url_fragment: str
     ) -> None:
         """Test that strings in the SCHEMA_TO_URL dict are correct."""
         assert fetch_data.SCHEMA_TO_URL[schema_type] == expected_url_fragment

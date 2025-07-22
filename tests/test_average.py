@@ -25,12 +25,15 @@ Test file for average.py
 from __future__ import annotations
 
 import datetime
+from typing import TYPE_CHECKING
 
-# from typing import TYPE_CHECKING
 # from unittest.mock import MagicMock, Mock
 import pytest
 
 from warmac import average, cli_parser, errors
+
+if TYPE_CHECKING:
+    AverageKind = average.AverageKind
 
 
 class TestCalcAvg:
@@ -66,7 +69,7 @@ class TestCalcAvg:
         ],
     )
     def test_calc_avg_parameterized(
-        plat_list: list[int], statistic: str, decimals: int, expected: float
+        plat_list: list[int], statistic: AverageKind, decimals: int, expected: float
     ) -> None:
         """Test calc_avg with various inputs."""
         assert average.calc_avg(plat_list, statistic, decimals) == expected
@@ -76,12 +79,6 @@ class TestCalcAvg:
         """Test that NoListingsFoundError is raised for empty list."""
         with pytest.raises(errors.NoListingsFoundError):
             average.calc_avg([], "mean")
-
-    @staticmethod
-    def test_calc_avg_invalid_statistic_key() -> None:
-        """Test that KeyError is raised for an invalid statistic."""
-        with pytest.raises(KeyError):
-            average.calc_avg([1, 2, 3], "invalid_stat")
 
 
 class TestInTimeRange:

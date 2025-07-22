@@ -36,9 +36,11 @@ if TYPE_CHECKING:
 
 
 # The default time to collect orders until
-DEFAULT_TIME: Final = 10
+DEFAULT_TIME = 10
+# The default number of digits to round to
+DEFAULT_NDIGITS = 1
 # The current version of WarMAC
-_VERSION: Final = "0.0.5"
+_VERSION = "0.0.5"
 
 http_headers: dict[str, str] = {
     "Accept": "application/json",
@@ -269,9 +271,13 @@ def create_parser() -> WarMACParser:
     min_time_range: Final = 1
     # The maximum time that str_to_int_bounds_check checks against
     max_time_range: Final = 60
+    # The minimum ndigits to round the statistic to
+    min_ndigits: Final = 0
+    # The maximum ndigits to round the statistic to
+    max_ndigits: Final = 10
     # See above comment about state.
 
-    # Option characters used: s, p, t, m, r, b, d, h, S
+    # Option characters used: s, p, t, m, r, b, d, h, S, n
 
     avg_parser.add_argument(
         "item",
@@ -333,7 +339,7 @@ def create_parser() -> WarMACParser:
         help=(
             "Number of days to consider for calculating the average. Value given "
             "indicates how far back to start the statistic's calculation. Must be in "
-            f"range [{min_time_range}, {max_time_range}]. (Default: {DEFAULT_TIME})"
+            f"range [{min_time_range}, {max_time_range}). (Default: {DEFAULT_TIME})"
         ),
         metavar="<days>",
         dest="timerange",
@@ -381,6 +387,19 @@ def create_parser() -> WarMACParser:
     )
 
     avg_parser.add_argument(
+        "-n",
+        "--ndigits",
+        default=DEFAULT_NDIGITS,
+        type=lambda x: str_to_int_bounds_check(x, min_ndigits, max_ndigits),
+        help=(
+            "Number of digits to round the statistic to. Must be in range "
+            f"[{min_ndigits}, {max_ndigits}). (Default: {DEFAULT_NDIGITS})"
+        ),
+        metavar="<ndigits>",
+        dest="ndigits",
+    )
+
+    avg_parser.add_argument(
         "-d",
         "--detailed-report",
         action="store_true",
@@ -397,8 +416,8 @@ def create_parser() -> WarMACParser:
         action="store_true",
         default=False,
         help=(
-            "Print numeric output separated with colons. If passed without "
-            "--detail-report, --porcelain will be ignored."
+            "Print output separated with colons. If passed without --detail-report, "
+            "--porcelain will be ignored."
         ),
         dest="porcelain",
     )

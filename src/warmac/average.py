@@ -36,8 +36,10 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Mapping, Sequence
     from typing import Literal
 
+    AverageKind = Literal["geometric", "mean", "median", "mode"]
 
-AVG_FUNCS: Mapping[str, Callable[[Sequence[int]], float]] = {
+# Convert to a match case when 3.9 EOL. Default case raises error
+AVG_FUNCS: Mapping[AverageKind, Callable[[Sequence[int]], float]] = {
     "geometric": statistics.geometric_mean,
     "mean": statistics.mean,
     "median": statistics.median,
@@ -50,7 +52,11 @@ CURR_TIME = datetime.datetime.now(datetime.timezone.utc)
 # CURR_TIME = datetime.datetime.now(datetime.UTC)
 
 
-def calc_avg(plat_list: list[int], statistic: str, decimals: int = 1) -> float:
+def calc_avg(
+    plat_list: list[int],
+    statistic: AverageKind,
+    ndigits: int = cli_parser.DEFAULT_NDIGITS,
+) -> float:
     """
     Calculate the specified statistic for a list of prices.
 
@@ -60,8 +66,9 @@ def calc_avg(plat_list: list[int], statistic: str, decimals: int = 1) -> float:
 
     :param plat_list: Prices in platinum of each order.
     :param statistic: Statistic to be calculated.
-    :param decimals: Number of decimals to which the calculated
-        statistic should be rounded, defaults to 1.
+    :param ndigits: Number of decimals to which the calculated
+        statistic should be rounded, defaults to
+        :py:const:`cli_parser.DEFAULT_NDIGITS`.
     :raises warmac_errors.NoListingsFoundError: If ``plat_list`` has no
         contents.
     :return: Desired statistic of the specified item.
@@ -69,7 +76,7 @@ def calc_avg(plat_list: list[int], statistic: str, decimals: int = 1) -> float:
     # Handle errors
     if not plat_list:
         raise errors.NoListingsFoundError from None
-    return round(float(AVG_FUNCS[statistic](plat_list)), decimals)
+    return round(float(AVG_FUNCS[statistic](plat_list)), ndigits)
 
 
 def in_time_range(
@@ -87,7 +94,7 @@ def in_time_range(
         last updated.
     :param current_time: Current UTC time.
     :param time_range: Maximum age, in days, that an order can be to
-        be accepted, defaults to :py:const:`warmac_parser.DEFAULT_TIME`.
+        be accepted, defaults to :py:const:`cli_parser.DEFAULT_TIME`.
     :return: True if ``last_updated ≤ time_range``, False if
         ``last_updated > time_range``.
     """
@@ -183,7 +190,7 @@ def filtered_plat_list(
     args: argparse.Namespace,
 ) -> list[int]:
     """
-    Return a filtered list of platinum prices.
+    Construct a list of prices using a filter.
 
     Return a filtered list of platinum prices given a list of
     :py:class:`schema.OrderWithUser`s, a :py:class:`schema.Item`, and
@@ -201,33 +208,42 @@ def filtered_plat_list(
     ]
 
 
-def output(plat_list: list[int], args: argparse.Namespace) -> None:
+def detailed_output(
+    stat: float, plat_list: list[int], args: argparse.Namespace
+) -> None:
     """
-    Display the average price along with additional information.
+    Display the calculated statistic along with additional information.
 
-    Display the calculated average price, along with the average type
-    used, the timerange of the request, the maximum and minimum prices
-    of the orders, and the total number of orders that match the search
-    criteria.
+    Display the calculated statistic, along with the statistic used, the
+    timerange of the request, the maximum and minimum prices of the
+    orders, and the total number of orders that match the search
+    criteria. If ``args.porcelain` is True, separate the fields with a
+    single colon.
 
+    :param stat: Statistic of the item that was found.
     :param plat_list: List of prices of the item.
     :param args: User-given command line arguments.
     """
     # {value:{width}.{precision}}
-    stat = calc_avg(plat_list, args.statistic, 1)
-    if not args.detailed_report:
-        print(stat)
+    statistic = AVG_FUNCS[args.statistic].__name__.replace("_", " ").title()
+    fixed_item_name = args.item.title().replace("_", " ").replace(" And ", " & ")
+    max_list = max(plat_list)
+    min_list = min(plat_list)
+    num_orders = len(plat_list)
+    if args.porcelain:
+        print(
+            f"{fixed_item_name}:{statistic}:{args.timerange}:{stat}:{min_list}:"
+            f"{max_list}:{num_orders}"
+        )
     else:
         space_after_label = 23
-        statistic = AVG_FUNCS[args.statistic].__name__.replace("_", " ").title()
-        fixed_item_name = args.item.title().replace("_", " ").replace(" And ", " & ")
         print(f"{'Item:':{space_after_label}}{fixed_item_name}")
         print(f"{'Statistic Found:':{space_after_label}}{statistic}")
         print(f"{'Time Range Used:':{space_after_label}}{args.timerange} days")
         print(f"{f'{statistic} Price:':{space_after_label}}{stat} platinum")
-        print(f"{'Max Price:':{space_after_label}}{max(plat_list):.0f} platinum")
-        print(f"{'Min Price:':{space_after_label}}{min(plat_list):.0f} platinum")
-        print(f"{'Number of Orders:':{space_after_label}}{len(plat_list)}")
+        print(f"{'Max Price:':{space_after_label}}{max_list:.0f} platinum")
+        print(f"{'Min Price:':{space_after_label}}{min_list:.0f} platinum")
+        print(f"{'Number of Orders:':{space_after_label}}{num_orders}")
 
 
 def main(
@@ -248,4 +264,5 @@ def main(
     item_data = fetch_data.get_data(item, schema.ItemResponse, http_headers)
     order_data = fetch_data.get_data(item, schema.OrderResponse, http_headers)
     plat_list = filtered_plat_list(order_data.data, item_data.data, current_time, args)
-    output(plat_list, args)
+    stat = calc_avg(plat_list, args.statistic, args.ndigits)
+    print(stat) if not args.detailed_report else detailed_output(stat, plat_list, args)
