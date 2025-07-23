@@ -133,6 +133,82 @@ class TestInTimeRange:
             average.in_time_range("not-a-valid-timestamp", self.TEST_CURRENT_TIME)
 
 
+class TestModArcaneRank:
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("order_rank", "item_max_rank", "use_maxrank", "expected"),
+        [
+            (None, None, True, True),
+            (None, None, False, True),
+            (None, 5, True, True),
+            (None, 10, False, True),
+            (0, None, True, True),
+            (5, None, False, True),
+        ],
+        ids=[
+            "both_none_maxrank",
+            "both_none_unranked",
+            "order_rank_none_maxrank",
+            "order_rank_none_unranked",
+            "item_max_rank_none_maxrank",
+            "item_max_rank_none_unranked",
+        ],
+    )
+    def test_both_none(
+        order_rank: int | None,
+        item_max_rank: int | None,
+        *,
+        use_maxrank: bool,
+        expected: bool,
+    ) -> None:
+        """Test that True is always returned if at least one of
+        order_rank and item_max_rank is None, regardless of the argument
+        passed for use_maxrank."""  # noqa: D205, D209
+        assert (
+            average.check_mod_arcane_rank(
+                order_rank, item_max_rank, use_maxrank=use_maxrank
+            )
+            == expected
+        )
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("order_rank", "item_max_rank", "use_maxrank", "expected"),
+        [
+            (5, 5, True, True),
+            (4, 5, True, False),
+            (0, 5, True, False),
+            (0, 0, True, True),
+            # -- use_maxrank is False --
+            (5, 5, False, False),
+            (4, 5, False, False),
+            (0, 1, False, True),
+            (0, 0, False, True),
+        ],
+        ids=[
+            "order_eq_item_max_w_maxrank",
+            "order_lt_item_max_w_maxrank",
+            "order_0_w_maxrank",
+            "both_0_w_maxrank",
+            "order_eq_item_max_unranked",
+            "order_non-zero_unranked",
+            "order_0_w_unranked",
+            "both_0_w_unranked",
+        ],
+    )
+    def test_non_none_params_use_maxrank(
+        order_rank: int, item_max_rank: int, *, use_maxrank: bool, expected: bool
+    ) -> None:
+        """Test various cases of order_rank against item_max_rank
+        depending on use_maxrank."""  # noqa: D205, D209
+        assert (
+            average.check_mod_arcane_rank(
+                order_rank, item_max_rank, use_maxrank=use_maxrank
+            )
+            == expected
+        )
+
+
 class TestGetPlatList:
     pass
 

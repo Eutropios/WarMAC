@@ -113,16 +113,19 @@ def check_mod_arcane_rank(
 
     Check if an order's rank equals the rank specified by the user. If
     the item isn't a mod or arcane, ``order_rank`` and ``item_max_rank``
-    should both be ``None``.
+    should both be ``None``. If only one of ``order_rank`` and
+    ``item_max_rank`` is ``None``, then True will be returned.
     :param order_rank: Rank of the order.
     :param item_max_rank: Maximum possible rank for the item.
     :param use_maxrank: User-specified rank of mod or arcane. If True,
         the maximum potential rank of the item will be use. If False,
         the unranked item will be used.
-    :return: True if the order's rank matches
-        ``item_max_rank * use_maxrank``, False otherwise.
+    :return: True if the order_rank is None, if item_max_rank is None,
+        or if order's rank matches ``item_max_rank * use_maxrank``,
+        False otherwise.
     """
     if order_rank is None or item_max_rank is None:
+        # If there's a mismatch, we'll eval as if unranked
         return True
     return order_rank == item_max_rank * use_maxrank
 
