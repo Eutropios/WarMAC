@@ -33,7 +33,9 @@ import pytest
 from warmac import average, cli_parser, errors
 
 if TYPE_CHECKING:
-    AverageKind = average.AverageKind
+    from typing import Literal
+
+    AverageKind = Literal["geometric", "mean", "median", "mode"]
 
 
 class TestCalcAvg:
@@ -207,6 +209,40 @@ class TestModArcaneRank:
             )
             == expected
         )
+
+
+class TestRelicSubtype:
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("subtype", "use_radiant", "expected"),
+        [
+            (None, "intact", True),
+            (None, "radiant", True),
+            ("intact", "intact", True),
+            ("radiant", "intact", False),
+            ("some_other_string", "intact", False),
+        ],
+        ids=[
+            "none_subtype_w_intact",
+            "none_subtype_w_radiant",
+            "subtypes_match",
+            "subtypes_dont_match",
+            "invalid_subtype",
+        ],
+    )
+    def test_check_relic_subtype(
+        subtype: str | None,
+        use_radiant: Literal["intact", "radiant"],
+        *,
+        expected: bool,
+    ) -> None:
+        """Test various combinations of subtype and use_radiant."""
+        result = average.check_relic_subtype(subtype, use_radiant)
+        assert result == expected
+
+
+class TestFilterOrder:
+    pass
 
 
 class TestGetPlatList:
