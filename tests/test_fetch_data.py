@@ -36,7 +36,7 @@ from warmac import errors, fetch_data, schema
 if TYPE_CHECKING:
     from unittest.mock import MagicMock
 
-    ResponseKind = type[fetch_data.ResponseKind]
+    from warmac.fetch_data import ResponseKind
 
 
 http_headers: dict[str, str] = {

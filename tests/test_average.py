@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 
     from _pytest.mark.structures import ParameterSet
 
-    AverageKind = type[average.AverageKind]
+    from warmac.average import AverageKind
 
     class OrderKwargs(TypedDict):
         platinum: int
