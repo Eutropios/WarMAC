@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 
     from _pytest.mark.structures import ParameterSet
 
-    AverageKind = Literal["geometric", "mean", "median", "mode"]
+    AverageKind = type[average.AverageKind]
 
     class OrderKwargs(TypedDict):
         platinum: int
@@ -402,12 +402,127 @@ class TestFilterOrderProgrammatic:
         assert result == expected_result
 
 
-class TestFilterOrder:
-    pass
-
-
 class TestGetPlatList:
-    pass
+    @staticmethod
+    @pytest.mark.parametrize(
+        (
+            "order_data_params",
+            "item_info_params",
+            "args_params",
+            "expected_plat_list",
+        ),
+        [
+            pytest.param(
+                [
+                    order_kwargs(platinum=100, order_type="sell"),
+                    order_kwargs(platinum=50, order_type="buy"),
+                ],
+                item_info_kwargs(),
+                args_kwargs(use_buyers="sell"),
+                [100],
+                id="order_types_match",
+            ),
+            pytest.param(
+                [
+                    order_kwargs(platinum=100, subtype="intact"),
+                    order_kwargs(platinum=200, subtype="radiant"),
+                ],
+                item_info_kwargs(),
+                args_kwargs(radiant="intact"),
+                [100],
+                id="intact_subtype_matches",
+            ),
+            pytest.param(
+                [
+                    order_kwargs(platinum=100, subtype="intact"),
+                    order_kwargs(platinum=200, subtype="radiant"),
+                ],
+                item_info_kwargs(),
+                args_kwargs(radiant="radiant"),
+                [200],
+                id="radiant_subtype_matches",
+            ),
+            pytest.param(
+                [
+                    order_kwargs(platinum=100, updated_at="2025-07-22T09:00:00Z"),
+                    order_kwargs(platinum=50, updated_at="2025-07-01T09:00:00Z"),
+                ],
+                item_info_kwargs(),
+                args_kwargs(timerange=7),
+                [100],
+                id="order_in_time_range",
+            ),
+            pytest.param(
+                [order_kwargs(platinum=100, rank=5), order_kwargs(platinum=50, rank=0)],
+                item_info_kwargs(max_rank=5),
+                args_kwargs(maxrank=True),
+                [100],
+                id="order_is_maxrank",
+            ),
+            pytest.param(
+                [order_kwargs(platinum=100, rank=5), order_kwargs(platinum=50, rank=0)],
+                item_info_kwargs(max_rank=5),
+                args_kwargs(maxrank=False),
+                [50],
+                id="order_is_unranked",
+            ),
+            pytest.param(
+                [],
+                item_info_kwargs(),
+                args_kwargs(),
+                [],
+                id="empty_order_data_does_nothing",
+            ),
+            pytest.param(
+                [
+                    order_kwargs(platinum=10),
+                    order_kwargs(platinum=20),
+                    order_kwargs(platinum=30),
+                ],
+                item_info_kwargs(),
+                args_kwargs(),
+                [10, 20, 30],
+                id="all_orders_pass",
+            ),
+            pytest.param(
+                [
+                    order_kwargs(platinum=10, order_type="buy"),
+                    order_kwargs(platinum=20, updated_at="2024-01-01T00:00:00Z"),
+                ],
+                item_info_kwargs(),
+                args_kwargs(use_buyers="sell", timerange=1),
+                [],
+                id="no_orders_pass",
+            ),
+        ],
+    )
+    def test_filtered_plat_list(
+        order_data_params: list[OrderKwargs],
+        item_info_params: ItemKwargs,
+        args_params: ArgsKwargs,
+        fixed_current_time: datetime.datetime,
+        expected_plat_list: list[int],
+    ) -> None:
+        """Test filtered_plat_list with various filtering scenarios."""
+        orders = [
+            schema.OrderWithUser(
+                id="some_id",
+                quantity=1,
+                created_at="2025-06-13T09:00:00Z",
+                item_id="some_item_id",
+                user=user,
+                **kw,
+            )
+            for kw in order_data_params
+        ]
+
+        item_info = schema.Item(
+            id="item_id", slug="item_slug", tags=[], **item_info_params
+        )
+        args = argparse.Namespace(**args_params)
+
+        result = average.filtered_plat_list(orders, item_info, fixed_current_time, args)
+        assert result == expected_plat_list
 
 
 class TestOutput:
