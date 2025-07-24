@@ -24,24 +24,40 @@ Test file for average.py
 
 from __future__ import annotations
 
+import argparse
 import datetime
 from typing import TYPE_CHECKING
 
 # from unittest.mock import MagicMock, Mock
 import pytest
 
-from warmac import average, cli_parser, errors
+from warmac import average, cli_parser, errors, schema
 
 if TYPE_CHECKING:
-    from typing import Literal
+    from typing import ClassVar, Literal, TypedDict
+
+    from _pytest.mark.structures import ParameterSet
 
     AverageKind = Literal["geometric", "mean", "median", "mode"]
 
+    class OrderKwargs(TypedDict):
+        platinum: int
+        type: str
+        updated_at: str
+        rank: int | None
+        subtype: str | None
+
+    class ArgsKwargs(TypedDict):
+        use_buyers: str
+        maxrank: bool
+        radiant: Literal["intact", "radiant"]
+        timerange: int
+
+    class ItemKwargs(TypedDict):
+        max_rank: int | None
+
 
 class TestCalcAvg:
-    # test if plat_list is empty that an error is thrown
-    # test that if statistic param not in AVG_FUNCS
-    # test if decimals is not passed, that result rounded to 1 decimal
     @staticmethod
     @pytest.mark.parametrize(
         ("plat_list", "statistic", "decimals", "expected"),
@@ -239,6 +255,151 @@ class TestRelicSubtype:
         """Test various combinations of subtype and use_radiant."""
         result = average.check_relic_subtype(subtype, use_radiant)
         assert result == expected
+
+
+def order_kwargs(
+    platinum: int = 100,
+    order_type: str = "sell",
+    updated_at: str = "2025-07-23T09:00:00Z",
+    rank: int | None = None,
+    subtype: str | None = "intact",
+) -> OrderKwargs:
+    """Construct a dictionary to be used in creating a
+    schema.OrderWithUser object."""  # noqa: D205, D209
+    return {
+        "platinum": platinum,
+        "type": order_type,
+        "updated_at": updated_at,
+        "rank": rank,
+        "subtype": subtype,
+    }
+
+
+def item_info_kwargs(max_rank: int | None = None) -> ItemKwargs:
+    """Construct a dictionary to be used in creating a schema.Item
+    object."""  # noqa: D205, D209
+    return {"max_rank": max_rank}
+
+
+def args_kwargs(
+    use_buyers: str = "sell",
+    radiant: Literal["intact", "radiant"] = "intact",
+    timerange: int = cli_parser.DEFAULT_TIME,
+    *,
+    maxrank: bool = False,
+) -> ArgsKwargs:
+    """Construct a dictionary to be used in-place of CLI arguments."""
+    return {
+        "use_buyers": use_buyers,
+        "maxrank": maxrank,
+        "radiant": radiant,
+        "timerange": timerange,
+    }
+
+
+@pytest.fixture
+def fixed_current_time() -> datetime.datetime:
+    """Fixture that returns a set datetime object."""
+    return datetime.datetime(2025, 7, 23, 10, 0, 0, 0, datetime.timezone.utc)
+
+
+user = schema.UserShort(
+    id="martin",
+    ingame_name="martin123",
+    reputation=1,
+    platform="ps4",
+    crossplay=True,
+)
+
+
+class TestFilterOrderProgrammatic:
+    test_cases: ClassVar[list[ParameterSet]] = [
+        pytest.param(
+            order_kwargs(),  # 100, sell, time, None (rank), None (subtype)
+            item_info_kwargs(),  # None (maxrank)
+            args_kwargs(),  # sell, intact, default_time, False (maxrank)
+            True,
+            # same order type, in timerange, no relic filter,
+            # not mod or arcane
+            id="all_passing_conditions",
+        ),
+        pytest.param(
+            order_kwargs(order_type="buy"),  # 100, buy, time, None(rank), None(subtype)
+            item_info_kwargs(),  # None (maxrank)
+            args_kwargs(),  # sell, intact, default_time, False (maxrank)
+            False,
+            # different order type. Should fail at that step in func
+            id="fail_different_order_type",
+        ),
+        pytest.param(
+            order_kwargs(rank=1),  # 100, buy, time, rank=1, None(subtype)
+            item_info_kwargs(max_rank=5),  # max_rank is 5
+            args_kwargs(maxrank=False),  # unranked
+            False,
+            id="fail_rank_mismatch_expected_unranked",
+        ),
+        pytest.param(
+            order_kwargs(rank=1),  # 100, buy, time, rank=1, None(subtype)
+            item_info_kwargs(max_rank=5),  # max_rank is 5
+            args_kwargs(maxrank=True),  # maxrank
+            False,
+            id="fail_rank_mismatch_expected_maxrank",
+        ),
+        pytest.param(
+            order_kwargs(updated_at="2025-07-08T09:00:00Z"),
+            item_info_kwargs(),
+            args_kwargs(timerange=10),
+            False,
+            id="fail_order_outside_timerange",
+        ),
+        pytest.param(
+            order_kwargs(updated_at="2025-07-13T09:00:00Z"),  # same as current_time
+            item_info_kwargs(),
+            args_kwargs(timerange=10),
+            True,
+            id="pass_order_time_eq_timerange",
+        ),
+        pytest.param(
+            order_kwargs(subtype="radiant"),  # radiant subtype
+            item_info_kwargs(),
+            args_kwargs(timerange=10),  # intact
+            False,
+            id="fail_relic_subtype_mismatch",
+        ),
+    ]
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        (
+            "order_kwargs",
+            "item_info_kwargs",
+            "args_kwargs",
+            "expected_result",
+        ),
+        test_cases,
+    )
+    def test_filter_order(
+        order_kwargs: OrderKwargs,
+        item_info_kwargs: ItemKwargs,
+        args_kwargs: ArgsKwargs,
+        fixed_current_time: datetime.datetime,
+        *,
+        expected_result: bool,
+    ) -> None:
+        """Test various objects in filter to see if they hold up."""
+        order = schema.OrderWithUser(
+            id="bob",
+            quantity=1,
+            created_at="2025-06-13T09:00:00Z",
+            item_id="joe",
+            user=user,
+            **order_kwargs,
+        )
+        item_info = schema.Item(id="gary", slug="foo", tags=[], **item_info_kwargs)
+        args = argparse.Namespace(**args_kwargs)
+
+        result = average.filter_order(order, item_info, fixed_current_time, args)
+        assert result == expected_result
 
 
 class TestFilterOrder:

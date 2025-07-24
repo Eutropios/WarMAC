@@ -127,7 +127,7 @@ def check_mod_arcane_rank(
     if order_rank is None or item_max_rank is None:
         # If there's a mismatch, we'll eval as if unranked
         return True
-    return order_rank == item_max_rank * use_maxrank
+    return order_rank == (item_max_rank if use_maxrank else 0)
 
 
 def check_relic_subtype(

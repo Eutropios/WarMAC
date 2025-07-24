@@ -143,7 +143,6 @@ class OrderResponse(ResponseBase, rename="camel"):
     error: str | None = None
 
 
-# Prune this class of irrelevant info
 class Item(Base, rename="camel"):
     """
     Full item model containing information about item.
