@@ -1,8 +1,8 @@
 """
 conf.py for Sphinx.
 
-Copyright (c) 2023 Noah Jenner under MIT License
-Please see LICENSE.txt for additional licensing information.
+Copyright (c) 2023 Noah Jenner under MIT License Please see LICENSE.txt
+for additional licensing information.
 
 Date of Creation: August 20, 2023
 """
