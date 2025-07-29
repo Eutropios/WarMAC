@@ -46,7 +46,7 @@
   repository    = "https://github.com/Eutropios/WarMAC"
 
 [dependency-groups]
-  dev = ["mypy", "pipdeptree", "ty", "vermin", "viztracer>=1.0.0"]
+  dev = ["mypy", "ty", "vermin", "viztracer>=1.0.0"]
   docs = [
     "docutils>=0.18.1",
     "esbonio>=0.16",

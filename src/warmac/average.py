@@ -26,36 +26,30 @@ Logic for average subcommand.
 from __future__ import annotations
 
 import datetime
-import statistics
 from typing import TYPE_CHECKING
 
-from warmac import cli_parser, errors, fetch_data, schema
+from warmac import config, errors, fetch_data, schema
 
 if TYPE_CHECKING:
     import argparse
-    from collections.abc import Callable, Mapping, Sequence
-    from typing import Literal
+    from typing import Literal, TypedDict
 
-    AverageKind = Literal["geometric", "mean", "median", "mode"]
+    class AverageReturn(TypedDict):
+        """
+        Data returned from average.process_data.
 
-# Convert to a match case when 3.9 EOL. Default case raises error
-AVG_FUNCS: Mapping[AverageKind, Callable[[Sequence[int]], float]] = {
-    "geometric": statistics.geometric_mean,
-    "mean": statistics.mean,
-    "median": statistics.median,
-    "mode": statistics.mode,
-}
+        :param stat: Calculated statistic.
+        :param plat_list: Filtered list of orders.
+        """
 
-#: An ISO-8601 timestamp of the current time retrieved on execution.
-CURR_TIME = datetime.datetime.now(datetime.timezone.utc)
-# When Python 3.10 EOL, change to:
-# CURR_TIME = datetime.datetime.now(datetime.UTC)
+        stat: float
+        plat_list: list[int]
 
 
 def calc_avg(
     plat_list: list[int],
-    statistic: AverageKind,
-    ndigits: int = cli_parser.DEFAULT_NDIGITS,
+    statistic: config.AverageKind,
+    ndigits: int = config.DEFAULT_NDIGITS,
 ) -> float:
     """
     Calculate the specified statistic for a list of prices.
@@ -68,7 +62,7 @@ def calc_avg(
     :param statistic: Statistic to be calculated.
     :param ndigits: Number of decimals to which the calculated
         statistic should be rounded, defaults to
-        :py:const:`cli_parser.DEFAULT_NDIGITS`.
+        :py:const:`config.DEFAULT_NDIGITS`.
     :raises warmac_errors.NoListingsFoundError: If ``plat_list`` has no
         contents.
     :return: Desired statistic of the specified item.
@@ -76,13 +70,13 @@ def calc_avg(
     # Handle errors
     if not plat_list:
         raise errors.NoListingsFoundError from None
-    return round(float(AVG_FUNCS[statistic](plat_list)), ndigits)
+    return round(float(config.AVG_FUNCS[statistic](plat_list)), ndigits)
 
 
 def in_time_range(
     last_updated: str,
     current_time: datetime.datetime,
-    time_range: int = cli_parser.DEFAULT_TIME,
+    time_range: int = config.DEFAULT_TIME,
 ) -> bool:
     """
     Check if order is younger than ``time_range`` days.
@@ -172,7 +166,9 @@ def filter_order(
     :param order: Order to be checked.
     :param item_info: Details about the item.
     :param current_time: Current time.
-    :param args: Command-line arguments provided by the user.
+    :param args: Command-line arguments provided by the user. Must have
+        the fields ``use_buyers``, ``maxrank``, ``radiant``, and
+        ``timerange``.
     :return: True if all specified conditions are met, False otherwise.
     """
     if order.type != args.use_buyers:
@@ -203,7 +199,9 @@ def filtered_plat_list(
         containing information about each individual order.
     :param item_info: Object containing information about the item.
     :param current_time: Current time.
-    :param args: User-given command line arguments.
+    :param args: User-given command line arguments. Must have
+        the fields ``statistic``, ``item``, ``porcelain``, and
+        ``timerange``.
     :return: List of the platinum prices from the filtered listings.
     """
     return [
@@ -211,56 +209,20 @@ def filtered_plat_list(
     ]
 
 
-def detailed_output(
-    stat: float, plat_list: list[int], args: argparse.Namespace
-) -> None:
-    """
-    Display the calculated statistic along with additional information.
-
-    Display the calculated statistic, along with the statistic used, the
-    timerange of the request, the maximum and minimum prices of the
-    orders, and the total number of orders that match the search
-    criteria. If ``args.porcelain` is True, separate the fields with a
-    single colon.
-
-    :param stat: Statistic of the item that was found.
-    :param plat_list: List of prices of the item.
-    :param args: User-given command line arguments.
-    """
-    # {value:{width}.{precision}}
-    statistic = AVG_FUNCS[args.statistic].__name__.replace("_", " ").title()
-    fixed_item_name = args.item.title().replace("_", " ").replace(" And ", " & ")
-    max_list = max(plat_list)
-    min_list = min(plat_list)
-    num_orders = len(plat_list)
-    if args.porcelain:
-        print(
-            f"{fixed_item_name}:{statistic}:{args.timerange}:{stat}:{min_list}:"
-            f"{max_list}:{num_orders}"
-        )
-    else:
-        space_after_label = 23
-        print(f"{'Item:':{space_after_label}}{fixed_item_name}")
-        print(f"{'Statistic Found:':{space_after_label}}{statistic}")
-        print(f"{'Time Range Used:':{space_after_label}}{args.timerange} days")
-        print(f"{f'{statistic} Price:':{space_after_label}}{stat} platinum")
-        print(f"{'Max Price:':{space_after_label}}{max_list:.0f} platinum")
-        print(f"{'Min Price:':{space_after_label}}{min_list:.0f} platinum")
-        print(f"{'Number of Orders:':{space_after_label}}{num_orders}")
-
-
-def main(
+def process_data(
     args: argparse.Namespace,
     http_headers: dict[str, str],
-    current_time: datetime.datetime = CURR_TIME,
-) -> None:
+    current_time: datetime.datetime = config.CURR_TIME,
+) -> AverageReturn:
     """
     Calculate average price of an item from warframe.market.
 
-    :param args: Parsed command-line args.
+    :param args: Parsed command-line args. Must have the fields
+        ``statistic``, ``item``, ``porcelain``, ``radiant``,
+        ``use_buyers``, ``maxrank``, and ``timerange``.
     :param http_headers: Headers to be used in the HTTP request.
     :param current_time: Current time, defaults to ``CURR_TIME``.
-    :return: Average price of item.
+    :return: Calculated statistic and filtered list of platinum.
     """
     # gotta do some error checking here
     item = args.item
@@ -268,4 +230,5 @@ def main(
     order_data = fetch_data.get_data(item, schema.OrderResponse, http_headers)
     plat_list = filtered_plat_list(order_data.data, item_data.data, current_time, args)
     stat = calc_avg(plat_list, args.statistic, args.ndigits)
-    print(stat) if not args.detailed_report else detailed_output(stat, plat_list, args)
+    return_dict: AverageReturn = {"stat": stat, "plat_list": plat_list}
+    return return_dict

@@ -31,14 +31,14 @@ from typing import TYPE_CHECKING
 # from unittest.mock import MagicMock, Mock
 import pytest
 
-from warmac import average, cli_parser, errors, schema
+from warmac import average, config, errors, schema
 
 if TYPE_CHECKING:
     from typing import ClassVar, Literal, TypedDict
 
     from _pytest.mark.structures import ParameterSet
 
-    from warmac.average import AverageKind
+    from warmac.config import AverageKind
 
     class OrderKwargs(TypedDict):
         platinum: int
@@ -112,10 +112,10 @@ class TestInTimeRange:
             ("2023-01-04T12:00:00+00:00", 7, True),
             ("2023-01-10T12:00:00+00:00", 0, True),
             ("2023-01-10T08:00:00+00:00", 0, True),
-            ("2023-01-04T12:00:00+00:00", cli_parser.DEFAULT_TIME, True),
+            ("2023-01-04T12:00:00+00:00", config.DEFAULT_TIME, True),
             # FALSE CASES
             ("2023-01-02T12:00:00+00:00", 7, False),
-            ("2022-12-30T12:00:00+00:00", cli_parser.DEFAULT_TIME, False),
+            ("2022-12-30T12:00:00+00:00", config.DEFAULT_TIME, False),
             ("2023-01-11T12:00:00+00:00", 7, False),
         ],
         ids=[
@@ -284,7 +284,7 @@ def item_info_kwargs(max_rank: int | None = None) -> ItemKwargs:
 def args_kwargs(
     use_buyers: str = "sell",
     radiant: Literal["intact", "radiant"] = "intact",
-    timerange: int = cli_parser.DEFAULT_TIME,
+    timerange: int = config.DEFAULT_TIME,
     *,
     maxrank: bool = False,
 ) -> ArgsKwargs:

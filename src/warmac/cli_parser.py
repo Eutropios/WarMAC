@@ -30,25 +30,11 @@ import shutil
 import sys
 from typing import TYPE_CHECKING
 
+from warmac import config
+
 if TYPE_CHECKING:
     from collections.abc import Generator
     from typing import Final, NoReturn
-
-
-# The default time to collect orders until
-DEFAULT_TIME = 10
-# The default number of digits to round to
-DEFAULT_NDIGITS = 1
-# The current version of WarMAC
-_VERSION = "0.0.5"
-
-http_headers: dict[str, str] = {
-    "Accept": "application/json",
-    "Accept-Language": "en",
-    "Content-Type": "application/json",
-    "Host": "api.warframe.market",
-    "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
-}
 
 
 class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
@@ -237,7 +223,7 @@ def create_parser() -> WarMACParser:
         "--version",
         action="version",
         help="Show the program's version number and exit.",
-        version=f"warmac {_VERSION}",
+        version=f"warmac {config.VERSION}",
     )
 
     # ======= Sub-Commands =======
@@ -265,8 +251,6 @@ def create_parser() -> WarMACParser:
     )
     # ---- Average default settings ----
 
-    # The statistic types that the average command can use
-    avg_funcs: Final = ("median", "mean", "mode", "geometric")
     # The minimum time that str_to_int_bounds_check checks against
     min_time_range: Final = 1
     # The maximum time that str_to_int_bounds_check checks against
@@ -290,13 +274,13 @@ def create_parser() -> WarMACParser:
 
     avg_parser.add_argument(
         "-s",
-        "--stats",
+        "--stat",
         default="median",
         type=lambda s: s.lower().strip(),
-        choices=avg_funcs,
+        choices=config.AVG_FUNCS,
         help=(
             "Specifies which statistic to return; Can be one of "
-            f"({', '.join(avg_funcs)}). (Default: median)"
+            f"({', '.join(config.AVG_FUNCS)}). (Default: median)"
         ),
         metavar="<stat>",
         dest="statistic",
@@ -334,12 +318,13 @@ def create_parser() -> WarMACParser:
     avg_parser.add_argument(
         "-t",
         "--timerange",
-        default=DEFAULT_TIME,
+        default=config.DEFAULT_TIME,
         type=lambda x: str_to_int_bounds_check(x, min_time_range, max_time_range),
         help=(
             "Number of days to consider for calculating the average. Value given "
             "indicates how far back to start the statistic's calculation. Must be in "
-            f"range [{min_time_range}, {max_time_range}). (Default: {DEFAULT_TIME})"
+            f"range [{min_time_range}, {max_time_range}). (Default: "
+            f"{config.DEFAULT_TIME})"
         ),
         metavar="<days>",
         dest="timerange",
@@ -389,11 +374,11 @@ def create_parser() -> WarMACParser:
     avg_parser.add_argument(
         "-n",
         "--ndigits",
-        default=DEFAULT_NDIGITS,
+        default=config.DEFAULT_NDIGITS,
         type=lambda x: str_to_int_bounds_check(x, min_ndigits, max_ndigits),
         help=(
             "Number of digits to round the statistic to. Must be in range "
-            f"[{min_ndigits}, {max_ndigits}). (Default: {DEFAULT_NDIGITS})"
+            f"[{min_ndigits}, {max_ndigits}). (Default: {config.DEFAULT_NDIGITS})"
         ),
         metavar="<ndigits>",
         dest="ndigits",
