@@ -534,6 +534,7 @@ class TestFormatOutput:
             item="Prime Warframe",
             porcelain=False,
             ndigits=config.DEFAULT_NDIGITS,
+            detailed_report=True,
         )
 
     @staticmethod
@@ -751,6 +752,7 @@ class TestFormatOutput:
         basic_args.statistic = "mean"
         basic_args.item = "Test Item"
         basic_args.ndigits = 0
+        basic_args.detailed_report = True
 
         basic_args.porcelain = False
         actual_output_detailed = average.format_output(
@@ -768,6 +770,17 @@ class TestFormatOutput:
         assert (
             f"Test Item:{stat_with_many_decimals}:100:200:2" == actual_output_porcelain
         )
+
+    @staticmethod
+    def test_format_non_detailed_report(basic_args: argparse.Namespace) -> None:
+        """Test that format_output only returns the calculated statistic
+        if args.detailed_report is False."""  # noqa: D205, D209
+        basic_args.detailed_report = False
+        statistic_value = 20
+        plat_list = [10, 20, 30]
+        actual_output = average.format_output(statistic_value, plat_list, basic_args)
+        expected_output = "20"
+        assert actual_output == expected_output
 
 
 class TestProcessData:

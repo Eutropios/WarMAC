@@ -215,6 +215,8 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
     :return: Return appropriately formatted string.
     """
     # {value:{width}.{precision}}
+    if not args.detailed_report:
+        return str(stat)
     statistic = (
         config.AVERAGE_FUNCTIONS[args.statistic].__name__.replace("_", " ").title()
     )
@@ -235,6 +237,21 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
     )
 
 
+def get_required_data(
+    item: str, http_headers: dict[str, str]
+) -> tuple[schema.ItemResponse, schema.OrderResponse]:
+    """
+    Retrieve the orders and metadata for an item.
+
+    :param item: Item to retrieve.
+    :param http_headers: Headers to be used in the HTTP request.
+    :return: The item's metadata and the orders associated with it.
+    """
+    item_data = fetch_data.get_data(item, schema.ItemResponse, http_headers)
+    order_data = fetch_data.get_data(item, schema.OrderResponse, http_headers)
+    return item_data, order_data
+
+
 def process_data(
     args: argparse.Namespace,
     http_headers: dict[str, str],
@@ -250,11 +267,7 @@ def process_data(
     :param current_time: Current time.
     :return: Calculated statistic.
     """
-    # gotta do some error checking here
-    item = args.item
-    item_data = fetch_data.get_data(item, schema.ItemResponse, http_headers)
-    order_data = fetch_data.get_data(item, schema.OrderResponse, http_headers)
+    item_data, order_data = get_required_data(args.item, http_headers)
     plat_list = filtered_plat_list(order_data.data, item_data.data, current_time, args)
     stat = calculate_average(plat_list, args.statistic, args.ndigits)
-    formatted_output = format_output(stat, plat_list, args)
-    return formatted_output if args.detailed_report else str(stat)
+    return format_output(stat, plat_list, args)
