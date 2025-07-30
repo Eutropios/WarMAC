@@ -183,15 +183,12 @@ def create_parser() -> WarMACParser:
 
     :return: Constructed :class:`.WarMACParser` object.
     """
-    # These two variables inherently involve state, so it doesn't make
-    # much sense to have them be passed in as parameters
     # Min width that help text should take up in usage
     help_min_width: Final = 34
     # Min value of help_min_width and terminal's width
     default_width = min(help_min_width, shutil.get_terminal_size().columns - 2)
     # Platforms the user can choose from
     platforms: Final = ("pc", "ps4", "xbox", "switch", "mobile")
-    # I'm already modifying state in this function. Just keep this here.
 
     parser = WarMACParser(
         usage="warmac <command> [options]",
@@ -277,10 +274,10 @@ def create_parser() -> WarMACParser:
         "--stat",
         default="median",
         type=lambda s: s.lower().strip(),
-        choices=config.AVG_FUNCS,
+        choices=config.AVERAGE_FUNCTIONS,
         help=(
             "Specifies which statistic to return; Can be one of "
-            f"({', '.join(config.AVG_FUNCS)}). (Default: median)"
+            f"({', '.join(config.AVERAGE_FUNCTIONS)}). (Default: median)"
         ),
         metavar="<stat>",
         dest="statistic",

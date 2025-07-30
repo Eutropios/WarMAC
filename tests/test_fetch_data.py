@@ -52,20 +52,20 @@ class TestItemUrl:
     @pytest.mark.parametrize(
         ("input_item", "expected_output"),
         [
-            ("Gauss Prime Set", "gauss_prime_set"),  # test space to _
-            ("Silva & aegis", "silva_and_aegis"),  # test & to and
-            ("  ack & BRUNT ", "ack_and_brunt"),  # test trim and lower
-            ("", ""),  # test empty string
-            ("   ", ""),  # test only spaces strips
-            ("&&&", "andandand"),  # test only ampersands
-            ("B1g (#_|NGv$ ", "b1g_(#_|ngv$"),  # test other chars unchanged
+            ("Gauss Prime Set", "gauss_prime_set"),
+            ("Silva & aegis", "silva_and_aegis"),
+            ("  ack & BRUNT ", "ack_and_brunt"),
+            ("", ""),
+            ("   ", ""),
+            ("&&&", "andandand"),  # cspell:disable-line
+            ("B1g (#_|NGv$ ", "b1g_(#_|ngv$"),
         ],
         ids=[
             "space_to_underscore",
             "ampersand_to_and",
             "strip_leading_spaces",
             "empty_str",
-            "sstrip_before_space_replace",
+            "sstrip_before_space_replace",  # cspell:disable-line
             "all_ampersand_to_and",
             "random_symbols",
         ],
@@ -248,10 +248,10 @@ class TestGetData:
         mock_http_response.data = mock_raw_data
         mock_get_page.return_value = mock_http_response
 
-        with pytest.raises(msgspec.ValidationError) as excinfo:
+        with pytest.raises(msgspec.ValidationError) as exc_info:
             fetch_data.get_data(test_item_name, schema.ItemResponse, http_headers)
 
-        assert "Object missing required field `apiVersion`" in str(excinfo.value)
+        assert "Object missing required field `apiVersion`" in str(exc_info.value)
 
         expected_url = self._get_expected_url(test_item_name, schema.ItemResponse)
         mock_get_page.assert_called_once_with(expected_url, http_headers=http_headers)
@@ -299,7 +299,7 @@ class TestGetPage:
         mock_response = mocker.MagicMock(spec=urllib3.BaseHTTPResponse)
         mock_response.status = status_code
         mocker.patch("urllib3.request", return_value=mock_response)
-        with pytest.raises(expected_error_type) as excinfo:
+        with pytest.raises(expected_error_type) as exc_info:
             fetch_data.get_page(
                 f"https://httpstat.us/{status_code}", http_headers=http_headers
             )
@@ -309,7 +309,7 @@ class TestGetPage:
                 f"Unknown Error - HTTP Code {status_code}: Please open a new issue on "
                 "the GitHub page (link in README.md file)."
             )
-            assert str(excinfo.value) == expected_message
+            assert str(exc_info.value) == expected_message
 
 
 class TestHTTPCodeCheck:
@@ -335,9 +335,9 @@ class TestHTTPCodeCheck:
     def test_http_code_check_raises_unknown_error_for_unmapped_code() -> None:
         """Verify http_code_check raises UnknownError for unmapped
         codes."""  # noqa: D205, D209
-        with pytest.raises(errors.UnknownError) as excinfo:
+        with pytest.raises(errors.UnknownError) as exc_info:
             fetch_data.http_code_check(499)
-        assert str(excinfo.value) == (
+        assert str(exc_info.value) == (
             "Unknown Error - HTTP Code 499: Please open a new issue on the GitHub page "
             "(link in README.md file)."
         )

@@ -28,7 +28,6 @@ import argparse
 import datetime
 from typing import TYPE_CHECKING
 
-# from unittest.mock import MagicMock, Mock
 import pytest
 
 from warmac import average, config, errors, schema
@@ -86,17 +85,17 @@ class TestCalcAvg:
             "mode_equal_occurrences",
         ],
     )
-    def test_calc_avg_parameterized(
+    def test_calculate_average_parameterized(
         plat_list: list[int], statistic: AverageKind, decimals: int, expected: float
     ) -> None:
-        """Test calc_avg with various inputs."""
-        assert average.calc_avg(plat_list, statistic, decimals) == expected
+        """Test calculate_average with various inputs."""
+        assert average.calculate_average(plat_list, statistic, decimals) == expected
 
     @staticmethod
-    def test_calc_avg_empty_list_raises_error() -> None:
+    def test_calculate_average_empty_list_raises_error() -> None:
         """Test that NoListingsFoundError is raised for empty list."""
         with pytest.raises(errors.NoListingsFoundError):
-            average.calc_avg([], "mean")
+            average.calculate_average([], "mean")
 
 
 class TestInTimeRange:
@@ -112,10 +111,10 @@ class TestInTimeRange:
             ("2023-01-04T12:00:00+00:00", 7, True),
             ("2023-01-10T12:00:00+00:00", 0, True),
             ("2023-01-10T08:00:00+00:00", 0, True),
-            ("2023-01-04T12:00:00+00:00", config.DEFAULT_TIME, True),
+            ("2023-01-04T12:00:00+00:00", 10, True),
             # FALSE CASES
             ("2023-01-02T12:00:00+00:00", 7, False),
-            ("2022-12-30T12:00:00+00:00", config.DEFAULT_TIME, False),
+            ("2022-12-30T12:00:00+00:00", 10, False),
             ("2023-01-11T12:00:00+00:00", 7, False),
         ],
         ids=[
@@ -525,9 +524,251 @@ class TestGetPlatList:
         assert result == expected_plat_list
 
 
-class TestOutput:
-    pass
+class TestFormatOutput:
+    @staticmethod
+    @pytest.fixture
+    def basic_args() -> argparse.Namespace:
+        """Construct basic argparse.Namespace object."""
+        return argparse.Namespace(
+            statistic="median",
+            item="Prime Warframe",
+            porcelain=False,
+            ndigits=config.DEFAULT_NDIGITS,
+        )
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("statistic", "item_name", "stat_value", "plat_list", "expected"),
+        [
+            (
+                "median",
+                "Braton Prime Set",
+                100.0,
+                [90, 95, 100, 105, 110],
+                "Median Price:          100.0 platinum",
+            ),
+            (
+                "mean",
+                "Serration",
+                50.5,
+                [48, 50, 52, 52, 60],
+                "Mean Price:            50.5 platinum",
+            ),
+            (
+                "mode",
+                "Gara Prime Blueprint",
+                75.0,
+                [70, 75, 75, 80],
+                "Mode Price:            75.0 platinum",
+            ),
+            (
+                "geometric",
+                "Axi A1 Relic",
+                60.0,
+                [50, 60, 72],
+                "Geometric Mean Price:  60.0 platinum",
+            ),
+            (
+                "mean",
+                "Andromeda And Andromeda",
+                12.3,
+                [10, 15],
+                "Item:                  Andromeda & Andromeda",
+            ),
+            (
+                "median",
+                "Single Item",
+                50.0,
+                [50],
+                "Min Price:             50 platinum\nNumber of Orders:      1",
+            ),
+            (
+                "mean",
+                "Precision Test",
+                123.45678,
+                [120, 126],
+                "Mean Price:            123.45678 platinum",
+            ),
+        ],
+        ids=[
+            "median_stat",
+            "mean_stat",
+            "mode_stat",
+            "geometric_stat",
+            "and_replacement",
+            "single-item_list",
+            "precision_gt_two",
+        ],
+    )
+    def test_detailed_output(  # noqa: PLR0913, PLR0917
+        statistic: AverageKind,
+        item_name: str,
+        stat_value: float,
+        plat_list: list[int],
+        expected: str,
+        basic_args: argparse.Namespace,
+    ) -> None:
+        """Test detailed output against various statistics and item."""
+        basic_args.statistic = statistic
+        basic_args.item = item_name
+        basic_args.porcelain = False
+
+        actual_output = average.format_output(stat_value, plat_list, basic_args)
+
+        fixed_item_name = item_name.title().replace("_", " ").replace(" And ", " & ")
+        max_price = max(plat_list)
+        min_price = min(plat_list)
+        num_orders = len(plat_list)
+
+        assert f"Item:                  {fixed_item_name}" in actual_output
+        assert expected in actual_output
+        assert f"Max Price:             {max_price:.0f} platinum" in actual_output
+        assert f"Min Price:             {min_price:.0f} platinum" in actual_output
+        assert f"Number of Orders:      {num_orders}" in actual_output
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        ("statistic_type", "item_name", "stat_value", "plat_list", "expected_output"),
+        [
+            (
+                "median",
+                "Atlas Prime Set",
+                100.0,
+                [90, 95, 100, 105, 110],
+                "Atlas Prime Set:100.0:90:110:5",
+            ),
+            (
+                "mean",
+                "Steel Meridian Sigil",
+                25.5,
+                [20, 25, 30, 26],
+                "Steel Meridian Sigil:25.5:20:30:4",
+            ),
+            (
+                "geometric",
+                "Octavia Neuroptics",
+                123.45,
+                [100, 150],
+                "Octavia Neuroptics:123.45:100:150:2",
+            ),
+            (
+                "mode",
+                "Axi L1 Relic",
+                40.0,
+                [30, 40, 40, 50],
+                "Axi L1 Relic:40.0:30:50:4",
+            ),
+            ("mean", "Red And Blue", 7.0, [5, 7, 9], "Red & Blue:7.0:5:9:3"),
+            ("median", "Solo Item", 70.0, [70], "Solo Item:70.0:70:70:1"),
+            (
+                "mean",
+                "Some Item",
+                987.654321,
+                [900, 1000],
+                "Some Item:987.654321:900:1000:2",
+            ),
+        ],
+        ids=[
+            "median_stat",
+            "mean_stat",
+            "geometric_stat",
+            "mode_stat",
+            "and_replacement",
+            "single-item_list",
+            "precision_gt_two",
+        ],
+    )
+    def test_porcelain_output(  # noqa: PLR0913, PLR0917
+        statistic_type: AverageKind,
+        item_name: str,
+        stat_value: float,
+        plat_list: list[int],
+        expected_output: str,
+        basic_args: argparse.Namespace,
+    ) -> None:
+        """Test the porcelain output format."""
+        basic_args.statistic = statistic_type
+        basic_args.item = item_name
+        basic_args.porcelain = True
+
+        actual_output = average.format_output(stat_value, plat_list, basic_args)
+        assert actual_output == expected_output
+
+    @staticmethod
+    def test_empty_plat_list_raises_error(basic_args: argparse.Namespace) -> None:
+        """
+        Test that error is raised if format_output is given empty list.
+
+        It should be noted that format_output should not be called with
+        an empty plat_list, as calculate_average would raise an error
+        and cause the program to exit.
+        """
+        stat = 0.0
+        plat_list: list[int] = []
+        basic_args.item = "Nonexistent Item"
+
+        with pytest.raises(ValueError, match=r"max\(\) iterable argument is empty"):
+            average.format_output(stat, plat_list, basic_args)
+
+    @staticmethod
+    def test_stat_is_integer_detailed(basic_args: argparse.Namespace) -> None:
+        """Test that detailed format_output still functions when the
+        calculated stat is an integer."""  # noqa: D205, D209
+        stat = 150
+        plat_list = [140, 150, 160]
+        basic_args.statistic = "median"
+        basic_args.item = "Int Stat Item"
+        basic_args.porcelain = False
+
+        expected_output = (
+            "Item:                  Int Stat Item\n"
+            "Median Price:          150 platinum\n"
+            "Max Price:             160 platinum\n"
+            "Min Price:             140 platinum\n"
+            "Number of Orders:      3"
+        )
+        assert average.format_output(stat, plat_list, basic_args) == expected_output
+
+    @staticmethod
+    def test_stat_is_integer_porcelain(basic_args: argparse.Namespace) -> None:
+        """Test that porcelain format_output still functions when the
+        calculated stat is an integer."""  # noqa: D205, D209
+        stat = 150
+        plat_list = [140, 150, 160]
+        basic_args.statistic = "median"
+        basic_args.item = "Int Stat Item"
+        basic_args.porcelain = True
+
+        expected_output = "Int Stat Item:150:140:160:3"
+        assert average.format_output(stat, plat_list, basic_args) == expected_output
+
+    @staticmethod
+    def test_ndigits_no_effect_on_stat_display(basic_args: argparse.Namespace) -> None:
+        """Test that float input is unaffected by ndigits when calc_avg
+        is skipped."""  # noqa: D205, D209
+        stat_with_many_decimals = 123.456789
+        plat_list = [100, 200]
+        basic_args.statistic = "mean"
+        basic_args.item = "Test Item"
+        basic_args.ndigits = 0
+
+        basic_args.porcelain = False
+        actual_output_detailed = average.format_output(
+            stat_with_many_decimals, plat_list, basic_args
+        )
+        assert (
+            f"Mean Price:            {stat_with_many_decimals} platinum"
+            in actual_output_detailed
+        )
+
+        basic_args.porcelain = True
+        actual_output_porcelain = average.format_output(
+            stat_with_many_decimals, plat_list, basic_args
+        )
+        assert (
+            f"Test Item:{stat_with_many_decimals}:100:200:2" == actual_output_porcelain
+        )
 
 
-class TestAverageMain:
+class TestProcessData:
     pass

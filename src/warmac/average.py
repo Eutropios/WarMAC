@@ -32,21 +32,10 @@ from warmac import config, errors, fetch_data, schema
 
 if TYPE_CHECKING:
     import argparse
-    from typing import Literal, TypedDict
-
-    class AverageReturn(TypedDict):
-        """
-        Data returned from average.process_data.
-
-        :param stat: Calculated statistic.
-        :param plat_list: Filtered list of orders.
-        """
-
-        stat: float
-        plat_list: list[int]
+    from typing import Literal
 
 
-def calc_avg(
+def calculate_average(
     plat_list: list[int],
     statistic: config.AverageKind,
     ndigits: int = config.DEFAULT_NDIGITS,
@@ -70,7 +59,7 @@ def calc_avg(
     # Handle errors
     if not plat_list:
         raise errors.NoListingsFoundError from None
-    return round(float(config.AVG_FUNCS[statistic](plat_list)), ndigits)
+    return round(float(config.AVERAGE_FUNCTIONS[statistic](plat_list)), ndigits)
 
 
 def in_time_range(
@@ -88,7 +77,7 @@ def in_time_range(
         last updated.
     :param current_time: Current UTC time.
     :param time_range: Maximum age, in days, that an order can be to
-        be accepted, defaults to :py:const:`cli_parser.DEFAULT_TIME`.
+        be accepted, defaults to :py:const:`config.DEFAULT_TIME`.
     :return: True if ``last_updated ≤ time_range``, False if
         ``last_updated > time_range``.
     """
@@ -107,7 +96,7 @@ def check_mod_arcane_rank(
 
     Check if an order's rank equals the rank specified by the user. If
     the item isn't a mod or arcane, ``order_rank`` and ``item_max_rank``
-    should both be ``None``. If only one of ``order_rank`` and
+    should both be ``None``. If either ``order_rank`` or
     ``item_max_rank`` is ``None``, then True will be returned.
     :param order_rank: Rank of the order.
     :param item_max_rank: Maximum possible rank for the item.
@@ -209,11 +198,48 @@ def filtered_plat_list(
     ]
 
 
+def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -> str:
+    """
+    Format the calculated statistic along with additional information.
+
+    Format the calculated statistic, along with the maximum and minimum
+    prices of the orders, and the total number of orders that match the
+    search criteria. If ``args.porcelain` is True, separate the fields
+    with a single colon.
+
+    :param stat: Statistic of the item that was found.
+    :param plat_list: List of prices of the item.
+    :param args: User-given command line arguments. Must have
+        the fields ``statistic``, ``item``, ``porcelain``, and
+        ``timerange``.
+    :return: Return appropriately formatted string.
+    """
+    # {value:{width}.{precision}}
+    statistic = (
+        config.AVERAGE_FUNCTIONS[args.statistic].__name__.replace("_", " ").title()
+    )
+    fixed_item_name = args.item.title().replace("_", " ").replace(" And ", " & ")
+    max_list = max(plat_list)
+    min_list = min(plat_list)
+    num_orders = len(plat_list)
+    if args.porcelain:
+        return f"{fixed_item_name}:{stat}:{min_list}:{max_list}:{num_orders}"
+
+    space_after_label = 23
+    return (
+        f"{'Item:':{space_after_label}}{fixed_item_name}\n"
+        f"{f'{statistic} Price:':{space_after_label}}{stat} platinum\n"
+        f"{'Max Price:':{space_after_label}}{max_list:.0f} platinum\n"
+        f"{'Min Price:':{space_after_label}}{min_list:.0f} platinum\n"
+        f"{'Number of Orders:':{space_after_label}}{num_orders}"
+    )
+
+
 def process_data(
     args: argparse.Namespace,
     http_headers: dict[str, str],
-    current_time: datetime.datetime = config.CURR_TIME,
-) -> AverageReturn:
+    current_time: datetime.datetime,
+) -> str:
     """
     Calculate average price of an item from warframe.market.
 
@@ -221,14 +247,14 @@ def process_data(
         ``statistic``, ``item``, ``porcelain``, ``radiant``,
         ``use_buyers``, ``maxrank``, and ``timerange``.
     :param http_headers: Headers to be used in the HTTP request.
-    :param current_time: Current time, defaults to ``CURR_TIME``.
-    :return: Calculated statistic and filtered list of platinum.
+    :param current_time: Current time.
+    :return: Calculated statistic.
     """
     # gotta do some error checking here
     item = args.item
     item_data = fetch_data.get_data(item, schema.ItemResponse, http_headers)
     order_data = fetch_data.get_data(item, schema.OrderResponse, http_headers)
     plat_list = filtered_plat_list(order_data.data, item_data.data, current_time, args)
-    stat = calc_avg(plat_list, args.statistic, args.ndigits)
-    return_dict: AverageReturn = {"stat": stat, "plat_list": plat_list}
-    return return_dict
+    stat = calculate_average(plat_list, args.statistic, args.ndigits)
+    formatted_output = format_output(stat, plat_list, args)
+    return formatted_output if args.detailed_report else str(stat)

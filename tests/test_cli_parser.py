@@ -146,13 +146,13 @@ class TestHandleInputInterface:
         input_args: list[str] | None, expected_exit_code: int
     ) -> None:
         """Test command-line inputs to ensure correct exit code."""
-        with pytest.raises(SystemExit) as excinfo:
+        with pytest.raises(SystemExit) as exc_info:
             (
                 cli_parser.handle_input()
                 if input_args is None
                 else cli_parser.handle_input(input_args)
             )
-        assert excinfo.value.code == expected_exit_code
+        assert exc_info.value.code == expected_exit_code
 
     @staticmethod
     def test_valid_command_returns_parsed_args() -> None:

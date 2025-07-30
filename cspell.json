@@ -1,0 +1,43 @@
+{
+    "allowCompoundWords": false,
+    "dictionaries": [
+        "en",
+        "en-GB",
+        "en-US",
+        "lorem"
+    ],
+    "files": [
+        ".git/COMMIT_EDITMSG",
+        "docs/**",
+        "README.md",
+        "src/**",
+        "tests/**"
+    ],
+    "version": "0.2",
+    "words": [
+        "Braton",
+        "crossplay",
+        "docformatter",
+        "endo",
+        "eutropios",
+        "Gara",
+        "ingame",
+        "maxrank",
+        "metavars",
+        "mypy",
+        "ndigits",
+        "neuroptics",
+        "pipx",
+        "pyproject",
+        "Reimplementations",
+        "subactions",
+        "subcmd",
+        "taplo",
+        "timerange",
+        "unranked",
+        "vosfor",
+        "warframe",
+        "warmac",
+        "WarMACHTTPError"
+    ]
+}
