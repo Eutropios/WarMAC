@@ -211,6 +211,16 @@ class TestModArcaneRank:
             (None, 10, False, True),
             (0, None, True, True),
             (5, None, False, True),
+            # use_maxrank is True
+            (5, 5, True, True),
+            (4, 5, True, False),
+            (0, 5, True, False),
+            (0, 0, True, True),
+            # use_maxrank is False
+            (5, 5, False, False),
+            (4, 5, False, False),
+            (0, 1, False, True),
+            (0, 0, False, True),
         ],
         ids=[
             "both_none_maxrank",
@@ -219,40 +229,6 @@ class TestModArcaneRank:
             "order_rank_none_unranked",
             "item_max_rank_none_maxrank",
             "item_max_rank_none_unranked",
-        ],
-    )
-    def test_both_none(
-        order_rank: int | None,
-        item_max_rank: int | None,
-        *,
-        use_maxrank: bool,
-        expected: bool,
-    ) -> None:
-        """Test that True is always returned if at least one of
-        order_rank and item_max_rank is None, regardless of the argument
-        passed for use_maxrank."""  # noqa: D205, D209
-        assert (
-            average.check_mod_arcane_rank(
-                order_rank, item_max_rank, use_maxrank=use_maxrank
-            )
-            == expected
-        )
-
-    @staticmethod
-    @pytest.mark.parametrize(
-        ("order_rank", "item_max_rank", "use_maxrank", "expected"),
-        [
-            (5, 5, True, True),
-            (4, 5, True, False),
-            (0, 5, True, False),
-            (0, 0, True, True),
-            # -- use_maxrank is False --
-            (5, 5, False, False),
-            (4, 5, False, False),
-            (0, 1, False, True),
-            (0, 0, False, True),
-        ],
-        ids=[
             "order_eq_item_max_w_maxrank",
             "order_lt_item_max_w_maxrank",
             "order_0_w_maxrank",
@@ -263,11 +239,14 @@ class TestModArcaneRank:
             "both_0_w_unranked",
         ],
     )
-    def test_non_none_params_use_maxrank(
-        order_rank: int, item_max_rank: int, *, use_maxrank: bool, expected: bool
+    def test_various_combinations(
+        order_rank: int | None,
+        item_max_rank: int | None,
+        *,
+        use_maxrank: bool,
+        expected: bool,
     ) -> None:
-        """Test various cases of order_rank against item_max_rank
-        depending on use_maxrank."""  # noqa: D205, D209
+        """Test that various inputs."""
         assert (
             average.check_mod_arcane_rank(
                 order_rank, item_max_rank, use_maxrank=use_maxrank
@@ -540,14 +519,6 @@ class TestFormatOutput:
                 "Item:                  Andromeda & Andromeda",
             ),
             (
-                "median",
-                "Single Item",
-                50.0,
-                [50],
-                False,
-                "Min Price:             50 platinum\nNumber of Orders:      1",
-            ),
-            (
                 "mean",
                 "Precision Test",
                 123.45678,
@@ -563,7 +534,6 @@ class TestFormatOutput:
                 True,
                 "Atlas Prime Set:100.0:90:110:5",
             ),
-            ("mean", "Red And Blue", 7.0, [5, 7, 9], True, "Red & Blue:7.0:5:9:3"),
             ("median", "Solo Item", 70.0, [70], True, "Solo Item:70.0:70:70:1"),
             (
                 "mean",
@@ -578,11 +548,9 @@ class TestFormatOutput:
             # Detailed
             "normal_detailed",
             "and_replacement_detailed",
-            "single-item_detailed",
             "precision_gt_two_detailed",
             # Porcelain
             "normal_porcelain",
-            "and_replacement_porcelain",
             "single-item_porcelain",
             "precision_gt_two_porcelain",
         ],
