@@ -98,13 +98,6 @@ class TestGetData:
         """Test that strings in the SCHEMA_TO_URL dict are correct."""
         assert fetch_data.SCHEMA_TO_URL[schema_type] == expected_url_fragment
 
-    @staticmethod
-    @pytest.fixture
-    def mock_get_page(mocker: MagicMock) -> object:
-        """Fixture that patches fetch_data.get_page, preventing real
-        HTTP requests during tests."""  # noqa: D205, D209
-        return mocker.patch("warmac.fetch_data.get_page")
-
     def test_get_data_success_item_response(self, mock_get_page: MagicMock) -> None:
         """Verify get_data successfully fetches and decodes requested
         data for an ItemResponse."""  # noqa: D205, D209

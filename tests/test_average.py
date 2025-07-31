@@ -34,6 +34,7 @@ from warmac import average, config, errors, schema
 
 if TYPE_CHECKING:
     from typing import ClassVar, Literal, TypedDict
+    from unittest.mock import Mock
 
     from _pytest.mark.structures import ParameterSet
 
@@ -54,6 +55,55 @@ if TYPE_CHECKING:
 
     class ItemKwargs(TypedDict):
         max_rank: int | None
+
+
+def order_kwargs(
+    platinum: int = 100,
+    order_type: str = "sell",
+    updated_at: str = "2025-07-23T09:00:00Z",
+    rank: int | None = None,
+    subtype: str | None = "intact",
+) -> OrderKwargs:
+    """Construct a dictionary to be used in creating a
+    schema.OrderWithUser object."""  # noqa: D205, D209
+    return {
+        "platinum": platinum,
+        "type": order_type,
+        "updated_at": updated_at,
+        "rank": rank,
+        "subtype": subtype,
+    }
+
+
+def item_info_kwargs(max_rank: int | None = None) -> ItemKwargs:
+    """Construct a dictionary to be used in creating a schema.Item
+    object."""  # noqa: D205, D209
+    return {"max_rank": max_rank}
+
+
+def args_kwargs(
+    use_buyers: str = "sell",
+    radiant: Literal["intact", "radiant"] = "intact",
+    timerange: int = config.DEFAULT_TIME,
+    *,
+    maxrank: bool = False,
+) -> ArgsKwargs:
+    """Construct a dictionary to be used in-place of CLI arguments."""
+    return {
+        "use_buyers": use_buyers,
+        "maxrank": maxrank,
+        "radiant": radiant,
+        "timerange": timerange,
+    }
+
+
+user = schema.UserShort(
+    id="martin",
+    ingame_name="martin123",
+    reputation=1,
+    platform="ps4",
+    crossplay=True,
+)
 
 
 class TestCalcAvg:
@@ -254,61 +304,6 @@ class TestRelicSubtype:
         """Test various combinations of subtype and use_radiant."""
         result = average.check_relic_subtype(subtype, use_radiant)
         assert result == expected
-
-
-def order_kwargs(
-    platinum: int = 100,
-    order_type: str = "sell",
-    updated_at: str = "2025-07-23T09:00:00Z",
-    rank: int | None = None,
-    subtype: str | None = "intact",
-) -> OrderKwargs:
-    """Construct a dictionary to be used in creating a
-    schema.OrderWithUser object."""  # noqa: D205, D209
-    return {
-        "platinum": platinum,
-        "type": order_type,
-        "updated_at": updated_at,
-        "rank": rank,
-        "subtype": subtype,
-    }
-
-
-def item_info_kwargs(max_rank: int | None = None) -> ItemKwargs:
-    """Construct a dictionary to be used in creating a schema.Item
-    object."""  # noqa: D205, D209
-    return {"max_rank": max_rank}
-
-
-def args_kwargs(
-    use_buyers: str = "sell",
-    radiant: Literal["intact", "radiant"] = "intact",
-    timerange: int = config.DEFAULT_TIME,
-    *,
-    maxrank: bool = False,
-) -> ArgsKwargs:
-    """Construct a dictionary to be used in-place of CLI arguments."""
-    return {
-        "use_buyers": use_buyers,
-        "maxrank": maxrank,
-        "radiant": radiant,
-        "timerange": timerange,
-    }
-
-
-@pytest.fixture
-def fixed_current_time() -> datetime.datetime:
-    """Fixture that returns a set datetime object."""
-    return datetime.datetime(2025, 7, 23, 10, 0, 0, 0, datetime.timezone.utc)
-
-
-user = schema.UserShort(
-    id="martin",
-    ingame_name="martin123",
-    reputation=1,
-    platform="ps4",
-    crossplay=True,
-)
 
 
 class TestFilterOrderProgrammatic:
@@ -525,18 +520,6 @@ class TestGetPlatList:
 
 
 class TestFormatOutput:
-    @staticmethod
-    @pytest.fixture
-    def basic_args() -> argparse.Namespace:
-        """Construct basic argparse.Namespace object."""
-        return argparse.Namespace(
-            statistic="median",
-            item="Prime Warframe",
-            porcelain=False,
-            ndigits=config.DEFAULT_NDIGITS,
-            detailed_report=True,
-        )
-
     @staticmethod
     @pytest.mark.parametrize(
         ("statistic", "item_name", "stat_value", "plat_list", "expected"),
@@ -783,5 +766,68 @@ class TestFormatOutput:
         assert actual_output == expected_output
 
 
+class TestGetRequiredData:
+    @staticmethod
+    def test_get_required_data_success(
+        mocker: Mock,
+        mock_item_response: schema.ItemResponse,
+        mock_order_response: schema.OrderResponse,
+        mock_http_headers: dict[str, str],
+    ) -> None:
+        """Test that get_required_data successfully calls fetch_data
+        twice and returns the expected tuple of data."""  # noqa: D205, D209
+        mock_get_data = mocker.patch("warmac.fetch_data.get_data")
+        mock_get_data.side_effect = [mock_item_response, mock_order_response]
+
+        item_name = "mock_item"
+        item_data, order_data = average.get_required_data(item_name, mock_http_headers)
+        assert mock_get_data.call_count == 2  # noqa: PLR2004
+        mock_get_data.assert_has_calls([
+            mocker.call(item_name, schema.ItemResponse, mock_http_headers),
+            mocker.call(item_name, schema.OrderResponse, mock_http_headers),
+        ])
+        assert item_data == mock_item_response
+        assert order_data == mock_order_response
+
+
 class TestProcessData:
-    pass
+    @staticmethod
+    def test_process_data_success(  # noqa: PLR0913, PLR0917
+        mocker: Mock,
+        mock_args: argparse.Namespace,
+        mock_http_headers: dict[str, str],
+        fixed_current_time: datetime.datetime,
+        mock_item_response: schema.ItemResponse,
+        mock_order_response: schema.OrderResponse,
+    ) -> None:
+        """Test that process_data correctly calculates and formats the
+        output with valid data."""  # noqa: D205, D209
+        mocker.patch(
+            "warmac.average.get_required_data",
+            return_value=(mock_item_response, mock_order_response),
+        )
+
+        result = average.process_data(mock_args, mock_http_headers, fixed_current_time)
+
+        # Assert that the final result is correct
+        assert result == "110.0"
+
+    @staticmethod
+    def test_process_data_no_listings_found(  # noqa: PLR0913, PLR0917
+        mocker: Mock,
+        mock_args: argparse.Namespace,
+        mock_http_headers: dict[str, str],
+        fixed_current_time: datetime.datetime,
+        mock_item_response: schema.ItemResponse,
+        mock_order_response: schema.OrderResponse,
+    ) -> None:
+        """Test that process_data raises NoListingsFoundError when
+        filtered platinum list is empty."""  # noqa: D205, D209
+        mocker.patch(
+            "warmac.average.get_required_data",
+            return_value=(mock_item_response, mock_order_response),
+        )
+        mocker.patch("warmac.average.filtered_plat_list", return_value=[])
+
+        with pytest.raises(errors.NoListingsFoundError):
+            average.process_data(mock_args, mock_http_headers, fixed_current_time)
