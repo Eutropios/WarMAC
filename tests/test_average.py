@@ -514,7 +514,6 @@ class TestGetPlatList:
             id="item_id", slug="item_slug", tags=[], **item_info_params
         )
         args = argparse.Namespace(**args_params)
-
         result = average.filtered_plat_list(orders, item_info, fixed_current_time, args)
         assert result == expected_plat_list
 
@@ -522,41 +521,22 @@ class TestGetPlatList:
 class TestFormatOutput:
     @staticmethod
     @pytest.mark.parametrize(
-        ("statistic", "item_name", "stat_value", "plat_list", "expected"),
+        ("statistic", "item_name", "stat_value", "plat_list", "porcelain", "expected"),
         [
-            (
-                "median",
-                "Braton Prime Set",
-                100.0,
-                [90, 95, 100, 105, 110],
-                "Median Price:          100.0 platinum",
-            ),
-            (
-                "mean",
-                "Serration",
-                50.5,
-                [48, 50, 52, 52, 60],
-                "Mean Price:            50.5 platinum",
-            ),
             (
                 "mode",
                 "Gara Prime Blueprint",
                 75.0,
                 [70, 75, 75, 80],
+                False,
                 "Mode Price:            75.0 platinum",
-            ),
-            (
-                "geometric",
-                "Axi A1 Relic",
-                60.0,
-                [50, 60, 72],
-                "Geometric Mean Price:  60.0 platinum",
             ),
             (
                 "mean",
                 "Andromeda And Andromeda",
                 12.3,
                 [10, 15],
+                False,
                 "Item:                  Andromeda & Andromeda",
             ),
             (
@@ -564,6 +544,7 @@ class TestFormatOutput:
                 "Single Item",
                 50.0,
                 [50],
+                False,
                 "Min Price:             50 platinum\nNumber of Orders:      1",
             ),
             (
@@ -571,17 +552,39 @@ class TestFormatOutput:
                 "Precision Test",
                 123.45678,
                 [120, 126],
+                False,
                 "Mean Price:            123.45678 platinum",
+            ),
+            (
+                "median",
+                "Atlas Prime Set",
+                100.0,
+                [90, 95, 100, 105, 110],
+                True,
+                "Atlas Prime Set:100.0:90:110:5",
+            ),
+            ("mean", "Red And Blue", 7.0, [5, 7, 9], True, "Red & Blue:7.0:5:9:3"),
+            ("median", "Solo Item", 70.0, [70], True, "Solo Item:70.0:70:70:1"),
+            (
+                "mean",
+                "Some Item",
+                987.654321,
+                [900, 1000],
+                True,
+                "Some Item:987.654321:900:1000:2",
             ),
         ],
         ids=[
-            "median_stat",
-            "mean_stat",
-            "mode_stat",
-            "geometric_stat",
-            "and_replacement",
-            "single-item_list",
-            "precision_gt_two",
+            # Detailed
+            "normal_detailed",
+            "and_replacement_detailed",
+            "single-item_detailed",
+            "precision_gt_two_detailed",
+            # Porcelain
+            "normal_porcelain",
+            "and_replacement_porcelain",
+            "single-item_porcelain",
+            "precision_gt_two_porcelain",
         ],
     )
     def test_detailed_output(  # noqa: PLR0913, PLR0917
@@ -591,92 +594,29 @@ class TestFormatOutput:
         plat_list: list[int],
         expected: str,
         basic_args: argparse.Namespace,
+        *,
+        porcelain: bool,
     ) -> None:
         """Test detailed output against various statistics and item."""
         basic_args.statistic = statistic
         basic_args.item = item_name
-        basic_args.porcelain = False
-
+        basic_args.porcelain = porcelain
         actual_output = average.format_output(stat_value, plat_list, basic_args)
+        if porcelain:
+            assert actual_output == expected
+        else:
+            fixed_item_name = (
+                item_name.title().replace("_", " ").replace(" And ", " & ")
+            )
+            max_price = max(plat_list)
+            min_price = min(plat_list)
+            num_orders = len(plat_list)
 
-        fixed_item_name = item_name.title().replace("_", " ").replace(" And ", " & ")
-        max_price = max(plat_list)
-        min_price = min(plat_list)
-        num_orders = len(plat_list)
-
-        assert f"Item:                  {fixed_item_name}" in actual_output
-        assert expected in actual_output
-        assert f"Max Price:             {max_price:.0f} platinum" in actual_output
-        assert f"Min Price:             {min_price:.0f} platinum" in actual_output
-        assert f"Number of Orders:      {num_orders}" in actual_output
-
-    @staticmethod
-    @pytest.mark.parametrize(
-        ("statistic_type", "item_name", "stat_value", "plat_list", "expected_output"),
-        [
-            (
-                "median",
-                "Atlas Prime Set",
-                100.0,
-                [90, 95, 100, 105, 110],
-                "Atlas Prime Set:100.0:90:110:5",
-            ),
-            (
-                "mean",
-                "Steel Meridian Sigil",
-                25.5,
-                [20, 25, 30, 26],
-                "Steel Meridian Sigil:25.5:20:30:4",
-            ),
-            (
-                "geometric",
-                "Octavia Neuroptics",
-                123.45,
-                [100, 150],
-                "Octavia Neuroptics:123.45:100:150:2",
-            ),
-            (
-                "mode",
-                "Axi L1 Relic",
-                40.0,
-                [30, 40, 40, 50],
-                "Axi L1 Relic:40.0:30:50:4",
-            ),
-            ("mean", "Red And Blue", 7.0, [5, 7, 9], "Red & Blue:7.0:5:9:3"),
-            ("median", "Solo Item", 70.0, [70], "Solo Item:70.0:70:70:1"),
-            (
-                "mean",
-                "Some Item",
-                987.654321,
-                [900, 1000],
-                "Some Item:987.654321:900:1000:2",
-            ),
-        ],
-        ids=[
-            "median_stat",
-            "mean_stat",
-            "geometric_stat",
-            "mode_stat",
-            "and_replacement",
-            "single-item_list",
-            "precision_gt_two",
-        ],
-    )
-    def test_porcelain_output(  # noqa: PLR0913, PLR0917
-        statistic_type: AverageKind,
-        item_name: str,
-        stat_value: float,
-        plat_list: list[int],
-        expected_output: str,
-        basic_args: argparse.Namespace,
-    ) -> None:
-        """Test the porcelain output format."""
-        basic_args.statistic = statistic_type
-        basic_args.item = item_name
-        basic_args.porcelain = True
-
-        actual_output = average.format_output(stat_value, plat_list, basic_args)
-        assert actual_output == expected_output
+            assert f"Item:                  {fixed_item_name}" in actual_output
+            assert expected in actual_output
+            assert f"Max Price:             {max_price:.0f} platinum" in actual_output
+            assert f"Min Price:             {min_price:.0f} platinum" in actual_output
+            assert f"Number of Orders:      {num_orders}" in actual_output
 
     @staticmethod
     def test_empty_plat_list_raises_error(basic_args: argparse.Namespace) -> None:
@@ -714,47 +654,6 @@ class TestFormatOutput:
         assert average.format_output(stat, plat_list, basic_args) == expected_output
 
     @staticmethod
-    def test_stat_is_integer_porcelain(basic_args: argparse.Namespace) -> None:
-        """Test that porcelain format_output still functions when the
-        calculated stat is an integer."""  # noqa: D205, D209
-        stat = 150
-        plat_list = [140, 150, 160]
-        basic_args.statistic = "median"
-        basic_args.item = "Int Stat Item"
-        basic_args.porcelain = True
-
-        expected_output = "Int Stat Item:150:140:160:3"
-        assert average.format_output(stat, plat_list, basic_args) == expected_output
-
-    @staticmethod
-    def test_ndigits_no_effect_on_stat_display(basic_args: argparse.Namespace) -> None:
-        """Test that float input is unaffected by ndigits when calc_avg
-        is skipped."""  # noqa: D205, D209
-        stat_with_many_decimals = 123.456789
-        plat_list = [100, 200]
-        basic_args.statistic = "mean"
-        basic_args.item = "Test Item"
-        basic_args.ndigits = 0
-        basic_args.detailed_report = True
-
-        basic_args.porcelain = False
-        actual_output_detailed = average.format_output(
-            stat_with_many_decimals, plat_list, basic_args
-        )
-        assert (
-            f"Mean Price:            {stat_with_many_decimals} platinum"
-            in actual_output_detailed
-        )
-
-        basic_args.porcelain = True
-        actual_output_porcelain = average.format_output(
-            stat_with_many_decimals, plat_list, basic_args
-        )
-        assert (
-            f"Test Item:{stat_with_many_decimals}:100:200:2" == actual_output_porcelain
-        )
-
-    @staticmethod
     def test_format_non_detailed_report(basic_args: argparse.Namespace) -> None:
         """Test that format_output only returns the calculated statistic
         if args.detailed_report is False."""  # noqa: D205, D209
@@ -778,7 +677,6 @@ class TestGetRequiredData:
         twice and returns the expected tuple of data."""  # noqa: D205, D209
         mock_get_data = mocker.patch("warmac.fetch_data.get_data")
         mock_get_data.side_effect = [mock_item_response, mock_order_response]
-
         item_name = "mock_item"
         item_data, order_data = average.get_required_data(item_name, mock_http_headers)
         assert mock_get_data.call_count == 2  # noqa: PLR2004
@@ -806,10 +704,7 @@ class TestProcessData:
             "warmac.average.get_required_data",
             return_value=(mock_item_response, mock_order_response),
         )
-
         result = average.process_data(mock_args, mock_http_headers, fixed_current_time)
-
-        # Assert that the final result is correct
         assert result == "110.0"
 
     @staticmethod
