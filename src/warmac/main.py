@@ -38,12 +38,6 @@ SUBCMD_DISPATCH = {
     "average": average.process_data,
 }
 
-http_headers: dict[str, str] = {
-    "Accept": "application/json",
-    "Accept-Language": "en",
-    "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
-}
-
 
 def fix_http_headers(
     http_headers: dict[str, str],
@@ -54,6 +48,9 @@ def fix_http_headers(
     """
     Append the platform name and crossplay status to HTTP headers dict.
 
+    Append the platform name and crossplay status to a dictionary
+    containing HTTP headers.
+
     :param http_headers: HTTP headers dictionary.
     :param platform: Desired platform, defaults to "pc".
     :param crossplay: Crossplay status, defaults to True.
@@ -62,24 +59,40 @@ def fix_http_headers(
     http_headers["Crossplay"] = str(crossplay).lower()
 
 
-def main(args: list[str] | None = None) -> Literal[0, 1]:
+def process_cli_command(args: list[str] | None) -> str:
     """
-    Create a :data:`cli_parser.WarMACParser` and run associated command.
+    Parse cli args, set up headers, and execute appropriate subcommand.
 
     Call :func:`cli_parser.handle_input` to create and parse a
-    :class:`cli_parser.WarMACParser`. Arguments are then used in
-    the script's execution.
+    :class:`cli_parser.WarMACParser`, create http headers for the http
+    request, and execute the function associated with the specified
+    subcommand.
 
-    :param args: Optional cli args. Should be used for testing.
-    :return: Return 0 if everything returns successfully.
+    :param args: Optional cli args used for testing.
+    :return: The data returned from the subcommand handler.
+    """
+    headers = {
+        "Accept": "application/json",
+        "Accept-Language": "en",
+        "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
+    }
+    cli_args = cli_parser.handle_input(args)
+    fix_http_headers(headers, cli_args.platform, crossplay=cli_args.crossplay)
+    current_time = datetime.datetime.now(datetime.timezone.utc)
+    return SUBCMD_DISPATCH[cli_args.subparser](cli_args, headers, current_time)
+
+
+def main(args: list[str] | None = None) -> Literal[0, 1]:
+    """
+    Entry point for WarMAC.
+
+    Orchestrate core logic and handle errors for WarMAC.
+
+    :param args: Optional cli args used for testing.
+    :return: 0 if execution is successful, 1 otherwise.
     """
     try:
-        cli_args = cli_parser.handle_input(args)
-        fix_http_headers(http_headers, cli_args.platform, crossplay=cli_args.crossplay)
-        current_time = datetime.datetime.now(datetime.timezone.utc)
-        # When Python 3.10 EOL, change to:
-        # current_time = datetime.datetime.now(datetime.UTC)
-        data = SUBCMD_DISPATCH[cli_args.subparser](cli_args, http_headers, current_time)
+        data = process_cli_command(args)
         print(data)
     except KeyError as err:
         raise errors.CommandError from err

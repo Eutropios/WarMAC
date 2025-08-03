@@ -30,7 +30,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from warmac import config, schema
+from warmac import schema
 
 if TYPE_CHECKING:
     from unittest.mock import MagicMock
@@ -49,18 +49,6 @@ def mock_get_page(mocker: MagicMock) -> object:
     """Fixture that patches fetch_data.get_page, preventing real HTTP
     requests during tests."""  # noqa: D205, D209
     return mocker.patch("warmac.fetch_data.get_page")
-
-
-@pytest.fixture
-def basic_args() -> argparse.Namespace:
-    """Construct basic argparse.Namespace object."""
-    return argparse.Namespace(
-        statistic="median",
-        item="Prime Warframe",
-        porcelain=False,
-        ndigits=config.DEFAULT_NDIGITS,
-        detailed_report=True,
-    )
 
 
 @pytest.fixture
@@ -83,12 +71,6 @@ def mock_args() -> argparse.Namespace:
         ndigits=2,
         detailed_report=False,
     )
-
-
-@pytest.fixture
-def mock_http_headers() -> dict[str, str]:
-    """Fixture for mock HTTP headers."""
-    return {"User-Agent": "test-client"}
 
 
 @pytest.fixture
@@ -149,3 +131,13 @@ def mock_order_response() -> schema.OrderResponse:
             ),
         ],
     )
+
+
+@pytest.fixture
+def mock_http_headers() -> dict[str, str]:
+    """Fixture that provides a basic set of HTTP headers."""
+    return {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
+    }

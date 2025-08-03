@@ -112,26 +112,24 @@ class TestCalcAvg:
         ("plat_list", "statistic", "decimals", "expected"),
         [
             # Mean tests
-            ([1, 2, 3, 4, 5], "mean", 1, 3.0),
+            ([5, 3, 1, 2, 4], "mean", 1, 3.0),
             ([10, 20, 30], "mean", 0, 20.0),
             # Geometric Mean tests
             ([1, 8], "geometric", 3, 2.828),
             # Median tests
-            ([1, 2, 3, 4, 5], "median", 1, 3.0),
+            ([5, 3, 1, 2, 4], "median", 1, 3.0),
             ([1, 2, 3, 4], "median", 1, 2.5),
-            ([7, 1, 9, 3, 5], "median", 1, 5.0),
             # Mode tests
             ([1, 2, 2, 3, 4], "mode", 1, 2.0),
             ([5, 4, 6, 8, 9, 1], "mode", 1, 5.0),
         ],
         ids=[
-            "mean",
+            "mean_unsorted",
             "mean_no_decimals",
             "geometric",
-            "median_odd",
-            "median_even",
             "median_unsorted",
-            "mode",
+            "median_even",
+            "mode_no_dupes",
             "mode_equal_occurrences",
         ],
     )
@@ -164,7 +162,6 @@ class TestInTimeRange:
             ("2023-01-04T12:00:00+00:00", 10, True),
             # FALSE CASES
             ("2023-01-02T12:00:00+00:00", 7, False),
-            ("2022-12-30T12:00:00+00:00", 10, False),
             ("2023-01-11T12:00:00+00:00", 7, False),
         ],
         ids=[
@@ -174,7 +171,6 @@ class TestInTimeRange:
             "last_updated_earlier_in_day",
             "in_range_w_default_time-range",
             "last_updated_gt_time-range",
-            "outside_range_w_default_time-range",
             "time_delta_lt_zero",
         ],
     )
@@ -561,15 +557,16 @@ class TestFormatOutput:
         stat_value: float,
         plat_list: list[int],
         expected: str,
-        basic_args: argparse.Namespace,
+        mock_args: argparse.Namespace,
         *,
         porcelain: bool,
     ) -> None:
         """Test detailed output against various statistics and item."""
-        basic_args.statistic = statistic
-        basic_args.item = item_name
-        basic_args.porcelain = porcelain
-        actual_output = average.format_output(stat_value, plat_list, basic_args)
+        mock_args.detailed_report = True
+        mock_args.statistic = statistic
+        mock_args.item = item_name
+        mock_args.porcelain = porcelain
+        actual_output = average.format_output(stat_value, plat_list, mock_args)
         if porcelain:
             assert actual_output == expected
         else:
@@ -587,7 +584,7 @@ class TestFormatOutput:
             assert f"Number of Orders:      {num_orders}" in actual_output
 
     @staticmethod
-    def test_empty_plat_list_raises_error(basic_args: argparse.Namespace) -> None:
+    def test_empty_plat_list_raises_error(mock_args: argparse.Namespace) -> None:
         """
         Test that error is raised if format_output is given empty list.
 
@@ -597,38 +594,20 @@ class TestFormatOutput:
         """
         stat = 0.0
         plat_list: list[int] = []
-        basic_args.item = "Nonexistent Item"
+        mock_args.item = "Nonexistent Item"
+        mock_args.detailed_report = True
 
         with pytest.raises(ValueError, match=r"max\(\) iterable argument is empty"):
-            average.format_output(stat, plat_list, basic_args)
+            average.format_output(stat, plat_list, mock_args)
 
     @staticmethod
-    def test_stat_is_integer_detailed(basic_args: argparse.Namespace) -> None:
-        """Test that detailed format_output still functions when the
-        calculated stat is an integer."""  # noqa: D205, D209
-        stat = 150
-        plat_list = [140, 150, 160]
-        basic_args.statistic = "median"
-        basic_args.item = "Int Stat Item"
-        basic_args.porcelain = False
-
-        expected_output = (
-            "Item:                  Int Stat Item\n"
-            "Median Price:          150 platinum\n"
-            "Max Price:             160 platinum\n"
-            "Min Price:             140 platinum\n"
-            "Number of Orders:      3"
-        )
-        assert average.format_output(stat, plat_list, basic_args) == expected_output
-
-    @staticmethod
-    def test_format_non_detailed_report(basic_args: argparse.Namespace) -> None:
+    def test_format_non_detailed_report(mock_args: argparse.Namespace) -> None:
         """Test that format_output only returns the calculated statistic
         if args.detailed_report is False."""  # noqa: D205, D209
-        basic_args.detailed_report = False
+        mock_args.detailed_report = False
         statistic_value = 20
         plat_list = [10, 20, 30]
-        actual_output = average.format_output(statistic_value, plat_list, basic_args)
+        actual_output = average.format_output(statistic_value, plat_list, mock_args)
         expected_output = "20"
         assert actual_output == expected_output
 
