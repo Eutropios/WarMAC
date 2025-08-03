@@ -169,7 +169,7 @@
   "src/warmac/__main__.py"   = ["I002"]
   "src/warmac/cli_parser.py" = ["SLF001"]
   "tests/**.py"              = ["D101", "S101"]
-  "tests/__init__.py"        = ["I002"]
+  "tests/**/__init__.py"     = ["I002"]
   # *IMPORTANT* - A dirty hack in cli_parser.py uses private components
 
 [tool.ruff.lint.pycodestyle]
