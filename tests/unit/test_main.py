@@ -30,7 +30,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from warmac import average, cli_parser, main
+from warmac import average, cli_parser, errors, main
 
 if TYPE_CHECKING:
     from typing import Literal
@@ -138,3 +138,45 @@ class TestProcessCliCommand:
         mocker.patch.object(cli_parser, "handle_input", return_value=mock_cli_args)
         with pytest.raises(KeyError):
             main.process_cli_command(args=["nonexistent_subcommand"])
+
+
+class TestMain:
+    @staticmethod
+    def test_main_success(mocker: Mock, capsys: pytest.CaptureFixture[str]) -> None:
+        """Test that main returns 0 and prints to stdout on success."""
+        mock_process_cli_command = mocker.patch(
+            "warmac.main.process_cli_command", return_value="Success message"
+        )
+        result = main.main(["some", "args"])
+        captured = capsys.readouterr()
+        assert result == 0
+        assert "Success message" in captured.out
+        assert not captured.err
+        mock_process_cli_command.assert_called_once_with(["some", "args"])
+
+    @staticmethod
+    def test_main_warmac_base_error(
+        mocker: Mock, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        """Test that main returns 1 and prints the error to stderr when
+        a WarMACBaseError is raised."""  # noqa: D205, D209
+        mock_process_cli_command = mocker.patch(
+            "warmac.main.process_cli_command",
+            side_effect=errors.WarMACBaseError("An error occurred"),
+        )
+        result = main.main(["some", "args"])
+        captured = capsys.readouterr()
+        assert result == 1
+        assert "An error occurred" in captured.err
+        assert not captured.out
+        mock_process_cli_command.assert_called_once_with(["some", "args"])
+
+    @staticmethod
+    def test_main_key_error_raises_command_error(mocker: Mock) -> None:
+        """Test that main re-raises a KeyError as a CommandError."""
+        mocker.patch(
+            "warmac.main.process_cli_command",
+            side_effect=KeyError,
+        )
+        with pytest.raises(errors.CommandError, match=r"Not a valid command\."):
+            main.main(["some", "args"])

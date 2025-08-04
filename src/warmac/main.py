@@ -97,7 +97,7 @@ def main(args: list[str] | None = None) -> Literal[0, 1]:
     except KeyError as err:
         raise errors.CommandError from err
     except errors.WarMACBaseError as err:
-        print(err, file=sys.stderr)
+        sys.stderr.write(err.message)
         return 1
     return 0
 
