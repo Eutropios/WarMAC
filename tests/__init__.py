@@ -1,17 +1,29 @@
 """
-tests.__init__.py.
+~~~~~~~~~~~~~~
+Warframe Tests
+~~~~~~~~~~~~~~
 
-Copyright (c) 2023 Noah Jenner under MIT License
-Please see LICENSE.txt for additional licensing information.
+WarMAC — https://github.com/Eutropios/WarMAC
+Copyright (C) 2024  Noah Jenner
 
-Test init for WarMAC.
-Date of Creation: August 8, 2023
-"""
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-def run_tests() -> None:
-    """Run warmac's lists of tests."""
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+-----------------------------------------------------------------------
 
-if __name__ == "__main__":
-    run_tests()
+Obligatory file for unittest to function.
+"""  # noqa: D205, D400
+
+from tests import test_average, test_cli_parser, test_fetch_data, test_main
+
+__all__ = ["test_average", "test_cli_parser", "test_fetch_data", "test_main"]

@@ -1,31 +1,57 @@
 repos:
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: "v0.18.1"
+    hooks:
+      - id: markdownlint-cli2
+
+  - repo: https://github.com/streetsidesoftware/cspell-cli
+    rev: v9.2.0
+    hooks:
+      - id: cspell # Spell check changed files
+      - id: cspell # Spell check the commit message
+        name: check commit message spelling
+        args:
+          - --no-must-find-files
+          - --no-progress
+          - --no-summary
+          - --files
+          - .git/COMMIT_EDITMSG
+        stages: [commit-msg]
+
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: "v0.16"
+    rev: "v0.24.1"
     hooks:
       - id: validate-pyproject
 
   - repo: https://github.com/PyCQA/docformatter
-    rev: "v1.7.5"
+    rev: "v1.7.7"
     hooks:
       - id: docformatter
         additional_dependencies: [tomli]
-        args: [-i]
+        args: [-i, -e ./tests]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.2.0"
+    rev: "v0.12.7"
     hooks:
-      - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-check
+        args: [--exit-non-zero-on-fix]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.8.0"
+    rev: "v1.17.1"
     hooks:
       - id: mypy
         args: [--strict, --ignore-missing-imports]
+        additional_dependencies:
+          [msgspec==0.19.0, urllib3==2.4.0, pytest==8.3.5, pytest-mock==3.14.1]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.7
+    hooks:
+      - id: actionlint
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.5.0"
+    rev: "v5.0.0"
     hooks:
       - id: check-ast
       - id: check-builtin-literals
@@ -34,4 +60,3 @@ repos:
       - id: check-yaml
       - id: detect-private-key
       - id: mixed-line-ending
-      - id: requirements-txt-fixer
