@@ -98,6 +98,7 @@ def check_mod_arcane_rank(
     the item isn't a mod or arcane, ``order_rank`` and ``item_max_rank``
     should both be ``None``. If either ``order_rank`` or
     ``item_max_rank`` is ``None``, then True will be returned.
+
     :param order_rank: Rank of the order.
     :param item_max_rank: Maximum possible rank for the item.
     :param use_maxrank: User-specified rank of mod or arcane. If True,
@@ -120,11 +121,11 @@ def check_relic_subtype(
     Check if an order's subtype matches user-specified refinement level.
 
     Check if an order's subtype equals the refinement level specified by
-    the user. If the item isn't a relic, ``subtype`` should be ``None``.
+    the user. If the item isn't a relic, ``subtype`` should be None.
 
     :param subtype: Subtype of the order.
     :param use_radiant: User-specified refinement level to compare
-    against. Can be either "radiant" or "intact".
+        against. Can be either "radiant" or "intact".
     :return: True if the order's subtype matches ``use_radiant`` or if
         subtype is None, False otherwise.
     """
