@@ -24,6 +24,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Obligatory file for unittest to function.
 """  # noqa: D205, D400
 
-from tests.unit import test_average, test_cli_parser, test_fetch_data, test_main
+from tests import test_average, test_cli_parser, test_fetch_data, test_main
 
 __all__ = ["test_average", "test_cli_parser", "test_fetch_data", "test_main"]
