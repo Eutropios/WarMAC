@@ -52,7 +52,7 @@ def calculate_average(
     :param ndigits: Number of decimals to which the calculated
         statistic should be rounded, defaults to
         :py:const:`config.DEFAULT_NDIGITS`.
-    :raises warmac_errors.NoListingsFoundError: If ``plat_list`` has no
+    :raises errors.NoListingsFoundError: If ``plat_list`` has no
         contents.
     :return: Desired statistic of the specified item.
     """
@@ -182,10 +182,10 @@ def filtered_plat_list(
     Construct a list of prices using a filter.
 
     Return a filtered list of platinum prices given a list of
-    :py:class:`schema.OrderWithUser`s, a :py:class:`schema.Item`, and
+    :py:class:`schema.OrderWithUser`, a :py:class:`schema.Item`, and
     the user's command-line arguments.
 
-    :param order_data: List of :py:class:`schema.OrderWithUser`s
+    :param order_data: List of :py:class:`schema.OrderWithUser`
         containing information about each individual order.
     :param item_info: Object containing information about the item.
     :param current_time: Current time.
@@ -205,7 +205,7 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
 
     Format the calculated statistic, along with the maximum and minimum
     prices of the orders, and the total number of orders that match the
-    search criteria. If ``args.porcelain` is True, separate the fields
+    search criteria. If ``args.porcelain`` is True, separate the fields
     with a single colon.
 
     :param stat: Statistic of the item that was found.

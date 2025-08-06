@@ -1,4 +1,4 @@
-.. _warmac_average:
+.. _average:
 
 #################
  Average Command
@@ -22,6 +22,6 @@
 
 .. autofunction:: average.format_output
 
-.. autofunction:: warmac.get_required_data
+.. autofunction:: average.get_required_data
 
 .. autofunction:: average.process_data

@@ -16,4 +16,4 @@
    :maxdepth: 1
    :caption: Commands
 
-   average_usage
+   average

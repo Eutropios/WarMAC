@@ -32,11 +32,21 @@ import msgspec
 
 
 class Base(msgspec.Struct):
-    """Base Struct for all schemas to subclass from."""
+    """
+    The base struct for all structs to inherit from.
+
+    The base struct for all structs to inherit from. Not actually used
+    programmatically. Only exists for typing purposes.
+    """
 
 
-class ResponseBase(msgspec.Struct):
-    """Base struct for all response schemas to subclass from."""
+class ResponseBase(Base, rename="camel"):
+    """
+    The base struct for all Response structs to inherit from.
+
+    The base struct for all Response structs to inherit from. Not
+    actually used programmatically. Only exists for typing purposes.
+    """
 
 
 class UserShort(Base, rename="camel"):
@@ -109,7 +119,7 @@ class OrderWithUser(Base, rename="camel"):
     :var subtype: (optional) Subtype or category of the item.
     :var amber_stars: (optional) Amber stars in a sculpture order.
     :var cyan_stars: (optional) Cyan stars in a sculpture order.
-    :var item_id: (optional) Unique identifier of the item.
+    :var item_id: Unique identifier of the item.
     """
 
     id: str
@@ -169,7 +179,8 @@ class Item(Base, rename="camel"):
     :var endo_multiplier: (optional) Multiplier for the endo value.
     :var subtypes: (optional) Subtype or category of the item.
     :var trading_tax: (optional) Trading tax of item.
-    :var req_mastery_rank: (optional) Mastery rank needed to trade item.
+    :var req_mastery_rank: (optional) Mastery rank needed to trade the
+        particular item.
     """
 
     id: str

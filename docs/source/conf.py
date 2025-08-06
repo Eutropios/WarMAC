@@ -14,7 +14,7 @@ from pathlib import Path
 
 # -- Metadata ----------------------------------------------------------
 
-python_path = str(Path("../../src/warmac/").resolve())
+python_path = str(Path("../../src/warmac").resolve())
 sys.path.insert(0, python_path)
 
 project = "WarMAC"
@@ -52,6 +52,7 @@ autodoc_default_options = {
     "undoc-members": True,
     "private-members": True,
 }
+autodoc_class_signature = "separated"
 # autodoc_type_aliases = {str, str}
 nitpicky = True
 autodoc_typehints = "signature"

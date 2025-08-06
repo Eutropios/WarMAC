@@ -39,6 +39,7 @@
         "intersphinx",
         "maxrank",
         "metavars",
+        "msgspec",
         "mypy",
         "ndigits",
         "neuroptics",

@@ -9,11 +9,11 @@
    them.
 
 .. py:data:: warmac.SUBCMD_TO_FUNC
-   :type: typing.Dict[str, typing.Callable[[~argparse.Namespace], None]]
-   :value: warmac_average.average()
+   :type: dict[str, ~collections.abc.Callable[[~argparse.Namespace], None]]
+   :value: average.average()
 
    A dictionary of all commands that can be executed by the user.
 
-.. autofunction:: warmac.command_select
+.. autofunction:: main.process_cli_command
 
-.. autofunction:: warmac.console_main
+.. autofunction:: main.main

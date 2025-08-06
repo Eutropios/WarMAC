@@ -1,8 +1,8 @@
-.. _warmac_errors:
+.. _errors:
 
-###############
- WarMAC Errors
-###############
+########
+ Errors
+########
 
 |  All of the custom errors that are used within WarMAC.
 
@@ -10,7 +10,7 @@
  Base Error
 ************
 
-.. autoexception:: warmac_errors.WarMACBaseError
+.. autoexception:: errors.WarMACBaseError
    :members:
    :undoc-members:
    :show-inheritance:
@@ -19,13 +19,13 @@
 Generic Errors
 ==============
 
-.. autoexception:: warmac_errors.CommandError
+.. autoexception:: errors.CommandError
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-.. autoexception:: warmac_errors.NoListingsFoundError
+.. autoexception:: errors.NoListingsFoundError
    :members:
    :undoc-members:
    :show-inheritance:
@@ -34,43 +34,43 @@ Generic Errors
 HTTP Errors
 ===========
 
-.. autoexception:: warmac_errors.WarMACHTTPError
+.. autoexception:: errors.WarMACHTTPError
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-.. autoexception:: warmac_errors.UnauthorizedAccessError
+.. autoexception:: errors.UnauthorizedAccessError
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-.. autoexception:: warmac_errors.ForbiddenRequestError
+.. autoexception:: errors.ForbiddenRequestError
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-.. autoexception:: warmac_errors.MalformedURLError
+.. autoexception:: errors.MalformedURLError
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-.. autoexception:: warmac_errors.MethodNotAllowedError
+.. autoexception:: errors.MethodNotAllowedError
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-.. autoexception:: warmac_errors.InternalServerError
+.. autoexception:: errors.InternalServerError
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
 
-.. autoexception:: warmac_errors.UnknownError
+.. autoexception:: errors.UnknownError
    :members:
    :undoc-members:
    :show-inheritance:

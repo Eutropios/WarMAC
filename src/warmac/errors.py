@@ -42,13 +42,12 @@ class WarMACBaseError(Exception):
 
 class CommandError(WarMACBaseError):
     """
-    Raised if subparser does not exist in
-    :data:`warmac.main.SUBCMD_DISPATCH`.
+    Raised if subparser does not exist in :data:`main.SUBCMD_DISPATCH`.
 
     Raised if the ``subparser`` field of ``argparse.Namespace`` does not
-    exist in :data:`warmac.main.SUBCMD_DISPATCH`. This should never be
+    exist in :data:`main.SUBCMD_DISPATCH`. This should never be
     raised if WarMAC executes as expected.
-    """  # noqa: D205
+    """
 
     def __init__(self) -> None:
         """Construct a ``CommandError`` error."""
