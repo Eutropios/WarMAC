@@ -45,7 +45,7 @@ class CommandError(WarMACBaseError):
     Raised if subparser does not exist in :data:`main.SUBCMD_DISPATCH`.
 
     Raised if the ``subparser`` field of ``argparse.Namespace`` does not
-    exist in :data:`main.SUBCMD_DISPATCH`. This should never be
+    exist in :py:data:`main.SUBCMD_DISPATCH`. This should never be
     raised if WarMAC executes as expected.
     """
 

@@ -6,17 +6,17 @@
 
 |  Makes HTTP requests given a particular WarMAC schema.
 
-.. py:data:: fetch_data.ResponseKind
+.. py:type:: fetch_data.ResponseKind
 
-   A type alias representing the union of Response structs.
-
+   A type alias representing the union of "-Response" structs.
 
 .. py:data:: fetch_data.T
-   :annotation: A TypeVar representing all possible Response structs.
+   :value: TypeVar(T, OrderResponse, ItemResponse)
 
+   Invariant :py:class:`~typing.TypeVar` constrained to :py:class:`schema.OrderResponse` and :py:class:`schema.ItemResponse`.
 
 .. py:data:: fetch_data.HTTP_ERROR_DICT
-   :type: typing.Final[collections.abc.Mapping[int, type[errors.WarMACHTTPError]]] 
+   :type: typing.Final[~collections.abc.Mapping[int, type[errors.WarMACHTTPError]]] 
    :value: {401: errors.UnauthorizedAccessError, 403: errors.ForbiddenRequestError, 404: errors.MalformedURLError, 405: errors.MethodNotAllowedError, 500: errors.InternalServerError}
 
    A dictionary that maps integers to HTTP-related errors.
@@ -29,7 +29,7 @@
    warframe.market API root.
 
 .. py:data:: fetch_data.SCHEMA_TO_URL
-   :type: collections.abc.Mapping[fetch_data.ResponseKind, str]
+   :type: ~collections.abc.Mapping[ResponseKind, str]
    :value: {schema.OrderResponse: "orders/item/", schema.ItemResponse: "item/"}
 
    A dictionary that makes Response schemas to strings.

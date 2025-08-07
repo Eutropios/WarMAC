@@ -26,7 +26,7 @@
 
 
 .. py:data:: config.AVERAGE_FUNCTIONS
-   :type: collections.abc.Mapping[str, ~collections.abc.Callable[[~collections.abc.Sequence[int]], float]]
+   :type: ~collections.abc.Mapping[str, ~collections.abc.Callable[[~collections.abc.Sequence[int]], float]]
    :value: {'geometric': statistics.geometric_mean, 'harmonic': statistics.harmonic_mean, 'mean': statistics.mean, 'median': statistics.median, 'mode': statistics.mode}
 
    A dictionary that maps strings to their respective statistics function.

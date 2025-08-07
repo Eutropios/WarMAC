@@ -33,6 +33,8 @@ extensions = [
     "sphinx_last_updated_by_git",
     "notfound.extension",
     "sphinx_inline_tabs",
+    "sphinx_toolbox.more_autodoc.typevars",
+    "sphinx_toolbox.more_autodoc.genericalias",
     # install this https://github.com/readthedocs/sphinx-hoverxref
 ]
 

@@ -151,7 +151,7 @@ def filter_order(
     - If the item is a mod or arcane, whether its rank is unranked or
         the maximum rank, based on ``args.maxrank``.
     - If the item is a relic, whether its refinement is intact or
-        radiant, based on``args.radiant``.
+        radiant, based on ``args.radiant``.
 
     :param order: Order to be checked.
     :param item_info: Details about the item.

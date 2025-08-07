@@ -77,8 +77,8 @@ def http_code_check(status_code: int) -> None:
     :param status_code: HTTP status code to check.
     :raises WarMACHTTPError: Raise an error from HTTP_ERROR_DICT if HTTP
         status code is not 200.
-    :raises errors.UnknownError: Raised as fallback if HTTP status code
-        is not in HTTP_ERROR_DICT.
+    :raises UnknownError: Raised as fallback if HTTP status code is not
+        in HTTP_ERROR_DICT.
     """
     if status_code == 200:  # noqa: PLR2004
         return
