@@ -11,67 +11,48 @@
 ************
 
 .. autoexception:: errors.WarMACBaseError
-   :members:
-   :undoc-members:
    :show-inheritance:
-   :private-members:
+   :exclude-members: __init__
 
 Generic Errors
 ==============
 
 .. autoexception:: errors.CommandError
-   :members:
-   :undoc-members:
    :show-inheritance:
-   :private-members:
+   :exclude-members: __init__
+
 
 .. autoexception:: errors.NoListingsFoundError
-   :members:
-   :undoc-members:
    :show-inheritance:
-   :private-members:
+   :exclude-members: __init__
 
 HTTP Errors
 ===========
 
 .. autoexception:: errors.WarMACHTTPError
-   :members:
-   :undoc-members:
    :show-inheritance:
-   :private-members:
+   :exclude-members: __init__
 
 .. autoexception:: errors.UnauthorizedAccessError
-   :members:
-   :undoc-members:
    :show-inheritance:
-   :private-members:
+   :exclude-members: __init__
 
 .. autoexception:: errors.ForbiddenRequestError
-   :members:
-   :undoc-members:
    :show-inheritance:
-   :private-members:
+   :exclude-members: __init__
 
 .. autoexception:: errors.MalformedURLError
-   :members:
-   :undoc-members:
    :show-inheritance:
-   :private-members:
+   :exclude-members: __init__
 
 .. autoexception:: errors.MethodNotAllowedError
-   :members:
-   :undoc-members:
    :show-inheritance:
-   :private-members:
+   :exclude-members: __init__
 
 .. autoexception:: errors.InternalServerError
-   :members:
-   :undoc-members:
    :show-inheritance:
-   :private-members:
+   :exclude-members: __init__
 
 .. autoexception:: errors.UnknownError
-   :members:
-   :undoc-members:
    :show-inheritance:
-   :private-members:
+   :exclude-members: __init__

@@ -1,16 +1,21 @@
 """
-conf.py for Sphinx.
+conf.py
+~~~~~~~
 
-Copyright (c) 2023 Noah Jenner under MIT License
-Please see LICENSE.txt for additional licensing information.
+Copyright (C) 2024 Noah Jenner under CC BY-SA 4.0.
+To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/
 
-Date of Creation: August 20, 2023
-"""
+------------------------------------------------------------------------
+
+Configuration file for Sphinx.
+"""  # noqa: D205, D400
 
 from __future__ import annotations
 
 import sys
 from pathlib import Path
+
+from warmac import config
 
 # -- Metadata ----------------------------------------------------------
 
@@ -18,9 +23,9 @@ python_path = str(Path("../../src/warmac").resolve())
 sys.path.insert(0, python_path)
 
 project = "WarMAC"
-copyright = "2023, Noah Jenner"  # noqa: A001
+copyright = "2023–2025, Noah Jenner"  # noqa: A001, RUF001
 author = "Noah Jenner"
-release = "0.0.4"
+release = config.VERSION
 language = "en"
 
 # -- General Config ----------------------------------------------------
@@ -33,8 +38,6 @@ extensions = [
     "sphinx_last_updated_by_git",
     "notfound.extension",
     "sphinx_inline_tabs",
-    "sphinx_toolbox.more_autodoc.typevars",
-    "sphinx_toolbox.more_autodoc.genericalias",
     # install this https://github.com/readthedocs/sphinx-hoverxref
 ]
 

@@ -54,11 +54,22 @@ packages. Installation can be done using one of the following commands:
 pipx install warmac
 ```
 
+You can ensure that you've installed WarMAC correctly by calling its help page
+like so:
+
+```bash
+warmac --version
+```
+
 ### Using uv (or uvx)
 
 ```bash
-uv install warmac
-# or
+uv tool install warmac
+```
+
+Or, to run warmac without installing it:
+
+```bash
 uvx warmac
 ```
 
@@ -79,6 +90,10 @@ done using the following command:
 | UNIX/MacOS | `python -m pip install warmac` |
 | Windows | `py -m pip install warmac` |
 
+If you're getting an error that `python` is not recognized as a command, try
+using the following instead:  
+`python3 -m pip install warmac`
+
 You can ensure that you've installed WarMAC correctly by calling its help page
 like so:
 
@@ -86,10 +101,10 @@ like so:
 warmac --help
 ```
 
-### Using Poetry
+### Using uv (for development)
 
-WarMAC can also be installed using [Poetry](https://python-poetry.org/) either
-through the provided [`poetry.lock`](https://github.com/Eutropios/WarMAC/blob/main/poetry.lock)
+For developing WarMAC, please build using [uv](https://docs.astral.sh/uv/)
+either through the provided [`uv.lock`](https://github.com/Eutropios/WarMAC/blob/main/uv.lock)
 file (recommended) or by building a lock of your own.
 
 To obtain the source code, you can either download the latest version from [Releases](https://github.com/Eutropios/WarMAC/releases)
@@ -101,7 +116,7 @@ git clone https://github.com/Eutropios/WarMAC.git ./some/directory
 ```
 
 WarMAC can then be built by navigating to the directory you cloned WarMAC into,
-and running the `poetry build` and `poetry install` commands.
+and running the `uv build` and `uv install` commands.
 
 ## Usage<a id="usage"></a>
 
@@ -127,18 +142,16 @@ To view the usage for the average command, users should run:
 WarMAC accepts outgoing pipes just like any other tool:
 
 ```bash
-$ warmac average -p=ps4 -t=5 -v "bite" | grep "Time Range"
-Time Range Used:             10 days
+$ warmac average -p=ps4 -t=5 -d "bite" | grep "Max Price"
+Max Price:             65 platinum
 ```
 
 WarMAC output can also be redirected to a file:
 
 ```bash
-$ warmac average -p PC -t 2 -v "vengeful revenant" > warmacOut.txt
+$ warmac average -p PC -t 2 -d "vengeful revenant" > warmacOut.txt
 $ cat warmacOut.txt
 Item:                  Vengeful Revenant
-Statistic Found:       Median
-Time Range Used:       2 days
 Median Price:          5.0 platinum
 Max Price:             30 platinum
 Min Price:             4 platinum
@@ -175,8 +188,8 @@ for the appropriate configuration of each tool.
 
 ### Testing
 
-There are currently no tests or intrusive GitHub Actions, but that is expected
-to change in the future.
+Tests must be run before submitting a PR. Please use the provided dependency
+grouping.
 
 ## Acknowledgements<a id="acknowledgements"></a>
 
@@ -185,15 +198,13 @@ and [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.t
 this project also uses [Taplo](https://github.com/tamasfe/taplo) in its
 development.
 
-WarMAC is packaged using [Poetry](https://github.com/python-poetry/poetry).
-
 ## Licensing<a id="licensing"></a>
 
 ***This project is NOT affiliated with Warframe, Digital Extremes, or Warframe Market***
 
 Copyright (C) 2024  Noah Jenner under GNU GPL version 3.0-or-later
 
-*The full details of the license can be found at [`LICENSE.txt`](https://github.com/Eutropios/WarMAC/blob/main/LICENSES/LICENSE.txt)*
+*The full details of the license can be found at [`LICENSE.txt`](https://github.com/Eutropios/WarMAC/blob/main/LICENSE)*
 *For licensing regarding any dependencies, please see [`LICENSES/](https://github.com/Eutropios/WarMAC/blob/main/LICENSES/)*
 
 ## Authors

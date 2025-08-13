@@ -10,7 +10,7 @@
    command-line Python script that can calculate the average market price of any
    tradeable item in Warframe. It does this by retrieving orders of a specific
    item from the fan website `Warframe Market <https://warframe.market/>`_, and
-   then calculates then average buy or sell price of that item.
+   then calculates the average buy or sell price of that item.
 
 |  WarMAC currently supports all Python versions 3.8 to 3.12 inclusive.
 
@@ -33,15 +33,10 @@
 .. toctree::
    :hidden:
    :maxdepth: 2
-   :caption: Documentation
+   :caption: Development
 
-   main
-   average
-   cli_parser
-   fetch_data
-   schema
-   config
-   errors
+   documentation/index
+   contributing
 
 .. toctree::
    :hidden:

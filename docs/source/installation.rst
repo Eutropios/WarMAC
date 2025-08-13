@@ -13,10 +13,11 @@
 
 |  WarMAC can be installed in a variety of ways, all of which can be found on
    this page. It is recommended that you install WarMAC using `pipx
-   <https://pypa.github.io/pipx/>`_, which keeps WarMAC and its dependencies
-   separate from your global Python version. However, using pip alone will work
-   just as well. The option of building WarMAC yourself using Poetry also
-   exists, however it is recommended for this to not be done.
+   <https://pypa.github.io/pipx/>`_ or using `uv 
+   <https://docs.astral.sh/uv/guides/tools/>`__ , which keeps WarMAC and its 
+   dependencies separate from your global Python version. However, using pip
+   alone will work just as well. The option of building WarMAC yourself using
+   uv also exists, however it is recommended for this to not be done.
 
 ************
  Using pipx
@@ -25,17 +26,30 @@
 |  Installing WarMAC using pipx can be done by running the following command in
    the terminal:
 
-.. tab:: Unix/macOS
+.. code-block:: console
 
-   .. code-block:: console
+   $ pipx install warmac
 
-      $ python -m pipx install warmac
+|  You can ensure that you've installed WarMAC correctly by calling its help
+   page like so:
 
-.. tab:: Windows
+.. code-block:: console
 
-   .. code-block:: console
+   $ warmac --version
 
-      $ py -m pipx install warmac
+|  Once you've installed WarMAC, check out :doc:`Usage </cli/index>` for details
+   on how to use WarMAC.
+
+**********
+ Using uv
+**********
+
+|  Installing WarMAC using uv can be done by running the following command in
+   the terminal:
+
+.. code-block:: console
+
+   $ uv tool install warmac
 
 |  You can ensure that you've installed WarMAC correctly by calling its help
    page like so:
@@ -66,6 +80,10 @@
 
       $ py -m pip install warmac
 
+|  If you're getting an error that `python` is not recognized as a command, try
+   using the following instead:  
+   ``python3 -m pip install warmac``
+
 |  You can ensure that you've installed WarMAC correctly by calling its help
    page like so:
 
@@ -76,17 +94,17 @@
 |  Once you've installed WarMAC, check out :doc:`Usage </cli/index>` for details
    on how to use WarMAC.
 
-**************
- Using Poetry
-**************
+****************************
+ Using uv (for development)
+****************************
 
 .. warning::
 
    Modifying the dependency pins of WarMAC could result in errors. It's
    recommended to keep the dependency pins as is to maintain stability.
 
-|  WarMAC can also be installed using `Poetry <https://python-poetry.org/>`_
-   either through the provided ``poetry.lock`` file (recommended) or by building
+|  WarMAC can also be installed using `uv <https://docs.astral.sh/uv/>`__
+   either through the provided ``uv.lock`` file (recommended) or by building
    a lock of your own.
 
 |  To obtain the source code, you can either download the latest version from
@@ -99,7 +117,7 @@
    $ git clone https://github.com/Eutropios/WarMAC.git ./some/directory
 
 |  WarMAC can then be built by navigating to the directory you cloned WarMAC
-   into, and running the ``poetry build`` and ``poetry install`` commands.
+   into, and running the ``uv build`` and ``uv install`` commands.
 
 |  You can ensure that you've installed WarMAC correctly by calling its help
    page like so:

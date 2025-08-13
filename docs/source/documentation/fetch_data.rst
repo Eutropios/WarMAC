@@ -21,7 +21,6 @@
 
    A dictionary that maps integers to HTTP-related errors.
 
-
 .. py:data:: fetch_data.API_ROOT
    :type: str
    :value: "https://api.warframe.market/v2/"
@@ -33,7 +32,6 @@
    :value: {schema.OrderResponse: "orders/item/", schema.ItemResponse: "item/"}
 
    A dictionary that makes Response schemas to strings.
-
 
 .. autofunction:: fetch_data.item_url
 

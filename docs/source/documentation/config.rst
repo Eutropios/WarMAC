@@ -4,12 +4,16 @@
  Config
 ########
 
+
+.. py:type:: fetch_data.AverageKind
+
+   A type alias representing the union of average statistic types.
+
 .. py:data:: config.DEFAULT_TIME
    :type: int
    :value: 5
 
    The default time that will be used for calculating listing ages.
-
 
 .. py:data:: config.DEFAULT_NDIGITS
    :type: int
@@ -17,13 +21,11 @@
 
    The default number of digits to round to when calculating an average.
 
-
 .. py:data:: config.VERSION
    :type: str
    :value: "0.0.5"
 
    The current version of WarMAC.
-
 
 .. py:data:: config.AVERAGE_FUNCTIONS
    :type: ~collections.abc.Mapping[str, ~collections.abc.Callable[[~collections.abc.Sequence[int]], float]]
