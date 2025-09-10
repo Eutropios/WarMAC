@@ -56,7 +56,6 @@ def calculate_average(
         contents.
     :return: Desired statistic of the specified item.
     """
-    # Handle errors
     if not plat_list:
         raise errors.NoListingsFoundError from None
     return round(float(config.AVERAGE_FUNCTIONS[statistic](plat_list)), ndigits)
@@ -221,16 +220,17 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
     statistic = (
         config.AVERAGE_FUNCTIONS[args.statistic].__name__.replace("_", " ").title()
     )
-    fixed_item_name = args.item.title().replace("_", " ").replace(" And ", " & ")
+    item_name = args.item.title().replace("_", " ").replace(" And ", " & ")
     max_list = max(plat_list)
     min_list = min(plat_list)
     num_orders = len(plat_list)
     if args.porcelain:
-        return f"{fixed_item_name}:{stat}:{min_list}:{max_list}:{num_orders}"
+        return f"{item_name}:{args.timerange}:{stat}:{min_list}:{max_list}:{num_orders}"
 
     space_after_label = 23
     return (
-        f"{'Item:':{space_after_label}}{fixed_item_name}\n"
+        f"{'Item:':{space_after_label}}{item_name}\n"
+        f"{'Time Range:':{space_after_label}}{args.timerange} days\n"
         f"{f'{statistic} Price:':{space_after_label}}{stat} platinum\n"
         f"{'Max Price:':{space_after_label}}{max_list:.0f} platinum\n"
         f"{'Min Price:':{space_after_label}}{min_list:.0f} platinum\n"
@@ -272,3 +272,16 @@ def process_data(
     plat_list = filtered_plat_list(order_data.data, item_data.data, current_time, args)
     stat = calculate_average(plat_list, args.statistic, args.ndigits)
     return format_output(stat, plat_list, args)
+
+
+# (WarMAC) $ warmac average foo
+# b'{"apiVersion":"0.20.0","data":null,"error":{"request":[
+# "app.item.notFound"]}}\n'
+# This item does not exist on Warframe Market. Please check your
+# spelling and remember to use quotations if the item is multiple words.
+
+# Maybe use these errors instead of urllib3's to do error checking
+# Use if statement before second call to determine if needed. Do order
+# request first, check for None fields, then check if args want anything
+# special, and only then make second request.
+# Maybe change the in_time_range to age_limit or something

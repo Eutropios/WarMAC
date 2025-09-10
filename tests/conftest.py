@@ -136,8 +136,4 @@ def mock_order_response() -> schema.OrderResponse:
 @pytest.fixture
 def mock_http_headers() -> dict[str, str]:
     """Fixture that provides a basic set of HTTP headers."""
-    return {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
-    }
+    return {"Accept": "application/json", "Content-Type": "application/json"}

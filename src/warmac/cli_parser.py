@@ -374,7 +374,7 @@ def create_parser() -> WarMACParser:
         default=config.DEFAULT_NDIGITS,
         type=lambda x: str_to_int_bounds_check(x, min_ndigits, max_ndigits),
         help=(
-            "Number of digits to round the statistic to. Must be in range "
+            "Number of decimals to round the statistic to. Must be in range "
             f"[{min_ndigits}, {max_ndigits}). (Default: {config.DEFAULT_NDIGITS})"
         ),
         metavar="<ndigits>",

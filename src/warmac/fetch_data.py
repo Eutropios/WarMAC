@@ -98,7 +98,7 @@ def get_page(url: str, http_headers: dict[str, str]) -> urllib3.BaseHTTPResponse
 
     :param url: Formatted URL used in the request.
     :param http_headers: Headers to be used in the HTTP request. Must
-        contain at least an "Accept" field and a "User-Agent" field.
+        contain at least an "Accept" field.
     :raises WarMACHTTPError: Raise an error from HTTP_ERROR_DICT given
         the HTTP response code.
     :raises errors.UnknownError: Fallback raised if the error code is

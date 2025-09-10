@@ -49,45 +49,59 @@
    ps4, xbox, or switch. By default, the platform that the orders are fetched
    for is PC.
 
+.. option:: -S, --same-platform
+
+   Specifies that orders from only the platform given by :option:`--platform`
+   will be collected, instead of collecting orders cross-platform. Will be
+   ignored if passed without :option:`--platform`.
+
 .. option:: -t, --timerange <days>
 
-   Determines the number of days to consider for calculating the average. The
+   Specifies the number of days to consider for calculating the average. The
    value for <days> indicates how far back to start the statistic calculation.
    The value given must be within the range of 1 to 60. By default, orders up
-   to 10 days old are taken into account.
+   to 5 days old are taken into account.
 
 .. option:: -m, --maxrank
    
    Calculates the price statistic of the mod/arcane at its maximum rank instead
    of when it is unranked. This option cannot be used together with the
-   :option:`warmac average --radiant` option.
+   :option:`--radiant` option.
 
 .. option:: -r, --radiant
 
    Calculates the price statistic of the relic at a radiant refinement instead
    of at an intact refinement. This option cannot be used together with the
-   :option:`warmac average --maxrank` option.
+   :option:`--maxrank` option.
 
 .. option:: -b, --buyers
    
    Calculates the price statistic of the item based on orders from buyers
    instead of orders from sellers.
 
-.. option:: -v, --verbose
+.. option:: -n, --ndigits
+
+   Specifies the number of decimal places to round the statistic to. Must be in
+   range [0, 10). By default, the number of decimals rounded to is 1.
+
+.. option:: -d, --detailed-report
 
    Prints additional market information about the requested item, along with
-   the parameters you have specified. This includes:
-   
-   * The type of statistic you requested
-   * The average price calculated for the item
-   * The time range you specified for the request
-   * The highest and lowest prices found
-   * The total number of matching orders found.
+   the parameters you have specified. This includes
+   * the type of statistic you requested,
+   * the average price calculated for the item,
+   * the minimum and maximum prices found, and
+   * the total number of matching orders found.
+
+.. option:: --porcelain
+
+   Prints the bare detailed report separated with colons. Will be ignored if
+   not passed with :option:`--detailed-report`.
 
 .. option:: -h, --help
    
-   Prints the command line usage and then exits. If ``-h`` or ``--help`` are
-   used, WarMAC will ignore all other options.
+   Prints the command line usage and then exits. If used, WarMAC will ignore
+   all other options.
 
 **********
  Examples
@@ -114,18 +128,16 @@ Handling Output
 
 .. code-block:: console
 
-   $ warmac average -p ps4 -t 5 -v "bite" | grep "Time Range"
-   Time Range Used:             10 days
+   $ warmac average -p ps4 -t 5 -d "bite" | grep "Number of Orders"
+   Number of Orders:      93
 
 |  WarMAC output can also be redirected to a file:
 
 .. code-block:: console
 
-   $ warmac average -p PC -t 2 -v "vengeful revenant" > warmacOut.txt
+   $ warmac average -p PC -t 2 -d "vengeful revenant" > warmacOut.txt
    $ cat warmacOut.txt
    Item:                  Vengeful Revenant
-   Statistic Found:       Median
-   Time Range Used:       2 days
    Median Price:          5.0 platinum
    Max Price:             30 platinum
    Min Price:             4 platinum

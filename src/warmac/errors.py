@@ -41,13 +41,8 @@ class WarMACBaseError(Exception):
 
 
 class CommandError(WarMACBaseError):
-    """
-    Raised if subparser does not exist in :data:`main.SUBCMD_DISPATCH`.
-
-    Raised if the ``subparser`` field of ``argparse.Namespace`` does not
-    exist in :py:data:`main.SUBCMD_DISPATCH`. This should never be
-    raised if WarMAC executes as expected.
-    """
+    """Raised if the ``subparser`` field of ``argparse.Namespace`` does
+    not exist in :py:data:`main.SUBCMD_DISPATCH`."""  # noqa: D205, D209
 
     def __init__(self) -> None:
         """Construct a ``CommandError`` error."""
@@ -55,12 +50,8 @@ class CommandError(WarMACBaseError):
 
 
 class NoListingsFoundError(WarMACBaseError):
-    """
-    Raised if no listings were found.
-
-    Raised if no order listings are found given the set of parameters
-    that the user gives the program.
-    """
+    """Raised if no order listings are found given the set of parameters
+    that the user gives the program."""  # noqa: D205, D209
 
     def __init__(self) -> None:
         """Construct a ``NoListingsFoundError`` error."""
@@ -71,12 +62,8 @@ class NoListingsFoundError(WarMACBaseError):
 
 
 class WarMACHTTPError(WarMACBaseError):
-    """
-    Raised if the request experienced an error or gave a bad response.
-
-    Raised if the request made by the user returned an HTTP Status code
-    that was not 200.
-    """
+    """Raised if the request made by the user returned an HTTP Status
+    code that was not 200."""  # noqa: D205, D209
 
     def __init__(self, message: str) -> None:
         """Construct a ``WarMACHTTPError`` error."""
@@ -84,13 +71,9 @@ class WarMACHTTPError(WarMACBaseError):
 
 
 class InternalServerError(WarMACHTTPError):
-    """
-    Raised if the server has encountered an internal error.
-
-    Raised on HTTP status code 500, which indicates that the server has
-    encountered an internal error that prevents it from fulfilling the
-    user's request.
-    """
+    """Raised on HTTP status code 500, which indicates that the server
+    has encountered an internal error that prevents it from fulfilling
+    the user's request."""  # noqa: D205, D209
 
     def __init__(self) -> None:
         """Construct a ``MalformedURLError`` error."""
@@ -101,12 +84,8 @@ class InternalServerError(WarMACHTTPError):
 
 
 class MethodNotAllowedError(WarMACHTTPError):
-    """
-    Raised if the target resource doesn't support the desired method.
-
-    Raised on HTTP status code 405, which indicates that the server
-    knows the method, but the target resource doesn't support it.
-    """
+    """Raised on HTTP status code 405, which indicates that the server
+    knows the method, but the target resource doesn't support it."""  # noqa: D205, D209
 
     def __init__(self) -> None:
         """Construct a ``MethodNotAllowedError`` error."""
@@ -116,12 +95,8 @@ class MethodNotAllowedError(WarMACHTTPError):
 
 
 class MalformedURLError(WarMACHTTPError):
-    """
-    Raised if the given item does not exist.
-
-    Raised on HTTP status code 404, which indicates that the resource in
-    question does not exist.
-    """
+    """Raised on HTTP status code 404, which indicates that the resource
+    in question does not exist."""  # noqa: D205, D209
 
     def __init__(self) -> None:
         """Construct a ``MalformedURLError`` error."""
@@ -132,12 +107,8 @@ class MalformedURLError(WarMACHTTPError):
 
 
 class ForbiddenRequestError(WarMACHTTPError):
-    """
-    Raised if the server refuses to authorize a request.
-
-    Raised on HTTP status code 403, which indicates that access to the
-    desired resource is forbidden.
-    """
+    """Raised on HTTP status code 403, which indicates that access to
+    the desired resource is forbidden."""  # noqa: D205, D209
 
     def __init__(self) -> None:
         """Construct a ``ForbiddenRequestError`` error."""
@@ -148,12 +119,9 @@ class ForbiddenRequestError(WarMACHTTPError):
 
 
 class UnauthorizedAccessError(WarMACHTTPError):
-    """
-    Raised if the user doesn't have the correct credentials.
-
-    Raised on HTTP status code 401, which indicates that authorization
-    via proper user credentials is needed to access this resource.
-    """
+    """Raised on HTTP status code 401, which indicates that
+    authorization via proper user credentials is needed to access this
+    resource."""  # noqa: D205, D209
 
     def __init__(self) -> None:
         """Construct a ``ForbiddenRequestError`` error."""
@@ -164,12 +132,8 @@ class UnauthorizedAccessError(WarMACHTTPError):
 
 
 class UnknownError(WarMACHTTPError):
-    """
-    Raised if the HTTP Response Code is not covered.
-
-    Raised if the HTTP Response Code is not covered by any other error
-    previously stated.
-    """
+    """Raised if the HTTP Response Code is not covered by any other
+    error previously stated."""  # noqa: D205, D209
 
     def __init__(self, status_code: int) -> None:
         """Construct an ``UnknownError`` error."""

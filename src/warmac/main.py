@@ -74,7 +74,6 @@ def process_cli_command(args: list[str] | None) -> str:
     headers = {
         "Accept": "application/json",
         "Accept-Language": "en",
-        "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
     }
     cli_args = cli_parser.handle_input(args)
     fix_http_headers(headers, cli_args.platform, crossplay=cli_args.crossplay)

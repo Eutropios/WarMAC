@@ -42,7 +42,6 @@ if TYPE_CHECKING:
 http_headers: dict[str, str] = {
     "Accept": "application/json",
     "Accept-Language": "en",
-    "User-Agent": "Mozilla/5.0 Gecko/20100101 Firefox/116.0",
     "Platform": "ps4",
 }
 

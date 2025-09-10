@@ -528,16 +528,16 @@ class TestFormatOutput:
                 100.0,
                 [90, 95, 100, 105, 110],
                 True,
-                "Atlas Prime Set:100.0:90:110:5",
+                "Atlas Prime Set:5:100.0:90:110:5",
             ),
-            ("median", "Solo Item", 70.0, [70], True, "Solo Item:70.0:70:70:1"),
+            ("median", "Solo Item", 70.0, [70], True, "Solo Item:5:70.0:70:70:1"),
             (
                 "mean",
                 "Some Item",
                 987.654321,
                 [900, 1000],
                 True,
-                "Some Item:987.654321:900:1000:2",
+                "Some Item:5:987.654321:900:1000:2",
             ),
         ],
         ids=[
@@ -565,6 +565,7 @@ class TestFormatOutput:
         mock_args.detailed_report = True
         mock_args.statistic = statistic
         mock_args.item = item_name
+        mock_args.timerange = 5
         mock_args.porcelain = porcelain
         actual_output = average.format_output(stat_value, plat_list, mock_args)
         if porcelain:
