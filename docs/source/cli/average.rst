@@ -138,7 +138,13 @@ Handling Output
    $ warmac average -p PC -t 2 -d "vengeful revenant" > warmacOut.txt
    $ cat warmacOut.txt
    Item:                  Vengeful Revenant
+   Time Range:            2 days
    Median Price:          5.0 platinum
    Max Price:             30 platinum
    Min Price:             4 platinum
    Number of Orders:      38
+
+Porcelain Output
+----------------
+
+|  Porcelain output is in the form of colon-separated values.

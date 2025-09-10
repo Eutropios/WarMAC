@@ -230,7 +230,7 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
     space_after_label = 23
     return (
         f"{'Item:':{space_after_label}}{item_name}\n"
-        f"{'Time Range:':{space_after_label}}{args.timerange} days\n"
+        f"{'Time Range:':{space_after_label}}{args.timerange} day(s)\n"
         f"{f'{statistic} Price:':{space_after_label}}{stat} platinum\n"
         f"{'Max Price:':{space_after_label}}{max_list:.0f} platinum\n"
         f"{'Min Price:':{space_after_label}}{min_list:.0f} platinum\n"
