@@ -26,4 +26,4 @@ jobs:
       - name: Install deps
         run: uv sync --locked --group test
       - name: Run tests
-        run: pytest ./tests
+        run: uv run pytest tests
