@@ -81,8 +81,9 @@ def in_time_range(
     :return: True if ``last_updated ≤ time_range``, False if
         ``last_updated > time_range``.
     """
-    timestamp = datetime.datetime.fromisoformat(last_updated)
-    if sys.version_info < (3, 11):
+    if sys.version_info >= (3, 11):
+        timestamp = datetime.datetime.fromisoformat(last_updated)
+    else:
         split_string = last_updated.split("T", maxsplit=1)[0]
         ts_parts = split_string.split("-")
         timestamp = datetime.datetime(
