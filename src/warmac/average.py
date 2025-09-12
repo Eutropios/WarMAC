@@ -27,6 +27,9 @@ from __future__ import annotations
 
 import datetime
 import sys
+
+if sys.version_info < (3, 11):
+    import dateutil.parser
 from typing import TYPE_CHECKING
 
 from warmac import config, errors, fetch_data, schema
@@ -84,18 +87,7 @@ def in_time_range(
     if sys.version_info >= (3, 11):
         timestamp = datetime.datetime.fromisoformat(last_updated)
     else:
-        split_string = last_updated.split("T", maxsplit=1)[0]
-        ts_parts = split_string.split("-")
-        timestamp = datetime.datetime(
-            int(ts_parts[0].lstrip("0")),
-            int(ts_parts[1].lstrip("0")),
-            int(ts_parts[2].lstrip("0")),
-            0,
-            0,
-            0,
-            0,
-            datetime.timezone.utc,
-        )
+        timestamp = dateutil.parser.parse(last_updated)
     return 0 <= (current_time - timestamp).days <= time_range
 
 

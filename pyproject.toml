@@ -22,7 +22,11 @@
     "Typing :: Typed",
   ]
 
-  dependencies = ["msgspec>=0.19.0", "urllib3>=2.0.4"]
+  dependencies = [
+    "msgspec>=0.19.0",
+    "python-dateutil>=2.9; python_version < '3.11'",
+    "urllib3>=2.0.4",
+  ]
   # come time to introduce logging, some options are:
   # The logging stdlib module, Loguru, structlog, picologging, logbook, Eliot
   # Do research on all options to see which is best fit

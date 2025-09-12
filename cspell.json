@@ -28,6 +28,7 @@
         "capsys",
         "copybutton",
         "crossplay",
+        "dateutil",
         "docformatter",
         "endo",
         "eutropios",
