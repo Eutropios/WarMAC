@@ -192,8 +192,8 @@ class TestInTimeRange:
         """Test that ValueError is raised for completely malformed
         ISO-8601 timestamps."""  # noqa: D205, D209
         match_string = (
-            r"Invalid isoformat string: 'not-a-valid-timestamp'|'Unknown string format:"
-            r" not-a-valid-timestamp'"
+            r"Invalid isoformat string: 'not-a-valid-timestamp'|Unknown string format:"
+            r" not-a-valid-timestamp"
         )
         with pytest.raises(ValueError, match=match_string):
             average.in_time_range("not-a-valid-timestamp", self.TEST_CURRENT_TIME)
