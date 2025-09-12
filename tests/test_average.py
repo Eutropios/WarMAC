@@ -598,7 +598,13 @@ class TestFormatOutput:
         mock_args.item = "Nonexistent Item"
         mock_args.detailed_report = True
 
-        with pytest.raises(ValueError, match=r"max\(\) iterable argument is empty"):
+        with pytest.raises(
+            ValueError,
+            match=(
+                r"(max\(\) iterable argument is empty)|(max\(\) arg is an empty "
+                r"sequence)"
+            ),
+        ):
             average.format_output(stat, plat_list, mock_args)
 
     @staticmethod
