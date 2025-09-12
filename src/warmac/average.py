@@ -80,7 +80,11 @@ def in_time_range(
     :return: True if ``last_updated ≤ time_range``, False if
         ``last_updated > time_range``.
     """
-    timestamp = datetime.datetime.fromisoformat(last_updated)
+    try:
+        timestamp = datetime.datetime.fromisoformat(last_updated)
+    except ValueError:
+        split_string = last_updated.split("T", maxsplit=1)[0]
+        timestamp = datetime.datetime.fromisoformat(split_string)
     return 0 <= (current_time - timestamp).days <= time_range
 
 
