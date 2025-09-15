@@ -89,9 +89,6 @@
   wrap-descriptions   = 72
   wrap-summaries      = 72
 
-[tool.docstrfmt]
-  line-length = 80
-
 [tool.mypy]
   exclude = ["_build", "buck-out", "build", "dist", "htmlcov"]
 
