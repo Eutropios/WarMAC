@@ -1361,6 +1361,14 @@ test = [
     { name = "pytest" },
     { name = "pytest-mock" },
 ]
+typechecking = [
+    { name = "msgspec" },
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-mock" },
+    { name = "python-dateutil", marker = "python_full_version < '3.11'" },
+    { name = "urllib3" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -1394,4 +1402,12 @@ test = [
     { name = "coverage", specifier = ">=7.6,<8.0" },
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-mock", specifier = ">=3.14" },
+]
+typechecking = [
+    { name = "msgspec" },
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-mock" },
+    { name = "python-dateutil", marker = "python_full_version < '3.11'", specifier = ">=2.9" },
+    { name = "urllib3" },
 ]
