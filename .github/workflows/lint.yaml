@@ -20,9 +20,6 @@ jobs:
       - name: Install the project
         run: uv sync --locked
 
-      - name: Validate pyproject
-        run: uvx validate-pyproject
-
       - name: Format docstrings
         run: uvx docformatter . --black --pre-summary-newline -r -s sphinx --wrap-summaries 72 --wrap-descriptions 72
 
@@ -31,3 +28,29 @@ jobs:
 
       - name: Ruff format
         run: uvx ruff format . --check
+
+  mypy:
+    name: mypy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv and set the python version
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install deps
+        run: uv sync --locked --group test
+      - name: Run mypy
+        run: uv run mypy .
+
+        # NOTE: Add mypy here

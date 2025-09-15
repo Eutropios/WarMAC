@@ -68,6 +68,14 @@
     "pytest-mock>=3.14",
     "pytest>=8.0",
   ]
+  typeChecking = [
+    "msgspec",
+    "mypy",
+    "pytest",
+    "pytest-mock",
+    "python-dateutil>=2.9; python_version < '3.11'",
+    "urllib3",
+  ]
 
 [tool.coverage.run]
   command_line = "-m pytest -vv ./tests"
