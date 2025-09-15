@@ -26,5 +26,3 @@ jobs:
         run: uv sync --locked --group test
       - name: Run tests
         run: uv run pytest tests -vv
-
-        # NOTE: Add mypy here

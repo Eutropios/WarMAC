@@ -9,6 +9,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: markdownlint-cli2-action
+        uses: DavidAnson/markdownlint-cli2-action@v20.0.0
+        with:
+          config: ".markdownlint.yaml"
+          globs: "**/*.md"
+
       - name: "Set up Python"
         uses: actions/setup-python@v5
         with:
@@ -52,5 +58,3 @@ jobs:
         run: uv sync --locked --group test
       - name: Run mypy
         run: uv run mypy .
-
-        # NOTE: Add mypy here
