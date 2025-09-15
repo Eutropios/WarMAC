@@ -32,13 +32,13 @@
   description = "An average platinum price calculator for tradeable items in Warframe."
   # include = [""]
 
-  keywords = ["platinum", "warframe calculator", "warframe market", "warframe"]
-
-  license     = {text = "GPL-3.0-or-later"}
-  maintainers = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
-  name        = "WarMAC"
-  readme      = "README.md"
-  version     = "0.0.5"
+  keywords        = ["platinum", "warframe calculator", "warframe market", "warframe"]
+  license         = {text = "GPL-3.0-or-later"}
+  maintainers     = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
+  name            = "WarMAC"
+  readme          = "README.md"
+  requires-python = ">=3.10"
+  version         = "0.0.5"
 
 [project.scripts]
   warmac = "warmac.main:main"
