@@ -26,19 +26,29 @@ Logic for average subcommand.
 from __future__ import annotations
 
 import sys
-
-if sys.version_info >= (3, 11):
-    # NOTE: When Python 3.10 EOL, use datetime instead of dateutil
-    import datetime
-else:
-    import dateutil.parser
-
 from typing import TYPE_CHECKING
 
 from warmac import config, errors, fetch_data, schema
 
+if sys.version_info >= (3, 11):
+    from datetime import datetime as dt
+
+    parse = dt.fromisoformat
+else:
+    import dateutil.parser
+
+    parse = dateutil.parser.parse
+
+"""if sys.version_info >= (3, 11):
+    # NOTE: When Python 3.10 EOL, use datetime instead of dateutil
+    import datetime
+else:
+    import dateutil.parser"""
+
+
 if TYPE_CHECKING:
     import argparse
+    import datetime
     from typing import Literal
 
 
@@ -87,11 +97,12 @@ def in_time_range(
     :return: True if ``last_updated ≤ time_range``, False if
         ``last_updated > time_range``.
     """
-    if sys.version_info >= (3, 11):
+    """if sys.version_info >= (3, 11):
         # Use just this when 3.10 eol
         timestamp = datetime.datetime.fromisoformat(last_updated)
     else:
-        timestamp = dateutil.parser.parse(last_updated)
+        timestamp = dateutil.parser.parse(last_updated)"""
+    timestamp = parse(last_updated)
     return 0 <= (current_time - timestamp).days <= time_range
 
 

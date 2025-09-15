@@ -1,10 +1,10 @@
-name: Test
+name: Lint and Format
 
 on: [pull_request, workflow_dispatch]
 
 jobs:
-  test:
-    name: test
+  lint:
+    name: lint
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -26,5 +26,3 @@ jobs:
         run: uv sync --locked --group test
       - name: Run tests
         run: uv run pytest tests -vv
-
-        # NOTE: Add mypy here
