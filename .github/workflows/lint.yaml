@@ -24,7 +24,7 @@ jobs:
         run: uvx validate-pyproject
 
       - name: Format docstrings
-        run: uvx docformatter . --config pyproject.toml
+        run: uvx docformatter . --black --pre-summary-newline -r -s sphinx --wrap-summaries 72 --wrap-descriptions 72
 
       - name: Ruff lint
         run: uvx ruff check . --exit-non-zero-on-fix
