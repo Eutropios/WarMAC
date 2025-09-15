@@ -25,11 +25,14 @@ Logic for average subcommand.
 
 from __future__ import annotations
 
-import datetime
 import sys
 
-if sys.version_info < (3, 11):
+if sys.version_info >= (3, 11):
+    # NOTE: When Python 3.10 EOL, use datetime instead of dateutil
+    import datetime
+else:
     import dateutil.parser
+
 from typing import TYPE_CHECKING
 
 from warmac import config, errors, fetch_data, schema
@@ -85,6 +88,7 @@ def in_time_range(
         ``last_updated > time_range``.
     """
     if sys.version_info >= (3, 11):
+        # Use just this when 3.10 eol
         timestamp = datetime.datetime.fromisoformat(last_updated)
     else:
         timestamp = dateutil.parser.parse(last_updated)

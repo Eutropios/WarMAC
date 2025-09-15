@@ -16,7 +16,6 @@
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Utilities",
     "Typing :: Typed",
@@ -35,12 +34,11 @@
 
   keywords = ["platinum", "warframe calculator", "warframe market", "warframe"]
 
-  license         = {text = "GPL-3.0-or-later"}
-  maintainers     = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
-  name            = "WarMAC"
-  readme          = "README.md"
-  requires-python = ">=3.9"
-  version         = "0.0.5"
+  license     = {text = "GPL-3.0-or-later"}
+  maintainers = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
+  name        = "WarMAC"
+  readme      = "README.md"
+  version     = "0.0.5"
 
 [project.scripts]
   warmac = "warmac.main:main"
@@ -61,7 +59,6 @@
     "sphinx-last-updated-by-git>=0.3.6",
     "sphinx-lint>=1",
     "sphinx-notfound-page>=1",
-    "sphinx<8.0,>=7.2; python_version < '3.10' and python_version >= '3.9'",
     "sphinx<8.2,>=8.0; python_version >= '3.10' and python_version < '3.11'",
     "sphinx>=8.2; python_version >= '3.11'",
   ]
@@ -121,7 +118,7 @@
   line-length    = 88
   preview        = true
   show-fixes     = true
-  target-version = "py39"
+  target-version = "py310"
 
 [tool.ruff.format]
   indent-style              = "space"

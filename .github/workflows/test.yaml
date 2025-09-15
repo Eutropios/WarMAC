@@ -9,7 +9,6 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
@@ -26,4 +25,4 @@ jobs:
       - name: Install deps
         run: uv sync --locked --group test
       - name: Run tests
-        run: uv run pytest tests
+        run: uv run pytest tests -vv
