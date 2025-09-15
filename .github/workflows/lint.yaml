@@ -6,23 +6,28 @@ jobs:
   lint:
     name: lint
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version:
-          - "3.10"
-          - "3.11"
-          - "3.12"
-          - "3.13"
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install uv and set the python version
-        uses: astral-sh/setup-uv@v6
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version-file: "pyproject.toml"
 
-      - name: Install deps
-        run: uv sync --locked --group test
-      - name: Run tests
-        run: uv run pytest tests -vv
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install the project
+        run: uv sync --locked
+
+      - name: Validate pyproject
+        run: uv run validate-pyproject
+
+      - name: Format docstrings
+        run: uv run docformatter -e ./tests
+
+      - name: Ruff lint
+        run: uv run ruff check . --exit-non-zero-on-fix
+
+      - name: Ruff format
+        run: uv run ruff format .

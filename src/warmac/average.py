@@ -31,6 +31,7 @@ from typing import TYPE_CHECKING
 from warmac import config, errors, fetch_data, schema
 
 if sys.version_info >= (3, 11):
+    # NOTE: When Python 3.10 EOL, use datetime instead of dateutil
     from datetime import datetime as dt
 
     parse = dt.fromisoformat
@@ -38,13 +39,6 @@ else:
     import dateutil.parser
 
     parse = dateutil.parser.parse
-
-"""if sys.version_info >= (3, 11):
-    # NOTE: When Python 3.10 EOL, use datetime instead of dateutil
-    import datetime
-else:
-    import dateutil.parser"""
-
 
 if TYPE_CHECKING:
     import argparse
