@@ -21,13 +21,13 @@ jobs:
         run: uv sync --locked
 
       - name: Validate pyproject
-        run: uv run validate-pyproject
+        run: uvx validate-pyproject
 
       - name: Format docstrings
-        run: uv run docformatter -e ./tests
+        run: uvx docformatter -e ./tests
 
       - name: Ruff lint
-        run: uv run ruff check . --exit-non-zero-on-fix
+        run: uvx ruff check . --exit-non-zero-on-fix
 
       - name: Ruff format
-        run: uv run ruff format .
+        run: uvx ruff format .
