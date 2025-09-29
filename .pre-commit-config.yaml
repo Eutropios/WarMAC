@@ -17,6 +17,7 @@ repos:
           - --files
           - .git/COMMIT_EDITMSG
         stages: [commit-msg]
+        always_run: true # This might not be necessary.
 
   - repo: https://github.com/abravalheri/validate-pyproject
     rev: "v0.24.1"
