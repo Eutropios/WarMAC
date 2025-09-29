@@ -14,7 +14,7 @@ trim_trailing_whitespace = true
 ; trailing whitespace is relevant in these languages
 trim_trailing_whitespace = false
 
-[*.{md,yaml,toml}]
+[*.{md,toml,yaml,yml}]
 indent_size = 2
 
 [*.rst]

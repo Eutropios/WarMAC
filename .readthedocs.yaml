@@ -20,7 +20,4 @@ sphinx:
 # Optionally build your docs in additional formats such as PDF and ePub
 formats:
   - pdf
-# Optionally build your docs in additional formats such as PDF and ePub
-# formats:
-# - pdf
 # - epub
