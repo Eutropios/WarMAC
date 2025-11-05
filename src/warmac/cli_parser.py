@@ -256,7 +256,6 @@ def create_parser() -> WarMACParser:
     min_ndigits: Final = 0
     # The maximum ndigits to round the statistic to
     max_ndigits: Final = 10
-    # See above comment about state.
 
     # Option characters used: s, p, t, m, r, b, d, h, S, n
 
@@ -430,7 +429,6 @@ def create_parser() -> WarMACParser:
         usage="warmac help subcommand",
     )
     possible_subcommands = ("average", "help")
-    # See above comment about already modifying state in this function.
 
     help_parser.add_argument(
         "subcommand",
@@ -483,14 +481,17 @@ def handle_input(args: list[str] | None = None) -> argparse.Namespace:
     # in the command line arguments.
 
     # printing sys.argv[1] would print the subcommand
-    # parse args
     parsed_args = parser.parse_args(args)
     if parsed_args.subparser != "help":
         return parsed_args
-    # user requested help text, so not being written to stderr
+
+    # At this point, we know that the user explicitly requested help
+    # text, so we're not writing to stderr like we were above
     if parsed_args.subcommand:
         # if a subcommand is passed after help, parse the subcommand
         # with its `--help` flag.
+        # This "double parsing" may be slow, but this is the cleanest
+        # way to print help text for other subcommands
         parser.parse_args([parsed_args.subcommand, "--help"])
         # Code exits here as per argparse help code
     parser.print_help(sys.stdout)

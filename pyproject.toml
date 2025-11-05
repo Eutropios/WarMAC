@@ -126,13 +126,14 @@
   target-version = "py310"
 
 [tool.ruff.format]
+  docstring-code-format     = true
   indent-style              = "space"
   line-ending               = "auto"
   quote-style               = "double"
   skip-magic-trailing-comma = false
 
 [tool.ruff.lint]
-  # NOTE: Some rules are turned off by Ruff due to `target-version` being set to Py 3.9
+  # NOTE: Some rules are turned off by Ruff due to `target-version` being set to Py 3.10
   explicit-preview-rules = false
   ignore = [
     "AIR",    # I don't use airflow

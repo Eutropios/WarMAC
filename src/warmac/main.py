@@ -92,12 +92,12 @@ def main(args: list[str] | None = None) -> Literal[0, 1]:
     """
     try:
         data = process_cli_command(args)
-        print(data)
     except KeyError as err:
         raise errors.CommandError from err
     except errors.WarMACBaseError as err:
         sys.stderr.write(err.message)
         return 1
+    print(data)
     return 0
 
 
