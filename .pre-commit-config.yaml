@@ -1,11 +1,11 @@
 repos:
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: "v0.18.1"
+    rev: "v0.19.1"
     hooks:
       - id: markdownlint-cli2
 
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: "v9.2.1"
+    rev: "v9.3.3"
     hooks:
       - id: cspell # Spell check changed files
       - id: cspell # Spell check the commit message
@@ -32,7 +32,7 @@ repos:
         args: [-i, -e ./tests]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.14.3"
+    rev: "v0.14.6"
     hooks:
       - id: ruff-check
         args: [--exit-non-zero-on-fix]
@@ -47,7 +47,7 @@ repos:
           [msgspec==0.19.0, urllib3==2.4.0, pytest==8.3.5, pytest-mock==3.14.1]
 
   - repo: https://github.com/rhysd/actionlint
-    rev: "v1.7.8"
+    rev: "v1.7.9"
     hooks:
       - id: actionlint
 
