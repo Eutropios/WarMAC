@@ -103,7 +103,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         """
         result = super()._format_action(action)
         return (
-            f"{'':{self._current_indent}}{result.lstrip()}"
+            f"{'':{self._current_indent}}{result.strip()}"
             if isinstance(action, argparse._SubParsersAction)
             else result
         )
