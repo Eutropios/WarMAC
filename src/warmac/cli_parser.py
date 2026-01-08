@@ -53,6 +53,8 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         indent_increment: int = 2,
         max_help_position: int = 24,
         width: int | None = None,
+        *,
+        color: bool = True,
     ) -> None:
         """
         Construct a :class:`.CustomHelpFormat` object.
@@ -64,8 +66,9 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
             the help text, defaults to 24.
         :param width: Maximum width that the help screen is able to
             occupy in the terminal, defaults to None.
+        :param color: Add color to parser help text, defaults to True.
         """
-        super().__init__(prog, indent_increment, max_help_position, width)
+        super().__init__(prog, indent_increment, max_help_position, width, color)
 
     def _format_action_invocation(self, action: argparse.Action) -> str:
         """
@@ -103,7 +106,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         """
         result = super()._format_action(action)
         return (
-            f"{'':{self._current_indent}}{result.strip()}"
+            f"{'':{self._current_indent}}{result.lstrip()}"
             if isinstance(action, argparse._SubParsersAction)
             else result
         )
@@ -191,6 +194,7 @@ def create_parser() -> WarMACParser:
     platforms: Final = ("pc", "ps4", "xbox", "switch", "mobile")
 
     parser = WarMACParser(
+        color=False,
         usage="warmac <command> [options]",
         description=(
             "A program to fetch the average market cost of an item in Warframe."

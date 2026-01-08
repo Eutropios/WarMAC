@@ -37,7 +37,7 @@
   maintainers     = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
   name            = "WarMAC"
   readme          = "README.md"
-  requires-python = ">=3.10,<3.14"
+  requires-python = ">=3.10,<3.15"
   version         = "0.0.5"
 
 [project.scripts]
@@ -48,7 +48,7 @@
   repository    = "https://github.com/Eutropios/WarMAC"
 
 [dependency-groups]
-  dev = ["mypy", "ty", "vermin", "viztracer>=1.0.0"]
+  dev = ["mypy", "vermin", "viztracer>=1.0.0"]
   docs = [
     "docstrfmt>=1.10.0",
     "docutils>=0.18.1",
@@ -100,12 +100,12 @@
 [tool.mypy]
   exclude = ["_build", "buck-out", "build", "dist", "htmlcov"]
 
-  python_version = "3.13"
+  python_version = "3.14"
   strict         = true
 
 [tool.pyright]
   include          = ["src", "tests"]
-  pythonVersion    = "3.13"
+  pythonVersion    = "3.14"
   typeCheckingMode = "strict"
 
 [tool.ruff]
@@ -193,7 +193,7 @@
 [tool.ty.environment]
   python          = "./.venv"
   python-platform = "all"
-  python-version  = "3.13"
+  python-version  = "3.14"
 
 [tool.ty.src]
   include = ["src", "tests"]
