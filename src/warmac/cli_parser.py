@@ -193,22 +193,39 @@ def create_parser() -> WarMACParser:
     # Platforms the user can choose from
     platforms: Final = ("pc", "ps4", "xbox", "switch", "mobile")
 
-    parser = WarMACParser(
-        color=False,
-        usage="warmac <command> [options]",
-        description=(
-            "A program to fetch the average market cost of an item in Warframe."
-        ),
-        epilog=(
-            "More help can be found at: "
-            "https://warmac.readthedocs.io/en/latest/usage/warmac.html"
-        ),
-        formatter_class=lambda prog: CustomHelpFormat(
-            prog=prog,  # first arg in CL, which is the file's name
-            max_help_position=default_width,
-        ),
-        add_help=False,  # don't add default help msg
-    )
+    try:
+        parser = WarMACParser(
+            color=False,
+            usage="warmac <command> [options]",
+            description=(
+                "A program to fetch the average market cost of an item in Warframe."
+            ),
+            epilog=(
+                "More help can be found at: "
+                "https://warmac.readthedocs.io/en/latest/usage/warmac.html"
+            ),
+            formatter_class=lambda prog: CustomHelpFormat(
+                prog=prog,  # first arg in CL, which is the file's name
+                max_help_position=default_width,
+            ),
+            add_help=False,  # don't add default help msg
+        )
+    except TypeError:
+        parser = WarMACParser(
+            usage="warmac <command> [options]",
+            description=(
+                "A program to fetch the average market cost of an item in Warframe."
+            ),
+            epilog=(
+                "More help can be found at: "
+                "https://warmac.readthedocs.io/en/latest/usage/warmac.html"
+            ),
+            formatter_class=lambda prog: CustomHelpFormat(
+                prog=prog,  # first arg in CL, which is the file's name
+                max_help_position=default_width,
+            ),
+            add_help=False,  # don't add default help msg
+        )
     parser._positionals.title = "commands"  # changing positional header
 
     # ------- Main Parser Arguments -------
