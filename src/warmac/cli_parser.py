@@ -53,8 +53,8 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         indent_increment: int = 2,
         max_help_position: int = 24,
         width: int | None = None,
-        *,
-        color: bool = True,
+        # *,
+        # color: bool = True,
     ) -> None:
         """
         Construct a :class:`.CustomHelpFormat` object.
@@ -68,7 +68,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
             occupy in the terminal, defaults to None.
         :param color: Add color to parser help text, defaults to True.
         """
-        super().__init__(prog, indent_increment, max_help_position, width, color)
+        super().__init__(prog, indent_increment, max_help_position, width)
 
     def _format_action_invocation(self, action: argparse.Action) -> str:
         """
