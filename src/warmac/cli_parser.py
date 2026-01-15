@@ -193,7 +193,7 @@ def create_parser() -> WarMACParser:
     # Platforms the user can choose from
     platforms: Final = ("pc", "ps4", "xbox", "switch", "mobile")
 
-    try:
+    if sys.version_info >= (3, 14):
         parser = WarMACParser(
             color=False,
             usage="warmac <command> [options]",
@@ -210,7 +210,7 @@ def create_parser() -> WarMACParser:
             ),
             add_help=False,  # don't add default help msg
         )
-    except TypeError:
+    else:
         parser = WarMACParser(
             usage="warmac <command> [options]",
             description=(
@@ -226,6 +226,7 @@ def create_parser() -> WarMACParser:
             ),
             add_help=False,  # don't add default help msg
         )
+
     parser._positionals.title = "commands"  # changing positional header
 
     # ------- Main Parser Arguments -------

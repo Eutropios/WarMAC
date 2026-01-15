@@ -250,6 +250,7 @@ class TestStdlibMonkeyPatching:
             ),
             description="Stuff description",
             add_help=False,
+            usage="usage here stuff [-h]",
         )
         target_parser = stuff_parser if test_subparser else some_parser
 
