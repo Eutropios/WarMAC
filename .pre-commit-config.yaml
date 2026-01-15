@@ -15,7 +15,8 @@ repos:
       - id: validate-pyproject
 
   - repo: https://github.com/PyCQA/docformatter
-    rev: "v1.7.7"
+    # rev: "v1.7.8"  update when new version becomes available
+    rev: "d9ace1fdef5d2c164ee7284fa07a63f8ead48682"
     hooks:
       - id: docformatter
         additional_dependencies: [tomli]
