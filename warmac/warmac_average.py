@@ -15,7 +15,7 @@ External packages required: urllib3
 from __future__ import annotations
 
 # Argparse is imported normally to satisfy Sphinx autodoc
-import argparse  # noqa: TCH003
+import argparse  # noqa: TC003
 import datetime
 import statistics
 from typing import Any, Callable, Dict, List, Sequence, TypedDict, Union
