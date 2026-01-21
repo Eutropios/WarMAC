@@ -40,16 +40,16 @@ jobs:
         run: uv python install
 
       - name: Install the project
-        run: uv sync --locked
+        run: uv sync --locked --no-dev
 
       - name: temp
         run: python --version
 
       - name: Format docstrings
-        run: uvx docformatter . --black --pre-summary-newline -r -s sphinx --wrap-summaries 72 --wrap-descriptions 72
+        run: uvx --managed-python docformatter . --black --pre-summary-newline -r -s sphinx --wrap-summaries 72 --wrap-descriptions 72
 
       - name: Ruff lint
-        run: uvx ruff check . --exit-non-zero-on-fix
+        run: uvx --managed-python ruff check . --exit-non-zero-on-fix
 
       - name: Ruff format
         run: uvx ruff format . --check
