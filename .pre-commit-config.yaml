@@ -15,15 +15,14 @@ repos:
       - id: validate-pyproject
 
   - repo: https://github.com/PyCQA/docformatter
-    # rev: "v1.7.8"  update when new version becomes available
-    rev: "d9ace1fdef5d2c164ee7284fa07a63f8ead48682"
+    rev: "v1.7.7"
     hooks:
       - id: docformatter
         additional_dependencies: [tomli]
         args: [-i, -e ./tests]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.14.11"
+    rev: "v0.14.13"
     hooks:
       - id: ruff-check
         args: [--exit-non-zero-on-fix]
@@ -38,7 +37,7 @@ repos:
           [msgspec==0.19.0, urllib3==2.4.0, pytest==8.3.5, pytest-mock==3.14.1]
 
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: v1.20.0
+    rev: v1.22.0
     hooks:
       - id: zizmor
         args: [--persona, pedantic]
