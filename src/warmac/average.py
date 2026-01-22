@@ -35,7 +35,8 @@ if sys.version_info >= (3, 11):
     from datetime import datetime as dt
 
     parse = dt.fromisoformat
-else:
+else:  # pragma: no cover
+    # this is already tested by CI versioned testing
     import dateutil.parser
 
     parse = dateutil.parser.parse

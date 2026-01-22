@@ -34,7 +34,7 @@ from warmac import config
 
 if TYPE_CHECKING:
     from collections.abc import Generator
-    from typing import Final, NoReturn
+    from typing import Any, Final, NoReturn
 
 
 class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
@@ -105,6 +105,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
             excluded, and the leading indentation will be corrected.
         """
         result = super()._format_action(action)
+        # print(result)
         return (
             f"{'':{self._current_indent}}{result.lstrip()}"
             if isinstance(action, argparse._SubParsersAction)
@@ -193,39 +194,25 @@ def create_parser() -> WarMACParser:
     # Platforms the user can choose from
     platforms: Final = ("pc", "ps4", "xbox", "switch", "mobile")
 
+    common_kwargs: dict[str, Any] = {
+        "usage": "warmac <command> [options]",
+        "description": (
+            "A program to fetch the average market cost of an item in Warframe."
+        ),
+        "epilog": (
+            "More help can be found at: "
+            "https://warmac.readthedocs.io/en/latest/usage/warmac.html"
+        ),
+        "formatter_class": lambda prog: CustomHelpFormat(
+            prog=prog, max_help_position=default_width
+        ),
+        "add_help": False,
+    }
+
     if sys.version_info >= (3, 14):
-        parser = WarMACParser(
-            color=False,
-            usage="warmac <command> [options]",
-            description=(
-                "A program to fetch the average market cost of an item in Warframe."
-            ),
-            epilog=(
-                "More help can be found at: "
-                "https://warmac.readthedocs.io/en/latest/usage/warmac.html"
-            ),
-            formatter_class=lambda prog: CustomHelpFormat(
-                prog=prog,  # first arg in CL, which is the file's name
-                max_help_position=default_width,
-            ),
-            add_help=False,  # don't add default help msg
-        )
-    else:
-        parser = WarMACParser(
-            usage="warmac <command> [options]",
-            description=(
-                "A program to fetch the average market cost of an item in Warframe."
-            ),
-            epilog=(
-                "More help can be found at: "
-                "https://warmac.readthedocs.io/en/latest/usage/warmac.html"
-            ),
-            formatter_class=lambda prog: CustomHelpFormat(
-                prog=prog,  # first arg in CL, which is the file's name
-                max_help_position=default_width,
-            ),
-            add_help=False,  # don't add default help msg
-        )
+        common_kwargs["color"] = False
+
+    parser = WarMACParser(**common_kwargs)
 
     parser._positionals.title = "commands"  # changing positional header
 
