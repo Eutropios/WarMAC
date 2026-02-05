@@ -92,14 +92,8 @@ def in_time_range(
     :return: ``True`` if ``last_updated ≤ time_range``, ``False`` if
         ``last_updated > time_range``.
     """
-    """
-    If sys.version_info >= (3, 11):
-
     # Use just this when 3.10 eol
-        timestamp = datetime.datetime.fromisoformat(last_updated)
-    else:
-        timestamp = dateutil.parser.parse(last_updated)
-    """
+    # timestamp = datetime.datetime.fromisoformat(last_updated)
     timestamp = parse(last_updated)
     return 0 <= (current_time - timestamp).days <= time_range
 

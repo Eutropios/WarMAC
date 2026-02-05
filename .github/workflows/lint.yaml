@@ -41,7 +41,7 @@ jobs:
       #  run: uvx --managed-python docformatter . --black --pre-summary-newline -r -s sphinx --wrap-summaries 72 --wrap-descriptions 72
 
       - name: Ruff lint
-        run: uvx --managed-python ruff check . --exit-non-zero-on-fix
+        run: uvx ruff check . --exit-non-zero-on-fix
 
       - name: Ruff format
         run: uvx ruff format . --check

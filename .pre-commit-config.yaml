@@ -5,12 +5,12 @@ repos:
       - id: markdownlint-cli2
 
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: "v9.4.0"
+    rev: "v9.6.0"
     hooks:
       - id: cspell # Spell check changed files
 
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: "v0.24.1"
+    rev: "v0.25"
     hooks:
       - id: validate-pyproject
 
@@ -22,7 +22,7 @@ repos:
         args: [-i, -e ./tests]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.14.13"
+    rev: "v0.15.0"
     hooks:
       - id: ruff-check
         args: [--exit-non-zero-on-fix]

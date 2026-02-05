@@ -3,8 +3,7 @@
 # WarMAC Version 0.0.5
 
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Eutropios/WarMAC/main)](https://github.com/Eutropios/WarMAC/commits/main/)
-[![Documentation Status](https://readthedocs.org/projects/warmac/badge/?version=latest)](https://warmac.readthedocs.io/en/latest/?badge=latest)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Eutropios/WarMAC/main.svg)](https://results.pre-commit.ci/latest/github/Eutropios/WarMAC/main)\
+[![Documentation Status](https://readthedocs.org/projects/warmac/badge/?version=latest)](https://warmac.readthedocs.io/en/latest/?badge=latest)\
 [![PyPI - Package Version](https://img.shields.io/pypi/v/warmac)](https://pypi.org/project/warmac/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/warmac)](https://pypi.org/project/warmac/)\
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
@@ -41,14 +40,31 @@ mods, and arcane enhancements.
 
 ## Installation<a id="installation"></a> <!--This ensures PyPI compatibility-->
 
-WarMAC only supports Python versions 3.10 to 3.13.
+WarMAC supports Python versions 3.10 to 3.14.
 
-The primary method of installing WarMAC is by installing it through [pipx](https://pypa.github.io/pipx/)
-or through [uv](https://docs.astral.sh/uv/guides/tools/).
+The primary method of installing WarMAC is by installing it through [uv](https://docs.astral.sh/uv/),
+though [pipx](https://pypa.github.io/pipx/) may be used as well.
 This keeps WarMAC and its dependencies separate from your global Python
 packages. Installation can be done using one of the following commands:
 
+### Using uv (or uvx)
+
+The most basic method of installation is by installing as a uv tool like so:
+
+```bash
+uv tool install warmac
+```
+
+You can ensure that you've installed WarMAC correctly by calling its help page
+like so:
+
+```bash
+warmac --version
+```
+
 ### Using pipx
+
+An alternative to installing with uv is pipx:
 
 ```bash
 pipx install warmac
@@ -61,29 +77,10 @@ like so:
 warmac --version
 ```
 
-### Using uv (or uvx)
+### Using pip
 
-```bash
-uv tool install warmac
-```
-
-Or, to run warmac without installing it:
-
-```bash
-uvx warmac
-```
-
-You can ensure that you've installed WarMAC correctly by calling its help page
-like so:
-
-```bash
-warmac --version
-```
-
-### Using Pip
-
-Using pip alone to install WarMAC will work just as well. Installation can be
-done using the following command:
+Using pip alone to install WarMAC will work just as well, though dependencies
+will not be isolated. Installation can be done using the following command:
 
 | Platform | Command |
 | --- | --- |
@@ -98,25 +95,8 @@ You can ensure that you've installed WarMAC correctly by calling its help page
 like so:
 
 ```bash
-warmac --help
+warmac --version
 ```
-
-### Using uv (for development)
-
-For developing WarMAC, please build using [uv](https://docs.astral.sh/uv/)
-either through the provided [`uv.lock`](https://github.com/Eutropios/WarMAC/blob/main/uv.lock)
-file (recommended) or by building a lock of your own.
-
-To obtain the source code, you can either download the latest version from [Releases](https://github.com/Eutropios/WarMAC/releases)
-or by cloning the repository using [git](https://git-scm.com/downloads) with the
-following command:
-
-```bash
-git clone https://github.com/Eutropios/WarMAC.git ./some/directory
-```
-
-WarMAC can then be built by navigating to the directory you cloned WarMAC into,
-and running the `uv build` and `uv install` commands.
 
 ## Usage<a id="usage"></a>
 
@@ -181,21 +161,31 @@ found on [WarMAC's readthedocs page](https://warmac.readthedocs.io/en/).
 
 ## Contributing<a id="contributing"></a>
 
-Contributions are welcome. The expected development stack that you will use
-consists of `docformatter`, `mypy`, and `ruff`. You may run pre-commit hooks
-yourself, though it is not necessary. Please see [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml)
-for the appropriate configuration of each tool.
+Contributions are welcome. Please use the provided pre-commit hooks.
+
+WarMAC is built using [uv](https://docs.astral.sh/uv/). Please use the provided
+[`uv.lock`](https://github.com/Eutropios/WarMAC/blob/main/uv.lock) file.
+
+To obtain the source code, you can clone the repository using [git](https://git-scm.com/downloads)
+with the following command:
+
+```bash
+git clone https://github.com/Eutropios/WarMAC.git ./some/directory
+```
+
+WarMAC can then be built by navigating to the directory you cloned WarMAC into,
+and running the `uv build` and `uv install` commands.
 
 ### Testing
 
-Tests must be run before submitting a PR. Please use the provided dependency
-grouping.
+Tests must be run before submitting a PR. Please use the provided `test`
+dependency group.
 
 ## Acknowledgements<a id="acknowledgements"></a>
 
 In addition to the tools listed in [`.pre-commit-config.yaml`](https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml)
 and [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml),
-this project also uses [Taplo](https://github.com/tamasfe/taplo) in its
+this project uses [Taplo](https://github.com/tamasfe/taplo) in its
 development.
 
 ## Licensing<a id="licensing"></a>
