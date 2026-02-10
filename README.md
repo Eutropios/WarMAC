@@ -183,10 +183,9 @@ dependency group.
 
 ## Acknowledgements<a id="acknowledgements"></a>
 
-In addition to the tools listed in [`.pre-commit-config.yaml`](https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml)
-and [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml),
-this project uses [Taplo](https://github.com/tamasfe/taplo) in its
-development.
+This project uses the tools listed in [`.pre-commit-config.yaml`](https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml)
+and [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml)
+in its development.
 
 ## Licensing<a id="licensing"></a>
 
