@@ -1,4 +1,5 @@
 name: Zizmor analysis
+# Separated from project.yaml for security reasons.
 
 on:
   push:

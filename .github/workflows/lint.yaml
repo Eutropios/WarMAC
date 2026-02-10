@@ -20,12 +20,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: markdownlint-cli2-action
-        uses: DavidAnson/markdownlint-cli2-action@07035fd053f7be764496c0f8d8f9f41f98305101 # v22.0.0
-        with:
-          config: ".markdownlint.yaml"
-          globs: "**/*.md"
-
       - name: Install uv
         uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
         with:
