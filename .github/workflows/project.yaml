@@ -32,7 +32,7 @@ jobs:
         run: tombi lint pyproject.toml
 
       - name: Format TOML files
-        run: tombi format pyproject.toml
+        run: tombi format --check --diff pyproject.toml
 
       - name: markdownlint-cli2-action
         uses: DavidAnson/markdownlint-cli2-action@07035fd053f7be764496c0f8d8f9f41f98305101 # v22.0.0
