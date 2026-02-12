@@ -102,6 +102,16 @@
   python_version = "3.14"
   strict         = true
 
+[tool.pydoclint]
+  allow-init-docstring                     = true
+  arg-type-hints-in-docstring              = false
+  check-return-types                       = false
+  check-style-mismatch                     = true
+  check-yield-types                        = false
+  exclude                                  = '\.git|\.tox|\.github|\.venv|\.venv-314|\.pytest_cache|dist|docs/_build'
+  should-document-private-class-attributes = true
+  style                                    = "sphinx"
+
 [tool.pyright]
   include          = ["src", "tests"]
   pythonVersion    = "3.14"
@@ -176,6 +186,7 @@
   "src/warmac/__init__.py"   = ["I002"]
   "src/warmac/__main__.py"   = ["I002"]
   "src/warmac/cli_parser.py" = ["SLF001"]
+  "src/warmac/fetch_data.py" = ["RUF100", "RUF102"]
   "tests/**.py"              = ["D101", "S101"]
   "tests/**/__init__.py"     = ["I002"]
   # *IMPORTANT* - A dirty hack in cli_parser.py uses private components

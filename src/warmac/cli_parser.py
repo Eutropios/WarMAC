@@ -53,8 +53,6 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         indent_increment: int = 2,
         max_help_position: int = 24,
         width: int | None = None,
-        # *,
-        # color: bool = True,
     ) -> None:
         """
         Construct a :class:`.CustomHelpFormat` object.
@@ -66,7 +64,6 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
             the help text, defaults to 24.
         :param width: Maximum width that the help screen is able to
             occupy in the terminal, defaults to None.
-        :param color: Add color to parser help text, defaults to True.
         """
         super().__init__(prog, indent_increment, max_help_position, width)
 
@@ -121,7 +118,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         method to fix the leading indentation for command names in
         the help menu.
 
-        :param action: Action to be yielded from.
+        :param action: Action to be assessed for correct indentation.
         :yield: Actions from a list returned by
             ``action._get_subactions``.
         """
@@ -151,11 +148,18 @@ def str_to_int_bounds_check(inp_val: str, min_val: int, max_val: int) -> int:
         integer or is not ``min_val <= int(inp_val) < max_val``.
     :return: Return ``inp_val`` as an integer.
     """
-    with contextlib.suppress(ValueError):
-        if min_val <= (casted_int := int(inp_val)) < max_val:
-            return casted_int
-    msg = f"'{inp_val}' is not an integer in the valid range of [{min_val}, {max_val})."
-    raise argparse.ArgumentTypeError(msg)
+    try:
+        casted_int = int(inp_val)
+    except ValueError as err:
+        # If casting fails, we don't even need to check the bounds
+        msg = f"'{inp_val}' is not a valid integer."
+        raise argparse.ArgumentTypeError(msg) from err
+
+    if not (min_val <= casted_int < max_val):
+        msg = f"'{inp_val}' is not in the valid range of [{min_val}, {max_val})."
+        raise argparse.ArgumentTypeError(msg) from None
+
+    return casted_int
 
 
 class WarMACParser(argparse.ArgumentParser):

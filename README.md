@@ -191,7 +191,7 @@ in its development.
 
 ***This project is NOT affiliated with Warframe, Digital Extremes, or Warframe Market***
 
-Copyright (C) 2025  Noah Jenner under GNU GPL version 3.0-or-later
+Copyright (C) 2023-2026  Noah Jenner under GNU GPL version 3.0-or-later
 
 *The full details of the license can be found at [`LICENSE.txt`](https://github.com/Eutropios/WarMAC/blob/main/LICENSE)*
 *For licensing regarding any dependencies, please see [`LICENSES/](https://github.com/Eutropios/WarMAC/blob/main/LICENSES/)*

@@ -5,7 +5,7 @@
 ########
 
 
-.. py:type:: fetch_data.AverageKind
+.. py:type:: config.AverageKind
 
    A type alias representing the union of average statistic types.
 

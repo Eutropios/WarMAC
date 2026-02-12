@@ -47,6 +47,7 @@
         "nitpicky",
         "pipx",
         "pissy",
+        "pydoclint",
         "pyproject",
         "Reimplementations",
         "subactions",

@@ -35,8 +35,6 @@
 
 .. autofunction:: fetch_data.item_url
 
-.. autofunction:: fetch_data.http_code_check
-
 .. autofunction:: fetch_data.get_page
 
 .. autofunction:: fetch_data.get_data

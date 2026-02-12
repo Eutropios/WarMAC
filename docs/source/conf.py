@@ -12,6 +12,7 @@ Configuration file for Sphinx.
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -23,12 +24,13 @@ python_path = str(Path("../../src/warmac").resolve())
 sys.path.insert(0, python_path)
 
 project = "WarMAC"
-copyright = "2023–2025, Noah Jenner"  # noqa: A001, RUF001
+copyright = "2023–2026, Noah Jenner"  # noqa: A001, RUF001
 author = "Noah Jenner"
 release = config.VERSION
 language = "en"
 
 # -- General Config ----------------------------------------------------
+os.environ["SPHINX_AUTODOC_RELOAD_MODULES"] = "1"
 
 extensions = [
     "sphinx.ext.duration",

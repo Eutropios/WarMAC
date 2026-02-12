@@ -79,7 +79,7 @@
    Calculates the price statistic of the item based on orders from buyers
    instead of orders from sellers.
 
-.. option:: -n, --ndigits
+.. option:: -n, --ndigits <ndigits>
 
    Specifies the number of decimal places to round the statistic to. Must be in
    range [0, 10). By default, the number of decimals rounded to is 1.
