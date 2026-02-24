@@ -1,6 +1,11 @@
 name: Lint and Format
 
 on:
+  push:
+    paths:
+      - 'src/**'
+      - 'docs/source/conf.py'
+      - 'tests/**'
   pull_request:
     paths:
       - 'src/**'
