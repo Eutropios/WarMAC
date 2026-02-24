@@ -41,7 +41,6 @@ DEFAULT_NDIGITS = 1
 # The current version of WarMAC
 VERSION = "0.0.5"
 
-# Convert to a match case when 3.9 EOL. Default case raises error
 AVERAGE_FUNCTIONS: Mapping[AverageKind, Callable[[Sequence[int]], float]] = {
     "geometric": statistics.geometric_mean,
     "mean": statistics.mean,

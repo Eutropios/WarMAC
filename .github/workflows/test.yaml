@@ -1,26 +1,58 @@
 name: Test
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'docs/source/conf.py'
+      - 'tests/**'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'docs/source/conf.py'
+      - 'tests/**'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     name: test
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+
     strategy:
+      fail-fast: false
       matrix:
         python-version:
-          - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
           - "3.13"
+          - "3.14"
+          - "3.14t"
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Install uv and set the python version
-        uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
         with:
+          persist-credentials: false
+
+      - name: Install uv and set python version
+        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
+        with:
+          version: "0.9.26"
           python-version: ${{ matrix.python-version }}
 
+      - name: Install deps
+        run: uv sync --no-dev --locked --group test
       - name: Run tests
-        run: python3 --version
+        run: uv run pytest tests -vv

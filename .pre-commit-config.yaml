@@ -1,54 +1,59 @@
 repos:
+  - repo: https://github.com/tombi-toml/tombi-pre-commit
+    rev: v0.7.32
+    hooks:
+      - id: tombi-format
+        args: [--check, --diff, pyproject.toml]
+      - id: tombi-lint
+        args: [pyproject.toml]
+
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: "v0.18.1"
+    rev: "v0.21.0"
     hooks:
       - id: markdownlint-cli2
 
   - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: "v9.2.0"
+    rev: "v9.7.0"
     hooks:
       - id: cspell # Spell check changed files
-      - id: cspell # Spell check the commit message
-        name: check commit message spelling
-        args:
-          - --no-must-find-files
-          - --no-progress
-          - --no-summary
-          - --files
-          - .git/COMMIT_EDITMSG
-        stages: [commit-msg]
 
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: "v0.24.1"
+    rev: "v0.25"
     hooks:
       - id: validate-pyproject
 
-  - repo: https://github.com/PyCQA/docformatter
-    rev: "v1.7.7"
-    hooks:
-      - id: docformatter
-        additional_dependencies: [tomli]
-        args: [-i, -e ./tests]
+  #- repo: https://github.com/PyCQA/docformatter
+  #  rev: "v1.7.7"
+  #  hooks:
+  #    - id: docformatter
+  #      additional_dependencies: [tomli]
+  #      args: [-i, -e ./tests]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.13.0"
+    rev: "v0.15.2"
     hooks:
       - id: ruff-check
         args: [--exit-non-zero-on-fix]
       - id: ruff-format
 
+  - repo: https://github.com/jsh9/pydoclint
+    rev: "0.8.3"
+    hooks:
+      - id: pydoclint
+
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.17.1"
+    rev: "v1.19.1"
     hooks:
       - id: mypy
         args: [--strict, --ignore-missing-imports]
         additional_dependencies:
           [msgspec==0.19.0, urllib3==2.4.0, pytest==8.3.5, pytest-mock==3.14.1]
 
-  - repo: https://github.com/rhysd/actionlint
-    rev: "v1.7.7"
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.22.0
     hooks:
-      - id: actionlint
+      - id: zizmor
+        args: [--persona, pedantic]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v6.0.0"

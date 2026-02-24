@@ -6,12 +6,8 @@
 # *~
 
 # Python-generated files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
 *.egg-info
+*.py[oc]
 .bzr
 .coverage
 .direnv
@@ -31,10 +27,12 @@ wheels/
 .svn
 .venv
 .vscode
+__pycache__/
 __pypackages__
 _build
 buck-out
 build
+dist/
 docs/_build
 htmlcov
 node_modules
@@ -42,3 +40,4 @@ report.json
 site-packages
 toAdd.md
 venv
+wheels/

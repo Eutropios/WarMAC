@@ -25,13 +25,25 @@ Logic for average subcommand.
 
 from __future__ import annotations
 
-import datetime
+import sys
 from typing import TYPE_CHECKING
 
 from warmac import config, errors, fetch_data, schema
 
+if sys.version_info >= (3, 11):
+    # NOTE: When Python 3.10 EOL, use datetime instead of dateutil
+    from datetime import datetime as dt
+
+    parse = dt.fromisoformat
+else:  # pragma: no cover
+    # this is already tested by CI versioned testing
+    import dateutil.parser
+
+    parse = dateutil.parser.parse
+
 if TYPE_CHECKING:
     import argparse
+    import datetime
     from typing import Literal
 
 
@@ -77,10 +89,12 @@ def in_time_range(
     :param current_time: Current UTC time.
     :param time_range: Maximum age, in days, that an order can be to
         be accepted, defaults to :py:const:`config.DEFAULT_TIME`.
-    :return: True if ``last_updated ≤ time_range``, False if
+    :return: ``True`` if ``last_updated ≤ time_range``, ``False`` if
         ``last_updated > time_range``.
     """
-    timestamp = datetime.datetime.fromisoformat(last_updated)
+    # Use just this when 3.10 eol
+    # timestamp = datetime.datetime.fromisoformat(last_updated)
+    timestamp = parse(last_updated)
     return 0 <= (current_time - timestamp).days <= time_range
 
 
@@ -96,16 +110,16 @@ def check_mod_arcane_rank(
     Check if an order's rank equals the rank specified by the user. If
     the item isn't a mod or arcane, ``order_rank`` and ``item_max_rank``
     should both be ``None``. If either ``order_rank`` or
-    ``item_max_rank`` is ``None``, then True will be returned.
+    ``item_max_rank`` is ``None``, then ``True`` will be returned.
 
     :param order_rank: Rank of the order.
     :param item_max_rank: Maximum possible rank for the item.
-    :param use_maxrank: User-specified rank of mod or arcane. If True,
-        the maximum potential rank of the item will be use. If False,
-        the unranked item will be used.
-    :return: True if the order_rank is None, if item_max_rank is None,
-        or if order's rank matches ``item_max_rank * use_maxrank``,
-        False otherwise.
+    :param use_maxrank: User-specified rank of mod or arcane. If
+        ``True``, the maximum potential rank of the item will be use. If
+        ``False``, the unranked item will be used.
+    :return: ``True`` if the order_rank is ``None``, if item_max_rank is
+        ``None``, or if order's rank matches
+        ``item_max_rank * use_maxrank``, ``False`` otherwise.
     """
     if order_rank is None or item_max_rank is None:
         # If there's a mismatch, we'll eval as if unranked
@@ -120,13 +134,13 @@ def check_relic_subtype(
     Check if an order's subtype matches user-specified refinement level.
 
     Check if an order's subtype equals the refinement level specified by
-    the user. If the item isn't a relic, ``subtype`` should be None.
+    the user. If the item isn't a relic, ``subtype`` should be ``None``.
 
     :param subtype: Subtype of the order.
     :param use_radiant: User-specified refinement level to compare
         against. Can be either "radiant" or "intact".
-    :return: True if the order's subtype matches ``use_radiant`` or if
-        subtype is None, False otherwise.
+    :return: ``True`` if the order's subtype matches ``use_radiant`` or
+        if subtype is ``None``, ``False`` otherwise.
     """
     if subtype is None:
         return True
@@ -158,7 +172,8 @@ def filter_order(
     :param args: Command-line arguments provided by the user. Must have
         the fields ``use_buyers``, ``maxrank``, ``radiant``, and
         ``timerange``.
-    :return: True if all specified conditions are met, False otherwise.
+    :return: ``True`` if all specified conditions are met, ``False``
+        otherwise.
     """
     if order.type != args.use_buyers:
         return False
@@ -204,8 +219,8 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
 
     Format the calculated statistic, along with the maximum and minimum
     prices of the orders, and the total number of orders that match the
-    search criteria. If ``args.porcelain`` is True, separate the fields
-    with a single colon.
+    search criteria. If ``args.porcelain`` is ``True``, separate the
+    fields with a single colon.
 
     :param stat: Statistic of the item that was found.
     :param plat_list: List of prices of the item.
@@ -230,7 +245,7 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
     space_after_label = 23
     return (
         f"{'Item:':{space_after_label}}{item_name}\n"
-        f"{'Time Range:':{space_after_label}}{args.timerange} days\n"
+        f"{'Time Range:':{space_after_label}}{args.timerange} day(s)\n"
         f"{f'{statistic} Price:':{space_after_label}}{stat} platinum\n"
         f"{'Max Price:':{space_after_label}}{max_list:.0f} platinum\n"
         f"{'Min Price:':{space_after_label}}{min_list:.0f} platinum\n"

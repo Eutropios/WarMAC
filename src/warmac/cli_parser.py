@@ -102,11 +102,10 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
             excluded, and the leading indentation will be corrected.
         """
         result = super()._format_action(action)
-        return (
-            f"{'':{self._current_indent}}{result.lstrip()}"
-            if isinstance(action, argparse._SubParsersAction)
-            else result
-        )
+        if isinstance(action, argparse._SubParsersAction):
+            result = result.replace("\x1b[1;32m\x1b[0m\n  ", "")
+            result = f"{'':{self._current_indent}}{result.lstrip()}"
+        return result
 
     def _iter_indented_subactions(
         self,
@@ -119,7 +118,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         method to fix the leading indentation for command names in
         the help menu.
 
-        :param action: Action to be yielded from.
+        :param action: Action to be assessed for correct indentation.
         :yield: Actions from a list returned by
             ``action._get_subactions``.
         """
@@ -149,11 +148,18 @@ def str_to_int_bounds_check(inp_val: str, min_val: int, max_val: int) -> int:
         integer or is not ``min_val <= int(inp_val) < max_val``.
     :return: Return ``inp_val`` as an integer.
     """
-    with contextlib.suppress(ValueError):
-        if min_val <= (casted_int := int(inp_val)) < max_val:
-            return casted_int
-    msg = f"'{inp_val}' is not an integer in the valid range of [{min_val}, {max_val})."
-    raise argparse.ArgumentTypeError(msg)
+    try:
+        casted_int = int(inp_val)
+    except ValueError as err:
+        # If casting fails, we don't even need to check the bounds
+        msg = f"'{inp_val}' is not a valid integer."
+        raise argparse.ArgumentTypeError(msg) from err
+
+    if not (min_val <= casted_int < max_val):
+        msg = f"'{inp_val}' is not in the valid range of [{min_val}, {max_val})."
+        raise argparse.ArgumentTypeError(msg) from None
+
+    return casted_int
 
 
 class WarMACParser(argparse.ArgumentParser):
@@ -205,6 +211,7 @@ def create_parser() -> WarMACParser:
         ),
         add_help=False,  # don't add default help msg
     )
+
     parser._positionals.title = "commands"  # changing positional header
 
     # ------- Main Parser Arguments -------
@@ -256,7 +263,6 @@ def create_parser() -> WarMACParser:
     min_ndigits: Final = 0
     # The maximum ndigits to round the statistic to
     max_ndigits: Final = 10
-    # See above comment about state.
 
     # Option characters used: s, p, t, m, r, b, d, h, S, n
 
@@ -430,7 +436,6 @@ def create_parser() -> WarMACParser:
         usage="warmac help subcommand",
     )
     possible_subcommands = ("average", "help")
-    # See above comment about already modifying state in this function.
 
     help_parser.add_argument(
         "subcommand",
@@ -483,14 +488,17 @@ def handle_input(args: list[str] | None = None) -> argparse.Namespace:
     # in the command line arguments.
 
     # printing sys.argv[1] would print the subcommand
-    # parse args
     parsed_args = parser.parse_args(args)
     if parsed_args.subparser != "help":
         return parsed_args
-    # user requested help text, so not being written to stderr
+
+    # At this point, we know that the user explicitly requested help
+    # text, so we're not writing to stderr like we were above
     if parsed_args.subcommand:
         # if a subcommand is passed after help, parse the subcommand
         # with its `--help` flag.
+        # This "double parsing" may be slow, but this is the cleanest
+        # way to print help text for other subcommands
         parser.parse_args([parsed_args.subcommand, "--help"])
         # Code exits here as per argparse help code
     parser.print_help(sys.stdout)

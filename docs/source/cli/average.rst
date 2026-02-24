@@ -79,7 +79,7 @@
    Calculates the price statistic of the item based on orders from buyers
    instead of orders from sellers.
 
-.. option:: -n, --ndigits
+.. option:: -n, --ndigits <ndigits>
 
    Specifies the number of decimal places to round the statistic to. Must be in
    range [0, 10). By default, the number of decimals rounded to is 1.
@@ -138,7 +138,13 @@ Handling Output
    $ warmac average -p PC -t 2 -d "vengeful revenant" > warmacOut.txt
    $ cat warmacOut.txt
    Item:                  Vengeful Revenant
+   Time Range:            2 days
    Median Price:          5.0 platinum
    Max Price:             30 platinum
    Min Price:             4 platinum
    Number of Orders:      38
+
+Porcelain Output
+----------------
+
+|  Porcelain output is in the form of colon-separated values.

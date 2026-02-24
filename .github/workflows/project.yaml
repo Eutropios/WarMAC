@@ -1,0 +1,53 @@
+name: Validate Project Files
+# Lint and format config files, readme, etc
+
+on:
+  push:
+    paths:
+      - 'pyproject.toml'
+      - '.github/**'
+      - 'README.md'
+  pull_request:
+    paths:
+      - 'pyproject.toml'
+      - '.github/**'
+      - 'README.md'
+  workflow_dispatch:
+
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        with:
+          persist-credentials: false
+
+      - name: setup-tombi
+        uses: tombi-toml/setup-tombi@f7cb38e77d9a62bc27a8445bf50e660e9496b893
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          version: '0.7.28'
+
+      - name: Validate TOML files
+        run: tombi lint pyproject.toml
+
+      - name: Format TOML files
+        run: tombi format --check --diff pyproject.toml
+
+      - name: markdownlint-cli2-action
+        uses: DavidAnson/markdownlint-cli2-action@07035fd053f7be764496c0f8d8f9f41f98305101 # v22.0.0
+        with:
+          config: ".markdownlint.yaml"
+          globs: "**/*.md"

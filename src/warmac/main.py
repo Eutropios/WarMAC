@@ -69,6 +69,9 @@ def process_cli_command(args: list[str] | None) -> str:
     subcommand.
 
     :param args: Optional cli args used for testing.
+    :raises errors.CommandError: Raised if the ``subparser`` field of
+        ``argparse.Namespace`` does not exist in
+        :py:data:`main.SUBCMD_DISPATCH`.
     :return: The data returned from the subcommand handler.
     """
     headers = {
@@ -78,7 +81,11 @@ def process_cli_command(args: list[str] | None) -> str:
     cli_args = cli_parser.handle_input(args)
     fix_http_headers(headers, cli_args.platform, crossplay=cli_args.crossplay)
     current_time = datetime.datetime.now(datetime.timezone.utc)
-    return SUBCMD_DISPATCH[cli_args.subparser](cli_args, headers, current_time)
+    try:
+        subcmd = SUBCMD_DISPATCH[cli_args.subparser](cli_args, headers, current_time)
+    except KeyError as err:
+        raise errors.CommandError from err
+    return subcmd
 
 
 def main(args: list[str] | None = None) -> Literal[0, 1]:
@@ -92,12 +99,10 @@ def main(args: list[str] | None = None) -> Literal[0, 1]:
     """
     try:
         data = process_cli_command(args)
-        print(data)
-    except KeyError as err:
-        raise errors.CommandError from err
     except errors.WarMACBaseError as err:
         sys.stderr.write(err.message)
         return 1
+    print(data)
     return 0
 
 
