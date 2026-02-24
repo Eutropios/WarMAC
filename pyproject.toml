@@ -1,14 +1,23 @@
-[build-system]
-  build-backend = "uv_build"
-  requires      = ["uv_build>=0.7.19"]
-
 [project]
-  authors = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
-  classifiers = [
+  name            = "WarMAC"
+  version         = "0.0.5"
+  description     = "An average platinum price calculator for tradeable items in Warframe."
+  readme          = "README.md"
+  requires-python = ">=3.10,<3.15"
+  license         = "GPL-3.0-or-later"
+  license-files   = ["LICENSE"]
+  authors         = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
+  maintainers     = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
+  keywords        = [
+    "platinum",
+    "warframe",
+    "warframe calculator",
+    "warframe market"
+  ]
+  classifiers     = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
@@ -16,57 +25,58 @@
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Utilities",
     "Typing :: Typed",
   ]
+  dependencies    = [
+    "msgspec>=0.19.0",
+    "python-dateutil>=2.9; python_version < '3.11'",
+    "urllib3>=2.0.4",
+  ]
 
-  dependencies = ["msgspec>=0.19.0", "urllib3>=2.0.4"]
-  # come time to introduce logging, some options are:
-  # The logging stdlib module, Loguru, structlog, picologging, logbook, Eliot
-  # Do research on all options to see which is best fit
-  description = "An average platinum price calculator for tradeable items in Warframe."
-  # include = [""]
-
-  keywords = ["platinum", "warframe calculator", "warframe market", "warframe"]
-
-  license         = {text = "GPL-3.0-or-later"}
-  maintainers     = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
-  name            = "WarMAC"
-  readme          = "README.md"
-  requires-python = ">=3.9"
-  version         = "0.0.5"
-
-[project.scripts]
-  warmac = "warmac.main:main"
 [project.urls]
   "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
   documentation = "https://warmac.readthedocs.io/en/"
   repository    = "https://github.com/Eutropios/WarMAC"
 
+[project.scripts]
+  warmac = "warmac.main:main"
+
 [dependency-groups]
-  dev = ["mypy", "ty", "vermin", "viztracer>=1.0.0"]
-  docs = [
+  dev          = ["vermin", "viztracer>=1.0.0"]
+  docs         = [
     "docstrfmt>=1.10.0",
     "docutils>=0.18.1",
     "esbonio>=0.16",
     "furo>=2023.9",
+    "sphinx<8.2,>=8.0; python_version >= '3.10' and python_version < '3.11'",
+    "sphinx>=8.2; python_version >= '3.11'",
     "sphinx-copybutton>=0.5.2",
     "sphinx-inline-tabs>=2023.4.21",
     "sphinx-last-updated-by-git>=0.3.6",
     "sphinx-lint>=1",
     "sphinx-notfound-page>=1",
-    "sphinx<8.0,>=7.2; python_version < '3.10' and python_version >= '3.9'",
-    "sphinx<8.2,>=8.0; python_version >= '3.10' and python_version < '3.11'",
-    "sphinx>=8.2; python_version >= '3.11'",
   ]
-  test = [
+  test         = [
     "covdefaults>=2.3",
     "coverage<8.0,>=7.6",
-    "pytest-mock>=3.14",
     "pytest>=8.0",
+    "pytest-mock>=3.14",
   ]
+  typeChecking = [
+    "msgspec",
+    "mypy",
+    "pytest",
+    "pytest-mock",
+    "python-dateutil>=2.9; python_version < '3.11'",
+    "urllib3",
+  ]
+
+[build-system]
+  requires      = ["uv_build>=0.7.19"]
+  build-backend = "uv_build"
 
 [tool.coverage.run]
   command_line = "-m pytest -vv ./tests"
@@ -75,10 +85,9 @@
 [tool.coverage.report]
   exclude_also = [
     # Don't complain if non-runnable code isn't run:
-    "if TYPE_CHECKING:",
     "if __name__ == .__main__.:",
   ]
-  precision = 2
+  precision    = 2
 
 [tool.docformatter]
   black               = true
@@ -88,18 +97,31 @@
   wrap-descriptions   = 72
   wrap-summaries      = 72
 
-[tool.docstrfmt]
-  line-length = 80
-
 [tool.mypy]
-  exclude = ["_build", "buck-out", "build", "dist", "htmlcov"]
-
-  python_version = "3.13"
+  exclude        = [
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "htmlcov",
+    "LICENSES"
+  ]
+  python_version = "3.14"
   strict         = true
+
+[tool.pydoclint]
+  allow-init-docstring                     = true
+  arg-type-hints-in-docstring              = false
+  check-return-types                       = false
+  check-style-mismatch                     = true
+  check-yield-types                        = false
+  exclude                                  = '\.git|\.tox|\.github|\.venv|\.venv-314|\.pytest_cache|dist|docs/_build'
+  should-document-private-class-attributes = true
+  style                                    = "sphinx"
 
 [tool.pyright]
   include          = ["src", "tests"]
-  pythonVersion    = "3.13"
+  pythonVersion    = "3.14"
   typeCheckingMode = "strict"
 
 [tool.ruff]
@@ -112,40 +134,40 @@
     "htmlcov",
     "site-packages",
   ]
-
   indent-width   = 4
   line-length    = 88
   preview        = true
   show-fixes     = true
-  target-version = "py39"
+  target-version = "py310"
 
 [tool.ruff.format]
+  docstring-code-format     = true
   indent-style              = "space"
   line-ending               = "auto"
   quote-style               = "double"
   skip-magic-trailing-comma = false
 
 [tool.ruff.lint]
-  # NOTE: Some rules are turned off by Ruff due to `target-version` being set to Py 3.9
+  # NOTE: Some rules are turned off by Ruff due to `target-version` being set to Py 3.10
   explicit-preview-rules = false
-  ignore = [
-    "AIR",    # I don't use airflow
-    "COM812", # Must be turned off for formatter
-    "DJ",     # Django rules (N/A for project)
-    "DOC",    # Turn this off for now until DOC supports sphinx-style
-    "ERA001", # Commented out code (I do this during development, the warning is annoying)
-    "FAST",   # FastAPI rules (N/A for project)
-    "FIX",    # I don't use these types of comments
-    "ISC001", # Must be turned off for formatter
-    "ISC002", # Must be turned off for formatter
-    "NPY",    # Numpy rules (N/A for project)
-    "PD",     # Pandas rules (N/A for project)
-    "T20",    # This ruleset flags printing, which my program inherently does
-    "TD",     # I don't do TODOs
+  external               = ["DOC5"]
+  ignore                 = [
+    "AIR",                           # Apache Airflow unused
+    "COM812",                        # Must be turned off for formatter
+    "DJ",                            # Django rules
+    "DOC",                           # Off until DOC supports sphinx-style
+    "ERA001",                        # Commented out code
+    "FAST",                          # FastAPI rules
+    "FIX",                           # FIXs unused
+    "ISC001",                        # Must be turned off for formatter
+    "ISC002",                        # Must be turned off for formatter
+    "NPY",                           # Numpy rules
+    "PD",                            # Pandas rules
+    "T20",                           # Flags printing, which this program does
+    "TD",                            # TODOs unused
   ]
-
-  preview = true
-  select  = ["ALL"]
+  preview                = true
+  select                 = ["ALL"]
 
 [tool.ruff.lint.flake8-copyright]
   author = "Noah Jenner"
@@ -180,13 +202,22 @@
   max-doc-length = 72
 
 [tool.ruff.lint.pydocstyle]
-  # waiting on sphinx convention being added
+  # waiting for sphinx convention being added
   convention = "pep257"
+
+[tool.tombi]
+  toml-version = "v1.0.0"
+
+[tool.tombi.format.rules]
+  indent-table-key-value-pairs    = true
+  inline-table-brace-space-width  = 0
+  key-value-equals-sign-alignment = true
+  trailing-comment-alignment      = true
 
 [tool.ty.environment]
   python          = "./.venv"
   python-platform = "all"
-  python-version  = "3.13"
+  python-version  = "3.14"
 
 [tool.ty.src]
   include = ["src", "tests"]

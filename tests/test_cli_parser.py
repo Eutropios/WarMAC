@@ -181,28 +181,36 @@ class TestStdlibMonkeyPatching:
         [
             (
                 60,
-                "usage: usage here\n\nsome description\n\npositional arguments:\n"
-                "  stuff       More stuff.\n\noptions:\n  -h, --help  Show this message"
-                " and exit.\n",
+                (
+                    "usage: usage here\n\nsome description\n\npositional arguments:\n"
+                    "  stuff       More stuff.\n\noptions:\n  -h, --help  Show this "
+                    "message and exit.\n"
+                ),
                 False,
             ),  # full-width output
             (
                 10,
-                "usage: usage here\n\nsome description\n\npositional arguments:\n"
-                "  stuff   More stuff.\n\noptions:\n  -h, --help\n          Show this"
-                " message and exit.\n",
+                (
+                    "usage: usage here\n\nsome description\n\npositional arguments:\n"
+                    "  stuff   More stuff.\n\noptions:\n  -h, --help\n          Show "
+                    "this message and exit.\n"
+                ),
                 False,
             ),  # Intentionally forcing a reformatting for help text
             (
                 60,
-                "usage: usage here stuff [-h]\n\nStuff description\n\noptions:\n"
-                "  -h, --help  Show this message and exit.\n",
+                (
+                    "usage: usage here stuff [-h]\n\nStuff description\n\noptions:\n"
+                    "  -h, --help  Show this message and exit.\n"
+                ),
                 True,
             ),
             (
                 10,
-                "usage: usage here stuff [-h]\n\nStuff description\n\noptions:\n"
-                "  -h, --help\n          Show this message and exit.\n",
+                (
+                    "usage: usage here stuff [-h]\n\nStuff description\n\noptions:\n"
+                    "  -h, --help\n          Show this message and exit.\n"
+                ),
                 True,
             ),
         ],
@@ -242,6 +250,7 @@ class TestStdlibMonkeyPatching:
             ),
             description="Stuff description",
             add_help=False,
+            usage="usage here stuff [-h]",
         )
         target_parser = stuff_parser if test_subparser else some_parser
 

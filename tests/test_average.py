@@ -191,7 +191,10 @@ class TestInTimeRange:
     def test_invalid_isoformat_raises_value_error(self) -> None:
         """Test that ValueError is raised for completely malformed
         ISO-8601 timestamps."""  # noqa: D205, D209
-        match_string = "Invalid isoformat string: 'not-a-valid-timestamp'"
+        match_string = (
+            r"Invalid isoformat string: 'not-a-valid-timestamp'|Unknown string format:"
+            r" not-a-valid-timestamp"
+        )
         with pytest.raises(ValueError, match=match_string):
             average.in_time_range("not-a-valid-timestamp", self.TEST_CURRENT_TIME)
 
@@ -598,7 +601,13 @@ class TestFormatOutput:
         mock_args.item = "Nonexistent Item"
         mock_args.detailed_report = True
 
-        with pytest.raises(ValueError, match=r"max\(\) iterable argument is empty"):
+        with pytest.raises(
+            ValueError,
+            match=(
+                r"(max\(\) iterable argument is empty)|(max\(\) arg is an empty "
+                r"sequence)"
+            ),
+        ):
             average.format_output(stat, plat_list, mock_args)
 
     @staticmethod

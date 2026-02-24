@@ -8,7 +8,7 @@
 
 .. py:type:: fetch_data.ResponseKind
 
-   A type alias representing the union of "-Response" structs.
+   A type alias representing the union of :doc:`"-Response" structs </schema>`.
 
 .. py:data:: fetch_data.T
    :value: TypeVar(T, OrderResponse, ItemResponse)
@@ -34,8 +34,6 @@
    A dictionary that makes Response schemas to strings.
 
 .. autofunction:: fetch_data.item_url
-
-.. autofunction:: fetch_data.http_code_check
 
 .. autofunction:: fetch_data.get_page
 

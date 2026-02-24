@@ -130,12 +130,12 @@ class TestProcessCliCommand:
 
     @staticmethod
     def test_process_cli_command_invalid_subcommand(mocker: Mock) -> None:
-        """Test that KeyError is raised when an invalid subcommand is
-        given to dictionary."""  # noqa: D205, D209
+        """Test that errors.CommandError is raised when an invalid
+        subcommand is given to dictionary."""  # noqa: D205, D209
         mock_cli_args = MagicMock()
         mock_cli_args.subparser = "nonexistent_subcommand"
         mocker.patch.object(cli_parser, "handle_input", return_value=mock_cli_args)
-        with pytest.raises(KeyError):
+        with pytest.raises(errors.CommandError):
             main.process_cli_command(args=["nonexistent_subcommand"])
 
 
@@ -169,13 +169,3 @@ class TestMain:
         assert "An error occurred" in captured.err
         assert not captured.out
         mock_process_cli_command.assert_called_once_with(["some", "args"])
-
-    @staticmethod
-    def test_main_key_error_raises_command_error(mocker: Mock) -> None:
-        """Test that main re-raises a KeyError as a CommandError."""
-        mocker.patch(
-            "warmac.main.process_cli_command",
-            side_effect=KeyError,
-        )
-        with pytest.raises(errors.CommandError, match=r"Not a valid command\."):
-            main.main(["some", "args"])
