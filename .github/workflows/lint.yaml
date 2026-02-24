@@ -11,6 +11,7 @@ on:
       - 'src/**'
       - 'docs/source/conf.py'
       - 'tests/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
