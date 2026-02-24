@@ -8,7 +8,7 @@
 
 .. py:type:: fetch_data.ResponseKind
 
-   A type alias representing the union of "-Response" structs.
+   A type alias representing the union of :doc:`"-Response" structs </schema>`.
 
 .. py:data:: fetch_data.T
    :value: TypeVar(T, OrderResponse, ItemResponse)

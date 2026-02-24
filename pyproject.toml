@@ -98,7 +98,14 @@
   wrap-summaries      = 72
 
 [tool.mypy]
-  exclude        = ["_build", "buck-out", "build", "dist", "htmlcov"]
+  exclude        = [
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "htmlcov",
+    "LICENSES"
+  ]
   python_version = "3.14"
   strict         = true
 
@@ -143,20 +150,21 @@
 [tool.ruff.lint]
   # NOTE: Some rules are turned off by Ruff due to `target-version` being set to Py 3.10
   explicit-preview-rules = false
+  external               = ["DOC5"]
   ignore                 = [
-    "AIR",                          # Apache Airflow unused
-    "COM812",                       # Must be turned off for formatter
-    "DJ",                           # Django rules
-    "DOC",                          # Off until DOC supports sphinx-style
-    "ERA001",                       # Commented out code
-    "FAST",                         # FastAPI rules
-    "FIX",                          # FIXs unused
-    "ISC001",                       # Must be turned off for formatter
-    "ISC002",                       # Must be turned off for formatter
-    "NPY",                          # Numpy rules
-    "PD",                           # Pandas rules
-    "T20",                          # Flags printing, which this program does
-    "TD",                           # TODOs unused
+    "AIR",                           # Apache Airflow unused
+    "COM812",                        # Must be turned off for formatter
+    "DJ",                            # Django rules
+    "DOC",                           # Off until DOC supports sphinx-style
+    "ERA001",                        # Commented out code
+    "FAST",                          # FastAPI rules
+    "FIX",                           # FIXs unused
+    "ISC001",                        # Must be turned off for formatter
+    "ISC002",                        # Must be turned off for formatter
+    "NPY",                           # Numpy rules
+    "PD",                            # Pandas rules
+    "T20",                           # Flags printing, which this program does
+    "TD",                            # TODOs unused
   ]
   preview                = true
   select                 = ["ALL"]
@@ -186,7 +194,6 @@
   "src/warmac/__init__.py"   = ["I002"]
   "src/warmac/__main__.py"   = ["I002"]
   "src/warmac/cli_parser.py" = ["SLF001"]
-  "src/warmac/fetch_data.py" = ["RUF100", "RUF102"]
   "tests/**.py"              = ["D101", "S101"]
   "tests/**/__init__.py"     = ["I002"]
   # *IMPORTANT* - A dirty hack in cli_parser.py uses private components

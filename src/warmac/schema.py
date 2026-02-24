@@ -84,6 +84,7 @@ class Order(Base, rename="camel"):
     :var amber_stars: (optional) Amber stars in a sculpture order.
     :var cyan_stars: (optional) Cyan stars in a sculpture order.
     :var item_id: (optional) Unique identifier of the item.
+    :var vosfor: (optional) Vosfor associated with arcane item.
     """
 
     id: str
@@ -113,13 +114,14 @@ class OrderWithUser(Base, rename="camel"):
     :var created_at: Creation time of the order.
     :var updated_at: Last modification time of the order.
     :var user: User who created the order, with basic profile info.
+    :var item_id: Unique identifier of the item.
     :var per_trade: (optional) Quantity per transaction.
     :var rank: (optional) Rank or level of the item in the order.
     :var charges: (optional) Number of charges left (requiem mods).
     :var subtype: (optional) Subtype or category of the item.
     :var amber_stars: (optional) Amber stars in a sculpture order.
     :var cyan_stars: (optional) Cyan stars in a sculpture order.
-    :var item_id: Unique identifier of the item.
+    :var vosfor: (optional) Vosfor associated with arcane item.
     """
 
     id: str

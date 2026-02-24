@@ -40,6 +40,10 @@ jobs:
       - name: Ruff format
         run: uvx ruff format . --check
 
+      - name: Lint docstring
+        run: uvx --managed-python pydoclint --config=pyproject.toml .
+
+
   mypy:
     name: mypy
     runs-on: ubuntu-latest

@@ -81,8 +81,8 @@ def http_code_check(status_code: int) -> None:
     """  # noqa: DOC503
     if status_code == 200:  # noqa: PLR2004
         return
-    if status_code in HTTP_ERROR_DICT:
-        raise HTTP_ERROR_DICT[status_code]
+    if err := HTTP_ERROR_DICT.get(status_code):
+        raise err
     raise errors.UnknownError(status_code)
 
 
@@ -98,8 +98,12 @@ def get_page(url: str, http_headers: dict[str, str]) -> urllib3.BaseHTTPResponse
     :param url: Formatted URL used in the request.
     :param http_headers: Headers to be used in the HTTP request. Must
         contain at least an "Accept" field.
+    :raises WarMACHTTPError: Raise an error from HTTP_ERROR_DICT if HTTP
+        status code is not 200.
+    :raises UnknownError: Raised as fallback if HTTP status code is not
+        in HTTP_ERROR_DICT.
     :return: Requested JSON.
-    """
+    """  # noqa: DOC502
     page = urllib3.request("GET", url, headers=http_headers, timeout=5)
     http_code_check(page.status)
     return page
