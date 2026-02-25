@@ -62,7 +62,7 @@
 
       Unique id of order.
 
-   .. py:attribute:: schema.Order.type
+   .. py:attribute:: schema.Order.order_type
       :type: str
 
       Specifies whether the order is a 'buy' or 'sell'.
@@ -134,7 +134,7 @@
 
       Unique id of the order.
 
-   .. py:attribute:: schema.OrderWithUser.type
+   .. py:attribute:: schema.OrderWithUser.order_type
       :type: str
 
       Specifies whether the order is a 'buy' or 'sell'.

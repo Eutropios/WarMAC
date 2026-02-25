@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Mapping, Sequence
     from typing import Literal
 
-    AverageKind = Literal["geometric", "mean", "median", "mode"]
+    AverageType = Literal["geometric", "mean", "median", "mode"]
 
 # The default time to collect orders until
 DEFAULT_TIME = 5
@@ -41,7 +41,7 @@ DEFAULT_NDIGITS = 1
 # The current version of WarMAC
 VERSION = "0.0.5"
 
-AVERAGE_FUNCTIONS: Mapping[AverageKind, Callable[[Sequence[int]], float]] = {
+AVERAGE_FUNCTIONS: Mapping[AverageType, Callable[[Sequence[int]], float]] = {
     "geometric": statistics.geometric_mean,
     "mean": statistics.mean,
     "median": statistics.median,

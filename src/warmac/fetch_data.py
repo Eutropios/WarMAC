@@ -36,7 +36,7 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
     from typing import Final, TypeVar
 
-    ResponseKind = type[schema.OrderResponse | schema.ItemResponse]
+    ResponseType = type[schema.OrderResponse | schema.ItemResponse]
     T = TypeVar("T", schema.OrderResponse, schema.ItemResponse)
 
 
@@ -50,7 +50,7 @@ HTTP_ERROR_DICT: Final[Mapping[int, type[errors.WarMACHTTPError]]] = {
 
 API_ROOT = "https://api.warframe.market/v2/"
 
-SCHEMA_TO_URL: Mapping[ResponseKind, str] = {
+SCHEMA_TO_URL: Mapping[ResponseType, str] = {
     schema.OrderResponse: "orders/item/",
     schema.ItemResponse: "item/",
 }

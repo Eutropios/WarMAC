@@ -49,7 +49,7 @@ if TYPE_CHECKING:
 
 def calculate_average(
     plat_list: list[int],
-    statistic: config.AverageKind,
+    statistic: config.AverageType,
     ndigits: int = config.DEFAULT_NDIGITS,
 ) -> float:
     """
@@ -175,7 +175,7 @@ def filter_order(
     :return: ``True`` if all specified conditions are met, ``False``
         otherwise.
     """
-    if order.type != args.use_buyers:
+    if order.order_type != args.use_buyers:
         return False
     if not check_mod_arcane_rank(
         order.rank, item_info.max_rank, use_maxrank=args.maxrank

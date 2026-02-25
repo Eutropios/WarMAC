@@ -96,7 +96,7 @@ def mock_order_response() -> schema.OrderResponse:
             schema.OrderWithUser(
                 id="order1",
                 item_id="1234",
-                type="buy",
+                order_type="buy",
                 created_at="2025-07-09T12:00:00Z",
                 updated_at="2025-07-09T12:00:00Z",
                 platinum=100,
@@ -107,7 +107,7 @@ def mock_order_response() -> schema.OrderResponse:
             ),
             schema.OrderWithUser(
                 id="order2",
-                type="sell",
+                order_type="sell",
                 created_at="2025-07-29T12:00:00Z",
                 updated_at="2025-07-29T12:00:00Z",
                 platinum=150,
@@ -119,7 +119,7 @@ def mock_order_response() -> schema.OrderResponse:
             ),
             schema.OrderWithUser(
                 id="order3",
-                type="buy",
+                order_type="buy",
                 created_at="2025-07-15T12:00:00Z",
                 updated_at="2025-07-15T12:00:00Z",
                 platinum=120,

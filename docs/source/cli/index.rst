@@ -1,8 +1,8 @@
 .. _cli_index:
 
-########
- WarMAC
-########
+#############
+ User Manual
+#############
 
 |  Options that apply to all commands within this section can be found on the
    page :doc:`Using WarMAC </cli/warmac_usage>`.

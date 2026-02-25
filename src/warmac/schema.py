@@ -72,7 +72,7 @@ class Order(Base, rename="camel"):
     An order on WFM.
 
     :var id: Unique id of order
-    :var type: Specifies whether the order is a 'buy' or 'sell'.
+    :var order_type: Specifies whether the order is a 'buy' or 'sell'.
     :var platinum: Total platinum currency involved in the order.
     :var quantity: Number of items included in the order.
     :var created_at: Creation time of the order.
@@ -88,7 +88,7 @@ class Order(Base, rename="camel"):
     """
 
     id: str
-    type: str
+    order_type: str = msgspec.field(name="type")
     platinum: int
     quantity: int
     created_at: str
@@ -108,7 +108,7 @@ class OrderWithUser(Base, rename="camel"):
     Order with user info.
 
     :var id: Unique id of order
-    :var type: Specifies whether the order is a 'buy' or 'sell'.
+    :var order_type: Specifies whether the order is a 'buy' or 'sell'.
     :var platinum: Total platinum currency involved in the order.
     :var quantity: Number of items included in the order.
     :var created_at: Creation time of the order.
@@ -125,7 +125,7 @@ class OrderWithUser(Base, rename="camel"):
     """
 
     id: str
-    type: str
+    order_type: str = msgspec.field(name="type")
     platinum: int
     quantity: int
     created_at: str

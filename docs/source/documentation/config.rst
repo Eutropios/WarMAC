@@ -5,7 +5,8 @@
 ########
 
 
-.. py:type:: config.AverageKind
+.. py:type:: config.AverageType
+   :canonical: Literal["geometric", "mean", "median", "mode"]
 
    A type alias representing the union of average statistic types.
 

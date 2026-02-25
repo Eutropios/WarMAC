@@ -6,9 +6,10 @@
 
 |  Makes HTTP requests given a particular WarMAC schema.
 
-.. py:type:: fetch_data.ResponseKind
+.. py:type:: fetch_data.ResponseType
+   :canonical: type[schema.OrderResponse | schema.ItemResponse]
 
-   A type alias representing the union of :doc:`"-Response" structs </schema>`.
+   A type alias representing the union of :doc:`"-Response" structs <schema>`.
 
 .. py:data:: fetch_data.T
    :value: TypeVar(T, OrderResponse, ItemResponse)
@@ -28,7 +29,7 @@
    warframe.market API root.
 
 .. py:data:: fetch_data.SCHEMA_TO_URL
-   :type: ~collections.abc.Mapping[ResponseKind, str]
+   :type: ~collections.abc.Mapping[ResponseType, str]
    :value: {schema.OrderResponse: "orders/item/", schema.ItemResponse: "item/"}
 
    A dictionary that makes Response schemas to strings.
