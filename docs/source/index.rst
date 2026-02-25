@@ -29,6 +29,7 @@
 
    installation
    cli/index
+   troubleshooting
 
 .. toctree::
    :hidden:
@@ -64,15 +65,8 @@ Acknowledgements
 |  In addition to the tools listed in `.pre-commit-config.yaml
    <https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml>`_ and
    `pyproject.toml
-   <https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml>`_, this
-   project uses the following tools in its development:
-
--  `autoDocstring <https://github.com/NilsJPWerner/autoDocstring>`_
--  `Taplo <https://github.com/tamasfe/taplo>`_
--  `markdownlint <https://github.com/DavidAnson/vscode-markdownlint>`_
--  `vermin <https://github.com/netromdk/vermin>`_
-
-|  WarMAC is packaged using `Poetry <https://github.com/python-poetry/poetry>`_.
+   <https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml>`_ in its
+   development.
 
 Licensing
 =========
@@ -80,12 +74,13 @@ Licensing
 |  **This project is NOT affiliated with Warframe, Digital Extremes, or
    Warframe Market.**
 
-|  Copyright (c) 2023 Noah Jenner under MIT License
+|  Copyright (C) 2023-2026  Noah Jenner under GNU GPL version 3.0-or-later
 
 |  For additional licensing information, please see `LICENSE.txt
    <https://github.com/Eutropios/WarMAC/blob/main/LICENSE.txt>`_
-|  For licensing regarding urllib3, please see `LICENSE-urllib3.txt
-   <https://github.com/Eutropios/WarMAC/blob/main/LICENSE-urllib3.txt>`_
+
+|  For licensing regarding dependencies, please see the `LICENSES
+   <https://github.com/Eutropios/WarMAC/blob/main/LICENSES>`_ directory.
 
 Authors
 =======

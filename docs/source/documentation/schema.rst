@@ -20,7 +20,7 @@
 
 .. py:class:: schema.UserShort
    :canonical: warmac.schema.UserShort
-   
+
    Bases: :py:class:`.Base`
 
    Shortened model of a user excluding irrelevant information.
@@ -52,7 +52,7 @@
 
 .. py:class:: schema.Order
    :canonical: warmac.schema.Order
-   
+
    Bases: :py:class:`.Base`
 
    An order on Warframe Market.
@@ -124,7 +124,7 @@
 
 .. py:class:: schema.OrderWithUser
    :canonical: warmac.schema.OrderWithUser
-   
+
    Bases: :py:class:`.Base`
 
    An order on Warframe Market with user info.
@@ -201,7 +201,7 @@
 
 .. py:class:: schema.OrderResponse
    :canonical: warmac.schema.OrderResponse
-   
+
    Bases: :py:class:`.ResponseBase`
 
    Response received from making the HTTP request to the API.
@@ -223,7 +223,7 @@
 
 .. py:class:: schema.Item
    :canonical: warmac.schema.Item
-   
+
    Bases: :py:class:`.Base`
 
    Full item model containing information about the item.
@@ -315,7 +315,7 @@
 
 .. py:class:: schema.ItemResponse
    :canonical: warmac.schema.ItemResponse
-   
+
    Bases: :py:class:`.ResponseBase`
 
    Response received from making the HTTP request to the API.

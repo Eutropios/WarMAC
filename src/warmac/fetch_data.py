@@ -45,6 +45,7 @@ HTTP_ERROR_DICT: Final[Mapping[int, type[errors.WarMACHTTPError]]] = {
     403: errors.ForbiddenRequestError,
     404: errors.MalformedURLError,
     405: errors.MethodNotAllowedError,
+    429: errors.RateLimitError,
     500: errors.InternalServerError,
 }
 

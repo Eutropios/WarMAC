@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 
     from _pytest.mark.structures import ParameterSet
 
-    from warmac.config import AverageType
+    from warmac.average import AverageType
 
     class OrderKwargs(TypedDict):
         platinum: int

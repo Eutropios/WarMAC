@@ -25,25 +25,9 @@ Global variables and constants.
 
 from __future__ import annotations
 
-import statistics
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
-    from typing import Literal
-
-    AverageType = Literal["geometric", "mean", "median", "mode"]
-
 # The default time to collect orders until
 DEFAULT_TIME = 5
 # The default number of digits to round to
 DEFAULT_NDIGITS = 1
 # The current version of WarMAC
 VERSION = "0.0.5"
-
-AVERAGE_FUNCTIONS: Mapping[AverageType, Callable[[Sequence[int]], float]] = {
-    "geometric": statistics.geometric_mean,
-    "mean": statistics.mean,
-    "median": statistics.median,
-    "mode": statistics.mode,
-}

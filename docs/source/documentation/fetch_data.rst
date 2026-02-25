@@ -6,33 +6,10 @@
 
 |  Makes HTTP requests given a particular WarMAC schema.
 
-.. py:type:: fetch_data.ResponseType
-   :canonical: type[schema.OrderResponse | schema.ItemResponse]
+.. py:type:: fetch_data.T
+   :canonical: ~typing.TypeVar(T, schema.OrderResponse, schema.ItemResponse)
 
-   A type alias representing the union of :doc:`"-Response" structs <schema>`.
-
-.. py:data:: fetch_data.T
-   :value: TypeVar(T, OrderResponse, ItemResponse)
-
-   Invariant :py:class:`~typing.TypeVar` constrained to :py:class:`schema.OrderResponse` and :py:class:`schema.ItemResponse`.
-
-.. py:data:: fetch_data.HTTP_ERROR_DICT
-   :type: typing.Final[~collections.abc.Mapping[int, type[errors.WarMACHTTPError]]] 
-   :value: {401: errors.UnauthorizedAccessError, 403: errors.ForbiddenRequestError, 404: errors.MalformedURLError, 405: errors.MethodNotAllowedError, 500: errors.InternalServerError}
-
-   A dictionary that maps integers to HTTP-related errors.
-
-.. py:data:: fetch_data.API_ROOT
-   :type: str
-   :value: "https://api.warframe.market/v2/"
-
-   warframe.market API root.
-
-.. py:data:: fetch_data.SCHEMA_TO_URL
-   :type: ~collections.abc.Mapping[ResponseType, str]
-   :value: {schema.OrderResponse: "orders/item/", schema.ItemResponse: "item/"}
-
-   A dictionary that makes Response schemas to strings.
+   Invariant TypeVar constrained to ``schema.OrderResponse`` and ``schema.ItemResponse``.
 
 .. autofunction:: fetch_data.item_url
 
