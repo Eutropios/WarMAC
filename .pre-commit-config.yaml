@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/tombi-toml/tombi-pre-commit
-    rev: v0.7.32
+    rev: v0.8.0
     hooks:
       - id: tombi-format
         args: [--check, --diff, pyproject.toml]
@@ -30,7 +30,7 @@ repos:
   #      args: [-i, -e ./tests]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.15.2"
+    rev: "v0.15.4"
     hooks:
       - id: ruff-check
         args: [--exit-non-zero-on-fix]
