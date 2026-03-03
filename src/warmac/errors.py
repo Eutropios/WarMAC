@@ -31,7 +31,7 @@ class WarMACBaseError(Exception):
 
     def __init__(self, msg: str = "WarMAC Error.") -> None:
         """
-        Construct a WarMACBaseError.
+        Construct a ``WarMACBaseError``.
 
         :param msg: Error's message, defaults to the phrase "WarMAC
             Error."
@@ -45,7 +45,7 @@ class CommandError(WarMACBaseError):
     not exist in :py:data:`main.SUBCMD_DISPATCH`."""  # noqa: D205, D209
 
     def __init__(self) -> None:
-        """Construct a ``CommandError`` error."""
+        """Construct a ``CommandError``."""
         super().__init__("Not a valid command.")
 
 
@@ -54,7 +54,7 @@ class NoListingsFoundError(WarMACBaseError):
     that the user gives the program."""  # noqa: D205, D209
 
     def __init__(self) -> None:
-        """Construct a ``NoListingsFoundError`` error."""
+        """Construct a ``NoListingsFoundError``."""
         super().__init__("There are no listings matching your search parameters.")
 
 
@@ -76,10 +76,25 @@ class InternalServerError(WarMACHTTPError):
     the user's request."""  # noqa: D205, D209
 
     def __init__(self) -> None:
-        """Construct a ``MalformedURLError`` error."""
+        """Construct an ``InternalServerError``."""
         super().__init__(
             "Error 500: warframe.market servers have encountered an internal error "
             "while processing this request.",
+        )
+
+
+class RateLimitError(WarMACHTTPError):
+    """Raised on HTTP status code 429, which indicates that the an
+    excessive number of requests per second have been made to the WFM
+    server."""  # noqa: D205, D209
+
+    def __init__(self) -> None:
+        """Construct a ``RateLimitError``."""
+        super().__init__(
+            "You have exceeded Warframe Market's allotted requests per second, the "
+            "current limit being 3 per second. Please wait a few moments before making "
+            "additional requests. For more information, please read "
+            "the documentation.",
         )
 
 
@@ -88,7 +103,7 @@ class MethodNotAllowedError(WarMACHTTPError):
     knows the method, but the target resource doesn't support it."""  # noqa: D205, D209
 
     def __init__(self) -> None:
-        """Construct a ``MethodNotAllowedError`` error."""
+        """Construct a ``MethodNotAllowedError``."""
         super().__init__(
             "Error 405: The target resource does not support this function.",
         )
@@ -99,7 +114,7 @@ class MalformedURLError(WarMACHTTPError):
     in question does not exist."""  # noqa: D205, D209
 
     def __init__(self) -> None:
-        """Construct a ``MalformedURLError`` error."""
+        """Construct a ``MalformedURLError``."""
         super().__init__(
             "This item does not exist on Warframe Market. Please check your spelling "
             "and remember to use quotations if the item is multiple words.",
@@ -111,7 +126,7 @@ class ForbiddenRequestError(WarMACHTTPError):
     the desired resource is forbidden."""  # noqa: D205, D209
 
     def __init__(self) -> None:
-        """Construct a ``ForbiddenRequestError`` error."""
+        """Construct a ``ForbiddenRequestError``."""
         super().__init__(
             "Error 403: The URL you've requested is forbidden. You do not have"
             " authorization to access it.",
@@ -124,7 +139,7 @@ class UnauthorizedAccessError(WarMACHTTPError):
     resource."""  # noqa: D205, D209
 
     def __init__(self) -> None:
-        """Construct a ``ForbiddenRequestError`` error."""
+        """Construct an ``UnauthorizedAccessError``."""
         super().__init__(
             "Error 401: Insufficient credentials. Please log in to before making this "
             "transaction.",
@@ -136,7 +151,7 @@ class UnknownError(WarMACHTTPError):
     error previously stated."""  # noqa: D205, D209
 
     def __init__(self, status_code: int) -> None:
-        """Construct an ``UnknownError`` error."""
+        """Construct an ``UnknownError``."""
         super().__init__(
             f"Unknown Error - HTTP Code {status_code}: Please open a new issue on the "
             "GitHub page (link in README.md file).",

@@ -36,7 +36,7 @@ from warmac import errors, fetch_data, schema
 if TYPE_CHECKING:
     from unittest.mock import MagicMock
 
-    from warmac.fetch_data import ResponseKind
+    from warmac.fetch_data import ResponseType
 
 
 http_headers: dict[str, str] = {
@@ -78,7 +78,7 @@ class TestItemUrl:
 
 class TestGetData:
     @staticmethod
-    def _get_expected_url(item_name: str, schema_type: ResponseKind) -> str:
+    def _get_expected_url(item_name: str, schema_type: ResponseType) -> str:
         return (
             f"{fetch_data.API_ROOT}{fetch_data.SCHEMA_TO_URL[schema_type]}{item_name}"
         )
@@ -92,7 +92,7 @@ class TestGetData:
         ],
     )
     def test_schema_in_dict_gives_correct_url_fragment(
-        schema_type: ResponseKind, expected_url_fragment: str
+        schema_type: ResponseType, expected_url_fragment: str
     ) -> None:
         """Test that strings in the SCHEMA_TO_URL dict are correct."""
         assert fetch_data.SCHEMA_TO_URL[schema_type] == expected_url_fragment
@@ -205,7 +205,7 @@ class TestGetData:
         assert isinstance(result.data[0], schema.OrderWithUser)
         assert result.data[0].id == "a"
         assert result.data[0].platinum == 10  # noqa: PLR2004
-        assert result.data[0].type == "buy"
+        assert result.data[0].order_type == "buy"
 
     def test_get_data_http_error_from_get_page(self, mock_get_page: MagicMock) -> None:
         """Test that get_data correctly propagates a MalformedURLError

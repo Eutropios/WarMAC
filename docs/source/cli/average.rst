@@ -17,7 +17,7 @@
 |  The average command is used to calculate the average platinum price of a
    specific item. It provides the average platinum price for any tradable item.
 
-.. important:: 
+.. important::
 
    For item names with multiple words, please use one of the following options:
 
@@ -32,7 +32,7 @@
  Options
 *********
 
-.. tip:: 
+.. tip::
 
    Options that take an argument can be in the form of ``--foo bar`` or
    ``--foo=bar``.
@@ -63,7 +63,7 @@
    to 5 days old are taken into account.
 
 .. option:: -m, --maxrank
-   
+
    Calculates the price statistic of the mod/arcane at its maximum rank instead
    of when it is unranked. This option cannot be used together with the
    :option:`--radiant` option.
@@ -75,7 +75,7 @@
    :option:`--maxrank` option.
 
 .. option:: -b, --buyers
-   
+
    Calculates the price statistic of the item based on orders from buyers
    instead of orders from sellers.
 
@@ -99,7 +99,7 @@
    not passed with :option:`--detailed-report`.
 
 .. option:: -h, --help
-   
+
    Prints the command line usage and then exits. If used, WarMAC will ignore
    all other options.
 

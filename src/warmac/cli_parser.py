@@ -30,7 +30,7 @@ import shutil
 import sys
 from typing import TYPE_CHECKING
 
-from warmac import config
+from warmac import average, config
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -280,10 +280,10 @@ def create_parser() -> WarMACParser:
         "--stat",
         default="median",
         type=lambda s: s.lower().strip(),
-        choices=config.AVERAGE_FUNCTIONS,
+        choices=average.AVERAGE_FUNCTIONS,
         help=(
             "Specifies which statistic to return; Can be one of "
-            f"({', '.join(config.AVERAGE_FUNCTIONS)}). (Default: median)"
+            f"({', '.join(average.AVERAGE_FUNCTIONS)}). (Default: median)"
         ),
         metavar="<stat>",
         dest="statistic",
