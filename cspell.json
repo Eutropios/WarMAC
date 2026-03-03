@@ -8,15 +8,15 @@
     ],
     "files": [
         ".git/COMMIT_EDITMSG",
-        "docs/**",
+        ".github/**",
+        "docs/source/**",
         "README.md",
         "src/**",
         "tests/**"
     ],
     "ignorePaths": [
+        ".github/workflows/**",
         "docs/source/conf.py",
-        "make.bat",
-        "Makefile"
     ],
     "version": "0.2",
     "words": [

@@ -1,8 +1,8 @@
 .. _documentation_index:
 
-######################
- WarMAC Documentation 
-######################
+########################
+ Internal Documentation
+########################
 
 |  All documentation for WarMAC's code can be found here.
 
@@ -15,5 +15,4 @@
    cli_parser
    fetch_data
    schema
-   config
    errors

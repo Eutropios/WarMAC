@@ -25,6 +25,7 @@ Logic for average subcommand.
 
 from __future__ import annotations
 
+import statistics
 import sys
 from typing import TYPE_CHECKING
 
@@ -44,12 +45,23 @@ else:  # pragma: no cover
 if TYPE_CHECKING:
     import argparse
     import datetime
+    from collections.abc import Callable, Mapping, Sequence
     from typing import Literal
+
+    AverageType = Literal["geometric", "mean", "median", "mode"]
+
+
+AVERAGE_FUNCTIONS: Mapping[AverageType, Callable[[Sequence[int]], float]] = {
+    "geometric": statistics.geometric_mean,
+    "mean": statistics.mean,
+    "median": statistics.median,
+    "mode": statistics.mode,
+}
 
 
 def calculate_average(
     plat_list: list[int],
-    statistic: config.AverageKind,
+    statistic: AverageType,
     ndigits: int = config.DEFAULT_NDIGITS,
 ) -> float:
     """
@@ -62,15 +74,14 @@ def calculate_average(
     :param plat_list: Prices in platinum of each order.
     :param statistic: Statistic to be calculated.
     :param ndigits: Number of decimals to which the calculated
-        statistic should be rounded, defaults to
-        :py:const:`config.DEFAULT_NDIGITS`.
+        statistic should be rounded, defaults to config.DEFAULT_NDIGITS.
     :raises errors.NoListingsFoundError: If ``plat_list`` has no
         contents.
     :return: Desired statistic of the specified item.
     """
     if not plat_list:
         raise errors.NoListingsFoundError from None
-    return round(float(config.AVERAGE_FUNCTIONS[statistic](plat_list)), ndigits)
+    return round(float(AVERAGE_FUNCTIONS[statistic](plat_list)), ndigits)
 
 
 def in_time_range(
@@ -88,7 +99,7 @@ def in_time_range(
         last updated.
     :param current_time: Current UTC time.
     :param time_range: Maximum age, in days, that an order can be to
-        be accepted, defaults to :py:const:`config.DEFAULT_TIME`.
+        be accepted, defaults to config.DEFAULT_TIME.
     :return: ``True`` if ``last_updated ≤ time_range``, ``False`` if
         ``last_updated > time_range``.
     """
@@ -175,7 +186,7 @@ def filter_order(
     :return: ``True`` if all specified conditions are met, ``False``
         otherwise.
     """
-    if order.type != args.use_buyers:
+    if order.order_type != args.use_buyers:
         return False
     if not check_mod_arcane_rank(
         order.rank, item_info.max_rank, use_maxrank=args.maxrank
@@ -232,9 +243,7 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
     # {value:{width}.{precision}}
     if not args.detailed_report:
         return str(stat)
-    statistic = (
-        config.AVERAGE_FUNCTIONS[args.statistic].__name__.replace("_", " ").title()
-    )
+    statistic = AVERAGE_FUNCTIONS[args.statistic].__name__.replace("_", " ").title()
     item_name = args.item.title().replace("_", " ").replace(" And ", " & ")
     max_list = max(plat_list)
     min_list = min(plat_list)

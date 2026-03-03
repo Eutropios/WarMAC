@@ -38,11 +38,11 @@ if TYPE_CHECKING:
 
     from _pytest.mark.structures import ParameterSet
 
-    from warmac.config import AverageKind
+    from warmac.average import AverageType
 
     class OrderKwargs(TypedDict):
         platinum: int
-        type: str
+        order_type: str
         updated_at: str
         rank: int | None
         subtype: str | None
@@ -68,7 +68,7 @@ def order_kwargs(
     schema.OrderWithUser object."""  # noqa: D205, D209
     return {
         "platinum": platinum,
-        "type": order_type,
+        "order_type": order_type,
         "updated_at": updated_at,
         "rank": rank,
         "subtype": subtype,
@@ -134,7 +134,7 @@ class TestCalcAvg:
         ],
     )
     def test_calculate_average_parameterized(
-        plat_list: list[int], statistic: AverageKind, decimals: int, expected: float
+        plat_list: list[int], statistic: AverageType, decimals: int, expected: float
     ) -> None:
         """Test calculate_average with various inputs."""
         assert average.calculate_average(plat_list, statistic, decimals) == expected
@@ -555,7 +555,7 @@ class TestFormatOutput:
         ],
     )
     def test_detailed_output(  # noqa: PLR0913, PLR0917
-        statistic: AverageKind,
+        statistic: AverageType,
         item_name: str,
         stat_value: float,
         plat_list: list[int],

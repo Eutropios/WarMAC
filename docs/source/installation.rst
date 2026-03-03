@@ -6,46 +6,21 @@
 
 .. attention::
 
-   WarMAC only supports Python versions 3.8 to 3.12. There are currently no
-   plans to add support to Python 3.7
+   WarMAC supports Python versions 3.10 to 3.14.
 
-|  WarMAC's only dependency is urllib3 ≥2.0.4,<3.0.0
 
-|  WarMAC can be installed in a variety of ways, all of which can be found on
-   this page. It is recommended that you install WarMAC using `pipx
-   <https://pypa.github.io/pipx/>`_ or using `uv 
-   <https://docs.astral.sh/uv/guides/tools/>`__ , which keeps WarMAC and its 
-   dependencies separate from your global Python version. However, using pip
-   alone will work just as well. The option of building WarMAC yourself using
-   uv also exists, however it is recommended for this to not be done.
+|  The primary method of installing WarMAC is by installing it through `uv
+   <https://docs.astral.sh/uv/guides/tools/>`_, though `pipx
+   <https://pypa.github.io/pipx/>`_ may be used as well. This keeps WarMAC and
+   its dependencies separate from your global Python packages. The option of
+   building WarMAC yourself using uv also exists, however this is only
+   recommended for development.
 
-************
- Using pipx
-************
+*******************
+ Using uv (or uvx)
+*******************
 
-|  Installing WarMAC using pipx can be done by running the following command in
-   the terminal:
-
-.. code-block:: console
-
-   $ pipx install warmac
-
-|  You can ensure that you've installed WarMAC correctly by calling its help
-   page like so:
-
-.. code-block:: console
-
-   $ warmac --version
-
-|  Once you've installed WarMAC, check out :doc:`Usage </cli/index>` for details
-   on how to use WarMAC.
-
-**********
- Using uv
-**********
-
-|  Installing WarMAC using uv can be done by running the following command in
-   the terminal:
+|  The most basic method of installation is by installing as a uv tool like so:
 
 .. code-block:: console
 
@@ -61,12 +36,33 @@
 |  Once you've installed WarMAC, check out :doc:`Usage </cli/index>` for details
    on how to use WarMAC.
 
+************
+ Using pipx
+************
+
+|  An alternative to installing with uv is pipx:
+
+.. code-block:: console
+
+   $ pipx install warmac
+
+|  You can ensure that you've installed WarMAC correctly by calling its help
+   page like so:
+
+.. code-block:: console
+
+   $ warmac --version
+
+|  Once you've installed WarMAC, check out :doc:`Usage </cli/index>` for details
+   on how to use WarMAC.
+
 ***********
  Using pip
 ***********
 
-|  Installing WarMAC using pip can be done by running the following command in
-   the terminal:
+|  Using pip alone to install WarMAC will work just as well, though dependencies
+   will not be isolated. Installation can be done using the following command:
+
 
 .. tab:: Unix/macOS
 
@@ -81,43 +77,8 @@
       $ py -m pip install warmac
 
 |  If you're getting an error that `python` is not recognized as a command, try
-   using the following instead:  
+   using the following instead:
    ``python3 -m pip install warmac``
-
-|  You can ensure that you've installed WarMAC correctly by calling its help
-   page like so:
-
-.. code-block:: console
-
-   $ warmac --version
-
-|  Once you've installed WarMAC, check out :doc:`Usage </cli/index>` for details
-   on how to use WarMAC.
-
-****************************
- Using uv (for development)
-****************************
-
-.. warning::
-
-   Modifying the dependency pins of WarMAC could result in errors. It's
-   recommended to keep the dependency pins as is to maintain stability.
-
-|  WarMAC can also be installed using `uv <https://docs.astral.sh/uv/>`__
-   either through the provided ``uv.lock`` file (recommended) or by building
-   a lock of your own.
-
-|  To obtain the source code, you can either download the latest version from
-   `Releases <https://github.com/Eutropios/WarMAC/releases>`_, or by cloning the
-   repository using `git <https://git-scm.com/downloads>`_ with the following
-   command:
-
-.. code-block:: console
-
-   $ git clone https://github.com/Eutropios/WarMAC.git ./some/directory
-
-|  WarMAC can then be built by navigating to the directory you cloned WarMAC
-   into, and running the ``uv build`` and ``uv install`` commands.
 
 |  You can ensure that you've installed WarMAC correctly by calling its help
    page like so:

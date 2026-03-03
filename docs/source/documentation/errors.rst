@@ -53,6 +53,10 @@ HTTP Errors
    :show-inheritance:
    :exclude-members: __init__
 
+.. autoexception:: errors.RateLimitError
+   :show-inheritance:
+   :exclude-members: __init__
+
 .. autoexception:: errors.UnknownError
    :show-inheritance:
    :exclude-members: __init__

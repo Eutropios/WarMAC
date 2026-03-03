@@ -33,7 +33,7 @@ from warmac import average, cli_parser, errors
 if TYPE_CHECKING:
     from typing import Literal
 
-
+# A dictionary of all commands that can be executed by the user.
 SUBCMD_DISPATCH = {
     "average": average.process_data,
 }
