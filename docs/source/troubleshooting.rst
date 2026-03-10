@@ -10,8 +10,8 @@
    user can perform per second. The exact number is not concrete, but it ranges from 3–5 requests per second.
 
 |  WarMAC typically makes 2 requests to WFM per execution: one to collect data
-   about the item itself, and a second to collect relevant user orders. This
-   means that you, the end-user, can run WarMAC twice per second.
+   about the item itself, and a second to collect relevant orders. This means
+   that you, the end-user, can run WarMAC twice per second.
 
 ======================================
  I'm still rate-limited after waiting
