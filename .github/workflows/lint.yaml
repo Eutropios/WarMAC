@@ -84,4 +84,4 @@ jobs:
       - name: Install deps
         run: uv sync --no-dev --locked --group typeChecking
       - name: Run mypy
-        run: uv run mypy .
+        run: uv run -m mypy .

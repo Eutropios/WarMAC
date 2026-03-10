@@ -19,3 +19,6 @@ indent_size = 2
 
 [*.rst]
 indent_size = 3
+
+[Makefile]
+indent_style = tab

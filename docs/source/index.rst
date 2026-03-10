@@ -12,7 +12,7 @@
    item from the fan website `Warframe Market <https://warframe.market/>`_, and
    then calculates the average buy or sell price of that item.
 
-|  WarMAC currently supports all Python versions 3.8 to 3.12 inclusive.
+|  WarMAC currently supports all Python versions 3.10 to 3.14 inclusive.
 
 .. attention::
 
@@ -62,7 +62,7 @@ Indices and tables
 Acknowledgements
 ================
 
-|  In addition to the tools listed in `.pre-commit-config.yaml
+|  This project uses the tools listed in `.pre-commit-config.yaml
    <https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml>`_ and
    `pyproject.toml
    <https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml>`_ in its

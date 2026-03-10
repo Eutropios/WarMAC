@@ -1,5 +1,3 @@
-.. _documentation_index:
-
 ########################
  Internal Documentation
 ########################

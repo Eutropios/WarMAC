@@ -1,5 +1,3 @@
-.. _warmac_usage:
-
 .. program:: warmac
 
 ##############

@@ -16,8 +16,6 @@ import os
 import sys
 from pathlib import Path
 
-from warmac import config
-
 # -- Metadata ----------------------------------------------------------
 
 python_path = str(Path("../../src/warmac").resolve())
@@ -26,7 +24,8 @@ sys.path.insert(0, python_path)
 project = "WarMAC"
 copyright = "2023–2026, Noah Jenner"  # noqa: A001, RUF001
 author = "Noah Jenner"
-release = config.VERSION
+release = "0.0.5"
+version = "0.0.5"
 language = "en"
 
 # -- General Config ----------------------------------------------------

@@ -1,5 +1,3 @@
-.. _warmac_main:
-
 #############
  WarMAC Main
 #############

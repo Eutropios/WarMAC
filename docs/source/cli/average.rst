@@ -1,5 +1,3 @@
-.. _average_usage:
-
 .. program:: warmac average
 
 #########

@@ -3,14 +3,14 @@ name: Test
 on:
   push:
     paths:
-      - 'src/**'
-      - 'docs/source/conf.py'
-      - 'tests/**'
+      - "src/**"
+      - "docs/source/conf.py"
+      - "tests/**"
   pull_request:
     paths:
-      - 'src/**'
-      - 'docs/source/conf.py'
-      - 'tests/**'
+      - "src/**"
+      - "docs/source/conf.py"
+      - "tests/**"
   workflow_dispatch:
 
 permissions: {}
@@ -55,4 +55,4 @@ jobs:
       - name: Install deps
         run: uv sync --no-dev --locked --group test
       - name: Run tests
-        run: uv run pytest tests -vv
+        run: uv run -m pytest tests -vv

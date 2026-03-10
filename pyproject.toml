@@ -52,7 +52,8 @@
     "esbonio>=0.16",
     "furo>=2023.9",
     "sphinx<8.2,>=8.0; python_version >= '3.10' and python_version < '3.11'",
-    "sphinx>=8.2; python_version >= '3.11'",
+    "sphinx>=8.2; python_version >= '3.11' and python_version < '3.12'",
+    "sphinx>=9.1; python_version >= '3.12'",
     "sphinx-copybutton>=0.5.2",
     "sphinx-inline-tabs>=2023.4.21",
     "sphinx-last-updated-by-git>=0.3.6",
@@ -75,7 +76,7 @@
   ]
 
 [build-system]
-  requires      = ["uv_build>=0.7.19"]
+  requires      = ["uv_build>=0.10.9"]
   build-backend = "uv_build"
 
 [tool.coverage.run]
@@ -96,6 +97,10 @@
   style               = "sphinx"
   wrap-descriptions   = 72
   wrap-summaries      = 72
+
+[tool.esbonio.sphinx]
+  pythonCommand = ["uv", "run", "--group", "docs", "python"]
+  buildCommand  = ["sphinx-build", "-M", "html", "docs", "docs/_build"]
 
 [tool.mypy]
   exclude        = [
@@ -207,6 +212,9 @@
 
 [tool.tombi]
   toml-version = "v1.0.0"
+
+[tool.tombi.files]
+  exclude = ["**/uv.lock"]
 
 [tool.tombi.format.rules]
   indent-table-key-value-pairs    = true
