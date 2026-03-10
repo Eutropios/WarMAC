@@ -39,4 +39,4 @@ jobs:
         run: uv sync --locked --no-dev --group docs
 
       - name: Run sphinx-lint
-        run: uv run -m sphinx-lint --max-line-length 80 docs
+        run: uv run sphinx-lint --max-line-length 80 docs
