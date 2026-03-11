@@ -248,8 +248,19 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
     max_list = max(plat_list)
     min_list = min(plat_list)
     num_orders = len(plat_list)
+
+    # IDEA: Print back everything the user specified if both
+    # detailed-report and porcelain are passed. If only detailed-report
+    # is passed, print as block. If only porcelain passed, print minimal
+    # amount of info: item name, statistic name, price, buyer/seller,
+    # ndigits,
     if args.porcelain:
-        return f"{item_name}:{args.timerange}:{stat}:{min_list}:{max_list}:{num_orders}"
+        if args.detailed_report:
+            return (
+                f"{item_name}:{statistic}:{stat}:{min_list}:{max_list}:{num_orders}:"
+                f"{args.timerange}:"
+            )
+        return f"{item_name}"
 
     space_after_label = 23
     return (
