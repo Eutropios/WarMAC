@@ -1,11 +1,11 @@
 repos:
-  #- repo: https://github.com/tombi-toml/tombi-pre-commit
-  #  rev: v0.9.4
-  #  hooks:
-  #    - id: tombi-format
-  #      args: [--check, --diff, pyproject.toml]
-  #    - id: tombi-lint
-  #      args: [pyproject.toml]
+  - repo: https://github.com/tombi-toml/tombi-pre-commit
+    rev: v0.9.6
+    hooks:
+      - id: tombi-format
+        args: [--check, --diff, pyproject.toml]
+      - id: tombi-lint
+        args: [pyproject.toml]
 
   - repo: https://github.com/DavidAnson/markdownlint-cli2
     rev: "v0.21.0"
@@ -30,7 +30,7 @@ repos:
   #      args: [-i, -e ./tests]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.15.5"
+    rev: "v0.15.6"
     hooks:
       - id: ruff-check
         args: [--exit-non-zero-on-fix]

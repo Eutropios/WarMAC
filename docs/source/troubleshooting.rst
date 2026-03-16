@@ -7,7 +7,8 @@
 *************
 
 |  Warframe Market's server imposes a limit on the number of requests that a
-   user can perform per second. The exact number is not concrete, but it ranges from 3–5 requests per second.
+   user can perform per second. The exact number is not concrete, but it ranges
+   from 3–5 requests per second.
 
 |  WarMAC typically makes 2 requests to WFM per execution: one to collect data
    about the item itself, and a second to collect relevant orders. This means
@@ -18,4 +19,5 @@
 ======================================
 
 |  If you are still rate-limited after waiting for minutes on end to make
-   another request, please file an issue on `GitHub <https://github.com/Eutropios/WarMAC/issues>`_.
+   another request, please file an issue on `GitHub
+   <https://github.com/Eutropios/WarMAC/issues>`_.

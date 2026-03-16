@@ -258,7 +258,7 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
         f"{f'{statistic} Price:':{space_after_label}}{stat} platinum\n"
         f"{'Max Price:':{space_after_label}}{max_list:.0f} platinum\n"
         f"{'Min Price:':{space_after_label}}{min_list:.0f} platinum\n"
-        f"{'Number of Orders:':{space_after_label}}{num_orders}"
+        f"{'Number of Orders:':{space_after_label}}{num_orders} orders"
     )
 
 

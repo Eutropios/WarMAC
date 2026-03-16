@@ -132,10 +132,11 @@ WarMAC output can also be redirected to a file:
 $ warmac average -p PC -t 2 -d "vengeful revenant" > warmacOut.txt
 $ cat warmacOut.txt
 Item:                  Vengeful Revenant
+Time Range:            2 days
 Median Price:          5.0 platinum
 Max Price:             30 platinum
 Min Price:             4 platinum
-Number of Orders:      38
+Number of Orders:      38 orders
 ```
 
 ### Examples

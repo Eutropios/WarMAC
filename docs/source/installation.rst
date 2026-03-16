@@ -76,6 +76,7 @@
 
 |  If you're getting an error that `python` is not recognized as a command, try
    using the following instead:
+
    ``python3 -m pip install warmac``
 
 |  You can ensure that you've installed WarMAC correctly by calling its help

@@ -282,7 +282,7 @@ def create_parser() -> WarMACParser:
         type=lambda s: s.lower().strip(),
         choices=average.AVERAGE_FUNCTIONS,
         help=(
-            "Specifies which statistic to return; Can be one of "
+            "Which statistic to return; Can be one of "
             f"({', '.join(average.AVERAGE_FUNCTIONS)}). (Default: median)"
         ),
         metavar="<stat>",
@@ -405,7 +405,9 @@ def create_parser() -> WarMACParser:
         default=False,
         help=(
             "Print output separated with colons. If passed without --detail-report, "
-            "--porcelain will be ignored."
+            "--porcelain will be ignored. Follows the template of `<name of item>:"
+            "<timerange>:<price calculated>:<min price in list>:<max price in list>:"
+            "<number of orders>`."
         ),
         dest="porcelain",
     )

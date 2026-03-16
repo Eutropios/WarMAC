@@ -19,7 +19,6 @@ Generic Errors
    :show-inheritance:
    :exclude-members: __init__
 
-
 .. autoexception:: errors.NoListingsFoundError
    :show-inheritance:
    :exclude-members: __init__

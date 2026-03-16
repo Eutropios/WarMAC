@@ -2,7 +2,7 @@
  Schema Models
 ###############
 
-| All msgspec.structs used in the program.
+|  All msgspec.structs used in the program.
 
 .. autoclass:: schema.Base
    :members:

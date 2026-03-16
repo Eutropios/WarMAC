@@ -71,10 +71,10 @@ Acknowledgements
 Licensing
 =========
 
-|  **This project is NOT affiliated with Warframe, Digital Extremes, or
-   Warframe Market.**
+|  **This project is NOT affiliated with Warframe, Digital Extremes, or Warframe
+   Market.**
 
-|  Copyright (C) 2023-2026  Noah Jenner under GNU GPL version 3.0-or-later
+|  Copyright (C) 2023-2026 Noah Jenner under GNU GPL version 3.0-or-later
 
 |  For additional licensing information, please see `LICENSE.txt
    <https://github.com/Eutropios/WarMAC/blob/main/LICENSE.txt>`_

@@ -98,9 +98,10 @@
   wrap-descriptions   = 72
   wrap-summaries      = 72
 
-[tool.esbonio.sphinx]
-  pythonCommand = ["uv", "run", "--group", "docs", "python"]
-  buildCommand  = ["sphinx-build", "-M", "html", "docs", "docs/_build"]
+  # Awaiting Sphinx v9 support in esbonio
+  # [tool.esbonio.sphinx]
+  #  pythonCommand = ["uv", "run", "--group", "docs", "python"]
+  #  buildCommand  = ["sphinx-build", "-M", "html", "docs", "docs/_build"]
 
 [tool.mypy]
   exclude        = [
