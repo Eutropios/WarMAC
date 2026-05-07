@@ -3,17 +3,18 @@ name: Validate Project Files
 
 on:
   push:
+    branches:
+      - main
     paths:
-      - 'pyproject.toml'
-      - '.github/**'
-      - 'README.md'
+      - "pyproject.toml"
+      - ".github/**"
+      - "README.md"
   pull_request:
     paths:
-      - 'pyproject.toml'
-      - '.github/**'
-      - 'README.md'
+      - "pyproject.toml"
+      - ".github/**"
+      - "README.md"
   workflow_dispatch:
-
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -38,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          version: '0.7.28'
+          version: "0.7.28"
 
       - name: Validate TOML files
         run: tombi lint pyproject.toml

@@ -3,11 +3,13 @@ name: Zizmor analysis
 
 on:
   push:
+    branches:
+      - main
     paths:
-      - '.github/**'
+      - ".github/**"
   pull_request:
     paths:
-      - '.github/**'
+      - ".github/**"
   workflow_dispatch:
 
 permissions: {}

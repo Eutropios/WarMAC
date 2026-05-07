@@ -1,6 +1,7 @@
 """
-warmac.average
-~~~~~~~~~~~~~~
+Logic for average subcommand.
+
+-----------------------------------------------------------------------
 
 WarMAC — https://github.com/Eutropios/WarMAC
 Copyright (C) 2024  Noah Jenner
@@ -17,34 +18,18 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
------------------------------------------------------------------------
-
-Logic for average subcommand.
-"""  # noqa: D205, D400
+"""
 
 from __future__ import annotations
 
+import datetime
 import statistics
-import sys
 from typing import TYPE_CHECKING
 
 from warmac import config, errors, fetch_data, schema
 
-if sys.version_info >= (3, 11):
-    # NOTE: When Python 3.10 EOL, use datetime instead of dateutil
-    from datetime import datetime as dt
-
-    parse = dt.fromisoformat
-else:  # pragma: no cover
-    # this is already tested by CI versioned testing
-    import dateutil.parser
-
-    parse = dateutil.parser.parse
-
 if TYPE_CHECKING:
     import argparse
-    import datetime
     from collections.abc import Callable, Mapping, Sequence
     from typing import Literal
 
@@ -103,9 +88,7 @@ def in_time_range(
     :return: ``True`` if ``last_updated ≤ time_range``, ``False`` if
         ``last_updated > time_range``.
     """
-    # Use just this when 3.10 eol
-    # timestamp = datetime.datetime.fromisoformat(last_updated)
-    timestamp = parse(last_updated)
+    timestamp = datetime.datetime.fromisoformat(last_updated)
     return 0 <= (current_time - timestamp).days <= time_range
 
 

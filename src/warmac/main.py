@@ -1,6 +1,7 @@
 """
-warmac.main
-~~~~~~~~~~~
+Main logic of warmac.
+
+-----------------------------------------------------------------------
 
 WarMAC — https://github.com/Eutropios/WarMAC
 Copyright (C) 2024  Noah Jenner
@@ -17,10 +18,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
------------------------------------------------------------------------
-
-Main logic of warmac.
-"""  # noqa: D205, D400
+"""
 
 from __future__ import annotations
 
@@ -80,7 +78,7 @@ def process_cli_command(args: list[str] | None) -> str:
     }
     cli_args = cli_parser.handle_input(args)
     fix_http_headers(headers, cli_args.platform, crossplay=cli_args.crossplay)
-    current_time = datetime.datetime.now(datetime.timezone.utc)
+    current_time = datetime.datetime.now(datetime.UTC)
     try:
         subcmd = SUBCMD_DISPATCH[cli_args.subparser](cli_args, headers, current_time)
     except KeyError as err:

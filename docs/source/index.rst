@@ -12,7 +12,7 @@
    item from the fan website `Warframe Market <https://warframe.market/>`_, and
    then calculates the average buy or sell price of that item.
 
-|  WarMAC currently supports all Python versions 3.10 to 3.14 inclusive.
+|  WarMAC currently supports all Python versions 3.11 to 3.14 inclusive.
 
 .. attention::
 

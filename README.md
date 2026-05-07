@@ -40,7 +40,7 @@ mods, and arcane enhancements.
 
 ## Installation<a id="installation"></a> <!--This ensures PyPI compatibility-->
 
-WarMAC supports Python versions 3.10 to 3.14.
+WarMAC supports Python versions 3.11 to 3.14.
 
 The primary method of installing WarMAC is by installing it through [uv](https://docs.astral.sh/uv/),
 though [pipx](https://pypa.github.io/pipx/) may be used as well.

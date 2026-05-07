@@ -1,6 +1,7 @@
 """
-warmac.errors
-~~~~~~~~~~~~~~
+Errors used within warmac.
+
+-----------------------------------------------------------------------
 
 WarMAC — https://github.com/Eutropios/WarMAC
 Copyright (C) 2024  Noah Jenner
@@ -17,11 +18,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
------------------------------------------------------------------------
-
-All errors used within warmac.
-"""  # noqa: D205, D400
+"""
 
 from __future__ import annotations
 
@@ -42,7 +39,7 @@ class WarMACBaseError(Exception):
 
 class CommandError(WarMACBaseError):
     """Raised if the ``subparser`` field of ``argparse.Namespace`` does
-    not exist in :py:data:`main.SUBCMD_DISPATCH`."""  # noqa: D205, D209
+    not exist in :py:data:`main.SUBCMD_DISPATCH`."""
 
     def __init__(self) -> None:
         """Construct a ``CommandError``."""
@@ -51,7 +48,7 @@ class CommandError(WarMACBaseError):
 
 class NoListingsFoundError(WarMACBaseError):
     """Raised if no order listings are found given the set of parameters
-    that the user gives the program."""  # noqa: D205, D209
+    that the user gives the program."""
 
     def __init__(self) -> None:
         """Construct a ``NoListingsFoundError``."""
@@ -63,7 +60,7 @@ class NoListingsFoundError(WarMACBaseError):
 
 class WarMACHTTPError(WarMACBaseError):
     """Raised if the request made by the user returned an HTTP Status
-    code that was not 200."""  # noqa: D205, D209
+    code that was not 200."""
 
     def __init__(self, message: str) -> None:
         """Construct a ``WarMACHTTPError`` error."""
@@ -73,7 +70,7 @@ class WarMACHTTPError(WarMACBaseError):
 class InternalServerError(WarMACHTTPError):
     """Raised on HTTP status code 500, which indicates that the server
     has encountered an internal error that prevents it from fulfilling
-    the user's request."""  # noqa: D205, D209
+    the user's request."""
 
     def __init__(self) -> None:
         """Construct an ``InternalServerError``."""
@@ -86,7 +83,7 @@ class InternalServerError(WarMACHTTPError):
 class RateLimitError(WarMACHTTPError):
     """Raised on HTTP status code 429, which indicates that the an
     excessive number of requests per second have been made to the WFM
-    server."""  # noqa: D205, D209
+    server."""
 
     def __init__(self) -> None:
         """Construct a ``RateLimitError``."""
@@ -100,7 +97,7 @@ class RateLimitError(WarMACHTTPError):
 
 class MethodNotAllowedError(WarMACHTTPError):
     """Raised on HTTP status code 405, which indicates that the server
-    knows the method, but the target resource doesn't support it."""  # noqa: D205, D209
+    knows the method, but the target resource doesn't support it."""
 
     def __init__(self) -> None:
         """Construct a ``MethodNotAllowedError``."""
@@ -111,7 +108,7 @@ class MethodNotAllowedError(WarMACHTTPError):
 
 class MalformedURLError(WarMACHTTPError):
     """Raised on HTTP status code 404, which indicates that the resource
-    in question does not exist."""  # noqa: D205, D209
+    in question does not exist."""
 
     def __init__(self) -> None:
         """Construct a ``MalformedURLError``."""
@@ -123,7 +120,7 @@ class MalformedURLError(WarMACHTTPError):
 
 class ForbiddenRequestError(WarMACHTTPError):
     """Raised on HTTP status code 403, which indicates that access to
-    the desired resource is forbidden."""  # noqa: D205, D209
+    the desired resource is forbidden."""
 
     def __init__(self) -> None:
         """Construct a ``ForbiddenRequestError``."""
@@ -136,7 +133,7 @@ class ForbiddenRequestError(WarMACHTTPError):
 class UnauthorizedAccessError(WarMACHTTPError):
     """Raised on HTTP status code 401, which indicates that
     authorization via proper user credentials is needed to access this
-    resource."""  # noqa: D205, D209
+    resource."""
 
     def __init__(self) -> None:
         """Construct an ``UnauthorizedAccessError``."""
@@ -148,7 +145,7 @@ class UnauthorizedAccessError(WarMACHTTPError):
 
 class UnknownError(WarMACHTTPError):
     """Raised if the HTTP Response Code is not covered by any other
-    error previously stated."""  # noqa: D205, D209
+    error previously stated."""
 
     def __init__(self, status_code: int) -> None:
         """Construct an ``UnknownError``."""

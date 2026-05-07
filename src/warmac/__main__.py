@@ -1,6 +1,7 @@
 """
-warmac.__main__
-~~~~~~~~~~~~~~~
+Entry point for console when `python -m warmac` is called.
+
+-----------------------------------------------------------------------
 
 WarMAC — https://github.com/Eutropios/WarMAC
 Copyright (C) 2024  Noah Jenner
@@ -17,11 +18,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
------------------------------------------------------------------------
-
-Entry point for console when `python -m warmac` is called.
-"""  # noqa: D205, D400
+"""
 
 import sys
 
