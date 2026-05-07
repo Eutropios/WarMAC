@@ -95,10 +95,10 @@
   wrap-descriptions   = 72
   wrap-summaries      = 72
 
-  # Awaiting Sphinx v9 support in esbonio
-  # [tool.esbonio.sphinx]
-  #  pythonCommand = ["uv", "run", "--group", "docs", "python"]
-  #  buildCommand  = ["sphinx-build", "-M", "html", "docs", "docs/_build"]
+# Awaiting Sphinx v9 support in esbonio
+[tool.esbonio.sphinx]
+  pythonCommand = ["uv", "run", "--group", "docs", "python"]
+  buildCommand  = ["sphinx-build", "-M", "html", "docs", "docs/_build"]
 
 [tool.mypy]
   exclude        = [
@@ -193,7 +193,7 @@
   max-complexity = 5
 
 [tool.ruff.lint.per-file-ignores]
-  "docs/source/conf.py"      = ["D205", "D400", "INP001"]
+  "docs/conf.py"             = ["INP001"]
   "**/__init__.py"           = ["I002", "D205", "D400"]
   "**/__main__.py"           = ["I002", "D205", "D400"]
   "src/warmac/cli_parser.py" = ["SLF001"]

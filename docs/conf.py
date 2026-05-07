@@ -15,7 +15,7 @@ from pathlib import Path
 
 # -- Metadata ----------------------------------------------------------
 
-python_path = str(Path("../../src/warmac").resolve())
+python_path = str(Path("../src/warmac").resolve())
 sys.path.insert(0, python_path)
 
 project = "WarMAC"
@@ -66,7 +66,7 @@ copybutton_prompt_is_regexp = True
 
 # ---- Options for HTML output ----------------------------------------
 
-_static_path = Path("../_static")
+_static_path = Path("_static")
 html_static_path = [str(_static_path)]
 html_theme = "furo"
 html_css_files = [str(_static_path / "custom.css")]
