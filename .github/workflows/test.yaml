@@ -6,12 +6,12 @@ on:
       - main
     paths:
       - "src/**"
-      - "docs/source/conf.py"
+      - "docs/conf.py"
       - "tests/**"
   pull_request:
     paths:
       - "src/**"
-      - "docs/source/conf.py"
+      - "docs/conf.py"
       - "tests/**"
   workflow_dispatch:
 

@@ -36,7 +36,7 @@
    :maxdepth: 2
    :caption: Development
 
-   documentation/index
+   internal/index
    contributing
 
 .. toctree::

@@ -15,14 +15,16 @@ build:
     create_environment:
       - uv venv "${READTHEDOCS_VIRTUALENV_PATH}"
     install:
-      - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv sync --frozen --group docs
+      - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}" uv sync --frozen
+        --group docs
 
 # Build documentation in the "docs/" directory with Sphinx
 sphinx:
-  configuration: docs/source/conf.py
+  configuration: docs/conf.py
   fail_on_warning: true
 
 # Optionally build your docs in additional formats such as PDF and ePub
 formats:
   - pdf
+
 # - epub
