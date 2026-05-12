@@ -30,16 +30,16 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           persist-credentials: false
 
       - name: setup-tombi
-        uses: tombi-toml/setup-tombi@f7cb38e77d9a62bc27a8445bf50e660e9496b893
+        uses: tombi-toml/setup-tombi@9880d1d3ba5e745d410c697366c513b337704388
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          version: "0.7.28"
+          version: "latest"
 
       - name: Validate TOML files
         run: tombi lint pyproject.toml
@@ -48,7 +48,7 @@ jobs:
         run: tombi format --check --diff pyproject.toml
 
       - name: markdownlint-cli2-action
-        uses: DavidAnson/markdownlint-cli2-action@07035fd053f7be764496c0f8d8f9f41f98305101 # v22.0.0
+        uses: DavidAnson/markdownlint-cli2-action@ded1f9488f68a970bc66ea5619e13e9b52e601cd # v23.2.0
         with:
           config: ".markdownlint.yaml"
           globs: "**/*.md"
