@@ -5,7 +5,7 @@
 # from the environment for the first two.
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
-SOURCEDIR	  = source
+SOURCEDIR	  = .
 BUILDDIR	  = _build
 
 ifeq ($(OS),Windows_NT)

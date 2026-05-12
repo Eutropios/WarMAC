@@ -2,14 +2,16 @@ name: Test
 
 on:
   push:
+    branches:
+      - main
     paths:
       - "src/**"
-      - "docs/source/conf.py"
+      - "docs/conf.py"
       - "tests/**"
   pull_request:
     paths:
       - "src/**"
-      - "docs/source/conf.py"
+      - "docs/conf.py"
       - "tests/**"
   workflow_dispatch:
 
@@ -30,7 +32,6 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - "3.10"
           - "3.11"
           - "3.12"
           - "3.13"
@@ -47,7 +48,7 @@ jobs:
           persist-credentials: false
 
       - name: Install uv and set python version
-        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
         with:
           version: "0.9.26"
           python-version: ${{ matrix.python-version }}

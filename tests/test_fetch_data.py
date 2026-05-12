@@ -1,7 +1,4 @@
 """
-tests.test_cli_parser
-~~~~~~~~~~~~~~~~~~~~~
-
 WarMAC — https://github.com/Eutropios/WarMAC
 Copyright (C) 2024  Noah Jenner
 
@@ -17,10 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
------------------------------------------------------------------------
-
-Test file for cli_parser.py
-"""  # noqa: D205, D400
+"""
 
 from __future__ import annotations
 
@@ -72,7 +66,7 @@ class TestItemUrl:
     def test_item_url_transformations(input_item: str, expected_output: str) -> None:
         """Test that function strips preceding and succeeding
         whitespace, makes characters lowercase, replaces spaces with
-        underscores, and replaces ampersands with "and"."""  # noqa: D205, D209
+        underscores, and replaces ampersands with "and"."""
         assert fetch_data.item_url(input_item) == expected_output
 
 
@@ -99,7 +93,7 @@ class TestGetData:
 
     def test_get_data_success_item_response(self, mock_get_page: MagicMock) -> None:
         """Verify get_data successfully fetches and decodes requested
-        data for an ItemResponse."""  # noqa: D205, D209
+        data for an ItemResponse."""
         test_item_name = "rhino_prime_set"
         mock_raw_data = b"""
             {
@@ -132,7 +126,7 @@ class TestGetData:
 
     def test_get_data_success_order_response(self, mock_get_page: MagicMock) -> None:
         """Verify get_data successfully fetches and decodes requested
-        data for an OrderResponse."""  # noqa: D205, D209
+        data for an OrderResponse."""
         test_item_name = "prime_fissure_orders"
         mock_raw_data = b"""
             {
@@ -209,7 +203,7 @@ class TestGetData:
 
     def test_get_data_http_error_from_get_page(self, mock_get_page: MagicMock) -> None:
         """Test that get_data correctly propagates a MalformedURLError
-        raised by get_page."""  # noqa: D205, D209
+        raised by get_page."""
         test_item_name = "non_existent_item"
         mock_get_page.side_effect = errors.MalformedURLError
         with pytest.raises(errors.MalformedURLError):
@@ -220,7 +214,7 @@ class TestGetData:
     def test_get_data_malformed_data_error(self, mock_get_page: MagicMock) -> None:
         """Test that get_data raises a msgspec.ValidationError if raw
         response data is a valid JSON, but does not conform to the
-        expected schema."""  # noqa: D205, D209
+        expected schema."""
         test_item_name = "missing_api_version_item"
         # missing api_version field to induce error
         mock_raw_data = b"""
@@ -287,7 +281,7 @@ class TestGetPage:
         expected_error_type: type[errors.WarMACHTTPError],
     ) -> None:
         """Test that get_page correctly propagates various HTTP errors
-        based on the status code returned by urllib3.request."""  # noqa: D205, D209
+        based on the status code returned by urllib3.request."""
         mock_response = mocker.MagicMock(spec=urllib3.BaseHTTPResponse)
         mock_response.status = status_code
         mocker.patch("urllib3.request", return_value=mock_response)
@@ -326,7 +320,7 @@ class TestHTTPCodeCheck:
     @staticmethod
     def test_http_code_check_raises_unknown_error_for_unmapped_code() -> None:
         """Verify http_code_check raises UnknownError for unmapped
-        codes."""  # noqa: D205, D209
+        codes."""
         with pytest.raises(errors.UnknownError) as exc_info:
             fetch_data.http_code_check(499)
         assert str(exc_info.value) == (

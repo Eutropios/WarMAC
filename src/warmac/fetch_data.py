@@ -1,6 +1,7 @@
 """
-warmac.fetch_data
-~~~~~~~~~~~~~~
+Logic for http requests, including error checks.
+
+-----------------------------------------------------------------------
 
 WarMAC — https://github.com/Eutropios/WarMAC
 Copyright (C) 2024  Noah Jenner
@@ -17,11 +18,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
------------------------------------------------------------------------
-
-Logic for http requests, including error checks.
-"""  # noqa: D205, D400
+"""
 
 from __future__ import annotations
 

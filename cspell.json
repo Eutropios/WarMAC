@@ -9,14 +9,16 @@
     "files": [
         ".git/COMMIT_EDITMSG",
         ".github/**",
-        "docs/source/**",
+        "docs/**",
         "README.md",
         "src/**",
         "tests/**"
     ],
     "ignorePaths": [
         ".github/workflows/**",
-        "docs/source/conf.py",
+        "docs/conf.py",
+        "docs/make.bat",
+        "docs/Makefile"
     ],
     "version": "0.2",
     "words": [

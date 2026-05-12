@@ -2,15 +2,17 @@ name: Lint and Format
 
 on:
   push:
+    branches:
+      - main
     paths:
-      - 'src/**'
-      - 'docs/source/conf.py'
-      - 'tests/**'
+      - "src/**"
+      - "docs/conf.py"
+      - "tests/**"
   pull_request:
     paths:
-      - 'src/**'
-      - 'docs/source/conf.py'
-      - 'tests/**'
+      - "src/**"
+      - "docs/conf.py"
+      - "tests/**"
   workflow_dispatch:
 
 concurrency:
@@ -32,7 +34,7 @@ jobs:
           persist-credentials: false
 
       - name: Install uv
-        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
         with:
           version: "0.9.26"
 
@@ -43,7 +45,8 @@ jobs:
         run: uv sync --locked --no-dev
 
       #- name: Format docstrings
-      #  run: uvx --managed-python docformatter . --black --pre-summary-newline -r -s sphinx --wrap-summaries 72 --wrap-descriptions 72
+      #  run: uvx --managed-python docformatter . --black --pre-summary-newline -r -s
+      #    sphinx --wrap-summaries 72 --wrap-descriptions 72
 
       - name: Ruff lint
         run: uvx ruff check . --exit-non-zero-on-fix
@@ -54,7 +57,6 @@ jobs:
       - name: Lint docstring
         run: uvx --managed-python pydoclint --config=pyproject.toml .
 
-
   mypy:
     name: mypy
     runs-on: ubuntu-latest
@@ -64,7 +66,6 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.10"
           - "3.11"
           - "3.12"
           - "3.13"
@@ -77,7 +78,7 @@ jobs:
           persist-credentials: false
 
       - name: Install uv and set python version
-        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
         with:
           python-version: ${{ matrix.python-version }}
 

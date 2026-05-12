@@ -1,7 +1,4 @@
 """
-tests.test_cli_parser
-~~~~~~~~~~~~~~~~~~~~~
-
 WarMAC — https://github.com/Eutropios/WarMAC
 Copyright (C) 2024  Noah Jenner
 
@@ -17,10 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
------------------------------------------------------------------------
-
-Test file for cli_parser.py
-"""  # noqa: D205, D400
+"""
 
 from __future__ import annotations
 
@@ -74,7 +68,7 @@ class TestIntCastInputBounds:
     ) -> None:
         """Test str_to_int_bounds_check for edge-case integers wrt
         bounds, asserting either correct conversion or
-        ArgumentTypeError."""  # noqa: D205, D209
+        ArgumentTypeError."""
         if should_raise_error:
             with pytest.raises(argparse.ArgumentTypeError):
                 cli_parser.str_to_int_bounds_check(input_str, min_bound, max_bound)
@@ -110,7 +104,7 @@ class TestIntCastInputParamTypes:
         invalid_input_string: str,
     ) -> None:
         """Test invalid string inputs for str_to_int_bounds_check to
-        ensure argparse.ArgumentTypeError is raised."""  # noqa: D205, D209
+        ensure argparse.ArgumentTypeError is raised."""
         min_bound = 1
         max_bound = 10
         with pytest.raises(argparse.ArgumentTypeError):
@@ -157,7 +151,7 @@ class TestHandleInputInterface:
     @staticmethod
     def test_valid_command_returns_parsed_args() -> None:
         """Test valid command to ensure it returns expected
-        argparse.Namespace object."""  # noqa: D205, D209
+        argparse.Namespace object."""
         parsed_args = cli_parser.handle_input(["average", "bite"])
         assert isinstance(parsed_args, argparse.Namespace)
         assert parsed_args.subparser == "average"
@@ -225,7 +219,7 @@ class TestStdlibMonkeyPatching:
         terminal_width: int, expected_output: str, *, test_subparser: bool
     ) -> None:
         """Test finished output for metavar tuples, poor leading
-        indents, and incorrect help text spacing."""  # noqa: D205, D209
+        indents, and incorrect help text spacing."""
         help_min_width = 34
         # Uses mocked terminal_width
         default_width = min(help_min_width, terminal_width)

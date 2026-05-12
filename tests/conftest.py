@@ -1,7 +1,4 @@
 """
-tests.conftest
-~~~~~~~~~~~~~~~~~
-
 WarMAC — https://github.com/Eutropios/WarMAC
 Copyright (C) 2024  Noah Jenner
 
@@ -17,10 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
------------------------------------------------------------------------
-
-Fixture file
-"""  # noqa: D205, D400
+"""
 
 from __future__ import annotations
 
@@ -47,14 +41,14 @@ user = schema.UserShort(
 @pytest.fixture
 def mock_get_page(mocker: MagicMock) -> object:
     """Fixture that patches fetch_data.get_page, preventing real HTTP
-    requests during tests."""  # noqa: D205, D209
+    requests during tests."""
     return mocker.patch("warmac.fetch_data.get_page")
 
 
 @pytest.fixture
 def fixed_current_time() -> datetime.datetime:
     """Fixture that returns a set datetime object."""
-    return datetime.datetime(2025, 7, 23, 10, 0, 0, 0, datetime.timezone.utc)
+    return datetime.datetime(2025, 7, 23, 10, 0, 0, 0, datetime.UTC)
 
 
 @pytest.fixture

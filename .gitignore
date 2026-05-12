@@ -25,7 +25,7 @@
 .pytype
 .ruff_cache
 .svn
-.venv
+.venv*
 .vscode
 __pycache__/
 __pypackages__

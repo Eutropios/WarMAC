@@ -4,7 +4,7 @@
 
 .. attention::
 
-   WarMAC supports Python versions 3.10 to 3.14.
+   WarMAC supports Python versions 3.11 to 3.14.
 
 
 |  The primary method of installing WarMAC is by installing it through `uv
@@ -76,6 +76,7 @@
 
 |  If you're getting an error that `python` is not recognized as a command, try
    using the following instead:
+
    ``python3 -m pip install warmac``
 
 |  You can ensure that you've installed WarMAC correctly by calling its help

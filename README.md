@@ -40,7 +40,7 @@ mods, and arcane enhancements.
 
 ## Installation<a id="installation"></a> <!--This ensures PyPI compatibility-->
 
-WarMAC supports Python versions 3.10 to 3.14.
+WarMAC supports Python versions 3.11 to 3.14.
 
 The primary method of installing WarMAC is by installing it through [uv](https://docs.astral.sh/uv/),
 though [pipx](https://pypa.github.io/pipx/) may be used as well.
@@ -132,10 +132,11 @@ WarMAC output can also be redirected to a file:
 $ warmac average -p PC -t 2 -d "vengeful revenant" > warmacOut.txt
 $ cat warmacOut.txt
 Item:                  Vengeful Revenant
+Time Range:            2 days
 Median Price:          5.0 platinum
 Max Price:             30 platinum
 Min Price:             4 platinum
-Number of Orders:      38
+Number of Orders:      38 orders
 ```
 
 ### Examples

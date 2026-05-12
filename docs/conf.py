@@ -1,14 +1,11 @@
 """
-conf.py
-~~~~~~~
-
-Copyright (C) 2024 Noah Jenner under CC BY-SA 4.0.
-To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/
+Configuration file for Sphinx.
 
 ------------------------------------------------------------------------
 
-Configuration file for Sphinx.
-"""  # noqa: D205, D400
+Copyright (C) 2024 Noah Jenner under CC BY-SA 4.0.
+To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/
+"""
 
 from __future__ import annotations
 
@@ -18,7 +15,7 @@ from pathlib import Path
 
 # -- Metadata ----------------------------------------------------------
 
-python_path = str(Path("../../src/warmac").resolve())
+python_path = str(Path("../src/warmac").resolve())
 sys.path.insert(0, python_path)
 
 project = "WarMAC"
@@ -69,7 +66,7 @@ copybutton_prompt_is_regexp = True
 
 # ---- Options for HTML output ----------------------------------------
 
-_static_path = Path("../_static")
+_static_path = Path("_static")
 html_static_path = [str(_static_path)]
 html_theme = "furo"
 html_css_files = [str(_static_path / "custom.css")]

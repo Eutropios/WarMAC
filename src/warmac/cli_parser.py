@@ -1,6 +1,7 @@
 """
-warmac.cli_parser
-~~~~~~~~~~~~~~~~~
+Command line interface logic for warmac.
+
+-----------------------------------------------------------------------
 
 WarMAC — https://github.com/Eutropios/WarMAC
 Copyright (C) 2024  Noah Jenner
@@ -17,10 +18,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
------------------------------------------------------------------------
-
-Command line interface logic for warmac.
-"""  # noqa: D205, D400
+"""
 
 from __future__ import annotations
 
@@ -151,7 +149,6 @@ def str_to_int_bounds_check(inp_val: str, min_val: int, max_val: int) -> int:
     try:
         casted_int = int(inp_val)
     except ValueError as err:
-        # If casting fails, we don't even need to check the bounds
         msg = f"'{inp_val}' is not a valid integer."
         raise argparse.ArgumentTypeError(msg) from err
 
@@ -167,13 +164,15 @@ class WarMACParser(argparse.ArgumentParser):
 
     def error(self, message: str) -> NoReturn:
         """
+        Modify content of error message printed to stderr.
+
         Modify exit message for :class:`argparse.ArgumentError`
-        occurrences to print to stderr, and return an exit code of 1.
+        occurrences to print to stderr and return an exit code of 1.
 
         :param message: Message provided by the standard
             :class:`argparse.ArgumentParser` class.
         :return: A value is never returned by this function.
-        """  # noqa: D205
+        """
         self.exit(1, f"{self.usage}: error: {message}\n")
         # change above code to print to stderr, then print cli help to
         # stdout, then exit with code 1
@@ -244,8 +243,6 @@ def create_parser() -> WarMACParser:
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,
             max_help_position=default_width,
-            # prog refers to the first argument passed in the command
-            # line, which is the name of the file in this case.
         ),
         add_help=False,
         usage=(
@@ -282,7 +279,7 @@ def create_parser() -> WarMACParser:
         type=lambda s: s.lower().strip(),
         choices=average.AVERAGE_FUNCTIONS,
         help=(
-            "Specifies which statistic to return; Can be one of "
+            "Which statistic to return; Can be one of "
             f"({', '.join(average.AVERAGE_FUNCTIONS)}). (Default: median)"
         ),
         metavar="<stat>",
@@ -405,7 +402,9 @@ def create_parser() -> WarMACParser:
         default=False,
         help=(
             "Print output separated with colons. If passed without --detail-report, "
-            "--porcelain will be ignored."
+            "--porcelain will be ignored. Follows the template of `<name of item>:"
+            "<timerange>:<price calculated>:<min price in list>:<max price in list>:"
+            "<number of orders>`."
         ),
         dest="porcelain",
     )
@@ -429,8 +428,6 @@ def create_parser() -> WarMACParser:
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,
             max_help_position=default_width,
-            # prog refers to the first argument passed in the command
-            # line, which is the name of the file in this case.
         ),
         add_help=False,
         usage="warmac help subcommand",

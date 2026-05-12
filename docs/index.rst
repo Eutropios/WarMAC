@@ -12,7 +12,7 @@
    item from the fan website `Warframe Market <https://warframe.market/>`_, and
    then calculates the average buy or sell price of that item.
 
-|  WarMAC currently supports all Python versions 3.10 to 3.14 inclusive.
+|  WarMAC currently supports all Python versions 3.11 to 3.14 inclusive.
 
 .. attention::
 
@@ -36,7 +36,7 @@
    :maxdepth: 2
    :caption: Development
 
-   documentation/index
+   internal/index
    contributing
 
 .. toctree::
@@ -71,10 +71,10 @@ Acknowledgements
 Licensing
 =========
 
-|  **This project is NOT affiliated with Warframe, Digital Extremes, or
-   Warframe Market.**
+|  **This project is NOT affiliated with Warframe, Digital Extremes, or Warframe
+   Market.**
 
-|  Copyright (C) 2023-2026  Noah Jenner under GNU GPL version 3.0-or-later
+|  Copyright (C) 2023-2026 Noah Jenner under GNU GPL version 3.0-or-later
 
 |  For additional licensing information, please see `LICENSE.txt
    <https://github.com/Eutropios/WarMAC/blob/main/LICENSE.txt>`_
