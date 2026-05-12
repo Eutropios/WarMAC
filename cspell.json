@@ -8,14 +8,14 @@
     ],
     "files": [
         ".git/COMMIT_EDITMSG",
-        ".github/**",
+        ".github/CODE_OF_CONDUCT.md",
+        ".github/ISSUE_TEMPLATE/**",
         "docs/**",
         "README.md",
         "src/**",
         "tests/**"
     ],
     "ignorePaths": [
-        ".github/workflows/**",
         "docs/conf.py",
         "docs/make.bat",
         "docs/Makefile"
