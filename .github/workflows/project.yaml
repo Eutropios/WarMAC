@@ -39,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          version: "0.7.28"
+          version: "latest"
 
       - name: Validate TOML files
         run: tombi lint pyproject.toml
