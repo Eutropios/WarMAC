@@ -1,0 +1,88 @@
+name: Lint and Format
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "docs/conf.py"
+      - "tests/**"
+  pull_request:
+    paths:
+      - "src/**"
+      - "docs/conf.py"
+      - "tests/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
+        with:
+          version: "0.9.26"
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install the project
+        run: uv sync --locked --no-dev
+
+      #- name: Format docstrings
+      #  run: uvx --managed-python docformatter . --black --pre-summary-newline -r -s
+      #    sphinx --wrap-summaries 72 --wrap-descriptions 72
+
+      - name: Ruff lint
+        run: uvx ruff check . --exit-non-zero-on-fix
+
+      - name: Ruff format
+        run: uvx ruff format . --check
+
+      - name: Lint docstring
+        run: uvx --managed-python pydoclint --config=pyproject.toml .
+
+  mypy:
+    name: mypy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    strategy:
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
+          - "3.14t"
+
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        with:
+          persist-credentials: false
+
+      - name: Install uv and set python version
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install deps
+        run: uv sync --no-dev --locked --group typeChecking
+      - name: Run mypy
+        run: uv run -m mypy .

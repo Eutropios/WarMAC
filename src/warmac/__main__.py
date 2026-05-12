@@ -1,4 +1,8 @@
 """
+Entry point for console when `python -m warmac` is called.
+
+-----------------------------------------------------------------------
+
 WarMAC — https://github.com/Eutropios/WarMAC
 Copyright (C) 2024  Noah Jenner
 
@@ -16,6 +20,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from tests import test_average, test_cli_parser, test_fetch_data, test_main
+import sys
 
-__all__ = ["test_average", "test_cli_parser", "test_fetch_data", "test_main"]
+from warmac import main
+
+sys.exit(main.main())

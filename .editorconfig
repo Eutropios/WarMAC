@@ -1,0 +1,24 @@
+root = true
+
+; recall, editorconfig is cascading
+; rules for more explicit or narrow patterns override broader ones
+
+[*]
+charset = utf-8
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{md,rst}]
+; trailing whitespace is relevant in these languages
+trim_trailing_whitespace = false
+
+[*.{md,toml,yaml,yml}]
+indent_size = 2
+
+[*.rst]
+indent_size = 3
+
+[Makefile]
+indent_style = tab

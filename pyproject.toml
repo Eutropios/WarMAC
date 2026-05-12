@@ -1,140 +1,228 @@
-[build-system]
-    build-backend = "poetry.core.masonry.api"
-    requires      = ["poetry-core>=1.0.0"]
+[project]
+  name            = "WarMAC"
+  version         = "0.0.5"
+  description     = "An average platinum price calculator for tradeable items in Warframe."
+  readme          = "README.md"
+  requires-python = ">=3.11"
+  license         = "GPL-3.0-or-later"
+  license-files   = ["LICENSE"]
+  authors         = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
+  maintainers     = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
+  keywords        = [
+    "platinum",
+    "warframe",
+    "warframe calculator",
+    "warframe market"
+  ]
+  classifiers     = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+  ]
+  dependencies    = [
+    "msgspec>=0.19.0",
+    "urllib3>=2.0.4",
+  ]
 
-[tool.poetry]
-    authors = ["Noah Jenner <noah.jenner@proton.me>"]
-    classifiers = [
-        "Development Status :: 4 - Beta",
-        "Environment :: Console",
-        "Intended Audience :: End Users/Desktop",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: Implementation :: CPython",
-        "Topic :: Utilities",
-        "Typing :: Typed",
-    ]
-    description = "An average platinum price calculator for tradeable items in Warframe."
-    documentation = "https://warmac.readthedocs.io/en/"
-    # include = [""]
-    keywords    = ["platinum", "warframe calculator", "warframe market", "warframe"]
-    license     = "MIT"
-    maintainers = ["Noah Jenner <noah.jenner@proton.me>"]
-    name        = "WarMAC"
-    packages    = [{include = "warmac"}]
-    readme      = "README.md"
-    repository  = "https://github.com/Eutropios/WarMAC"
-    version     = "0.0.4"
-    [tool.poetry.dependencies]
-        python  = ">=3.8,<3.13.0"
-        urllib3 = ">=2.0.4,<3.0.0"
-    [tool.poetry.scripts]
-        warmac = "warmac.__init__:console_main"
-    [tool.poetry.urls]
-        "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
+[project.urls]
+  "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
+  documentation = "https://warmac.readthedocs.io/en/"
+  repository    = "https://github.com/Eutropios/WarMAC"
+
+[project.scripts]
+  warmac = "warmac.main:main"
+
+[dependency-groups]
+  dev          = ["vermin"]
+  docs         = [
+    "docstrfmt>=1.10.0",
+    "docutils>=0.18.1",
+    "esbonio>=0.16",
+    "furo>=2023.9",
+    "sphinx>=8.2; python_version >= '3.11' and python_version < '3.12'",
+    "sphinx>=9.1; python_version >= '3.12'",
+    "sphinx-copybutton>=0.5.2",
+    "sphinx-inline-tabs>=2023.4.21",
+    "sphinx-last-updated-by-git>=0.3.6",
+    "sphinx-lint>=1",
+    "sphinx-notfound-page>=1",
+  ]
+  test         = [
+    "covdefaults>=2.3",
+    "coverage<8.0,>=7.6",
+    "pytest>=8.0",
+    "pytest-mock>=3.14",
+  ]
+  typeChecking = [
+    "msgspec",
+    "mypy",
+    "pytest",
+    "pytest-mock",
+    "urllib3",
+  ]
+
+[build-system]
+  requires      = ["uv_build>=0.10.9"]
+  build-backend = "uv_build"
+
+[tool.coverage.run]
+  command_line = "-m pytest -vv ./tests"
+  plugins      = ["covdefaults"]
+
+[tool.coverage.report]
+  exclude_also = [
+    # Don't complain if non-runnable code isn't run:
+    "if __name__ == .__main__.:",
+  ]
+  precision    = 2
 
 [tool.docformatter]
-    black               = true
-    pre-summary-newline = true
-    recursive           = true
-    style               = "sphinx"
-    wrap-descriptions   = 72
-    wrap-summaries      = 72
+  black               = true
+  pre-summary-newline = true
+  recursive           = true
+  style               = "sphinx"
+  wrap-descriptions   = 72
+  wrap-summaries      = 72
+
+# Awaiting Sphinx v9 support in esbonio
+[tool.esbonio.sphinx]
+  pythonCommand = ["uv", "run", "--group", "docs", "python"]
+  buildCommand  = ["sphinx-build", "-M", "html", "docs", "docs/_build"]
 
 [tool.mypy]
-    exclude = [
-        '\.git',
-        '\.hg',
-        '\.mypy_cache',
-        '\.ruff_cache',
-        '\.tox',
-        '\.venv',
-        '_build',
-        'buck-out',
-        'build',
-        'dist',
-    ]
-    python_version = "3.12"
-    strict = true
+  exclude        = [
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "htmlcov",
+    "LICENSES"
+  ]
+  python_version = "3.14"
+  strict         = true
+
+[tool.pydoclint]
+  allow-init-docstring                     = true
+  arg-type-hints-in-docstring              = false
+  check-return-types                       = false
+  check-style-mismatch                     = true
+  check-yield-types                        = false
+  exclude                                  = '\.git|\.tox|\.github|\.venv|\.venv-314|\.pytest_cache|dist|docs/_build'
+  should-document-private-class-attributes = true
+  style                                    = "sphinx"
+
+[tool.pyright]
+  include          = ["src", "tests"]
+  pythonVersion    = "3.14"
+  typeCheckingMode = "strict"
 
 [tool.ruff]
-    explicit-preview-rules = false
-    ignore = [
-        "AIR",
-        "ANN101",
-        "COM812",
-        "DJ",
-        "ERA001",
-        "FIX",
-        "INT",
-        "ISC001",
-        "ISC002",
-        "NPY",
-        "PD",
-        "PT",
-        "SLF001",
-        "SLOT",
-        "T20",
-        "TD",
-        "UP006",
-        "UP007",
-        "UP035",
-    ]
-    indent-width = 4
-    line-length = 88
-    preview = true
-    select = ["ALL"]
-    show-fixes = true
-    target-version = "py38"
+  extend-exclude = [
+    ".ipynb_checkpoints",
+    ".pyenv",
+    ".pytest_cache",
+    ".vscode",
+    "build",
+    "htmlcov",
+    "site-packages",
+  ]
+  indent-width   = 4
+  line-length    = 88
+  preview        = true
+  show-fixes     = true
+  target-version = "py311"
 
-    [tool.ruff.flake8-copyright]
-        author = "Noah Jenner"
+[tool.ruff.format]
+  docstring-code-format     = true
+  indent-style              = "space"
+  line-ending               = "auto"
+  quote-style               = "double"
+  skip-magic-trailing-comma = false
 
-    [tool.ruff.flake8-implicit-str-concat]
-        allow-multiline = true
+[tool.ruff.lint]
+  # NOTE: Some rules are turned off by Ruff due to `target-version` being set to Py 3.11
+  explicit-preview-rules = false
+  external               = ["DOC5"]
+  ignore                 = [
+    "AIR",                           # Apache Airflow unused
+    "COM812",                        # Must be turned off for formatter
+    "DJ",                            # Django rules
+    "DOC",                           # Off until DOC supports sphinx-style
+    "ERA001",                        # Commented out code
+    "FAST",                          # FastAPI rules
+    "FIX",                           # FIXs unused
+    "ISC001",                        # Must be turned off for formatter
+    "ISC002",                        # Must be turned off for formatter
+    "NPY",                           # Numpy rules
+    "PD",                            # Pandas rules
+    "T20",                           # Flags printing, which this program does
+    "TD",                            # TODOs unused
+  ]
+  preview                = true
+  select                 = ["ALL"]
 
-    [tool.ruff.flake8-quotes]
-        docstring-quotes = "double"
-        inline-quotes    = "double"
-        multiline-quotes = "double"
+[tool.ruff.lint.flake8-copyright]
+  author = "Noah Jenner"
 
-    [tool.ruff.format]
-        exclude = [
-            ".git",
-            ".hg",
-            ".mypy_cache",
-            ".tox",
-            ".venv",
-            "_build",
-            "buck-out",
-            "build",
-            "dist",
-            "ruff_cache",
-        ]
-        indent-style = "space"
-        line-ending = "auto"
-        quote-style = "double"
-        skip-magic-trailing-comma = false
+[tool.ruff.lint.flake8-implicit-str-concat]
+  allow-multiline = true
 
-    [tool.ruff.flake8-type-checking]
-        exempt-modules = ["typing"]
-        strict         = true
+[tool.ruff.lint.flake8-quotes]
+  docstring-quotes = "double"
+  inline-quotes    = "double"
+  multiline-quotes = "double"
 
-    [tool.ruff.isort]
-        required-imports = ["from __future__ import annotations"]
+[tool.ruff.lint.flake8-type-checking]
+  strict = true
 
-    [tool.ruff.per-file-ignores]
-        "docs/source/conf.py" = ["CPY001", "D100", "D104", "I002", "INP001"]
-        "tests/__init__.py"   = ["CPY001", "D100", "D104", "I002"]
-        "warmac/__main__.py"  = ["CPY001", "D100", "D104", "I002"]
+[tool.ruff.lint.isort]
+  required-imports = ["from __future__ import annotations"]
 
-    [tool.ruff.pycodestyle]
-        max-doc-length = 72
+[tool.ruff.lint.mccabe]
+  max-complexity = 5
 
-    [tool.ruff.pydocstyle]
-        convention = "pep257"
+[tool.ruff.lint.per-file-ignores]
+  "docs/conf.py"             = ["INP001"]
+  "**/__init__.py"           = ["I002", "D205", "D400"]
+  "**/__main__.py"           = ["I002", "D205", "D400"]
+  "src/warmac/cli_parser.py" = ["SLF001"]
+  "src/warmac/errors.py"     = ["D205", "D209"]
+  "tests/**.py"              = ["D101", "S101", "D205", "D209", "D400"]
+  # *IMPORTANT* - A dirty hack in cli_parser.py uses private components
+
+[tool.ruff.lint.pycodestyle]
+  max-doc-length = 72
+
+[tool.ruff.lint.pydocstyle]
+  # waiting for sphinx convention being added
+  convention = "pep257"
+
+[tool.tombi]
+  toml-version = "v1.0.0"
+
+[tool.tombi.files]
+  exclude = ["**/uv.lock"]
+
+[tool.tombi.format.rules]
+  indent-table-key-value-pairs    = true
+  inline-table-brace-space-width  = 0
+  key-value-equals-sign-alignment = true
+  trailing-comment-alignment      = true
+
+[tool.ty.environment]
+  python          = "./.venv"
+  python-platform = "all"
+  python-version  = "3.14"
+
+[tool.ty.src]
+  include = ["src", "tests"]

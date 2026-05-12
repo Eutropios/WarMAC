@@ -25,9 +25,9 @@ If applicable, add screenshots to help explain your problem.
 
 **Version information:**
 
-- OS: [e.g. Windows 11]
-- Version of Python [e.g. 3.11]
-- Version of urllib3 [e.g. 2.0.4]
+- OS: (e.g. Windows 11)
+- Version of Python (e.g. 3.14)
+- Version of urllib3 (e.g. 2.0.4)
 
 **Additional context**
 Add any other context about the problem here.
