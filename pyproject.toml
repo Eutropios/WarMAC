@@ -43,7 +43,7 @@
   warmac = "warmac.main:main"
 
 [dependency-groups]
-  dev          = ["vermin"]                                               # "viztracer>=1.0.0"
+  dev          = ["vermin"]
   docs         = [
     "docstrfmt>=1.10.0",
     "docutils>=0.18.1",
@@ -61,7 +61,6 @@
     "covdefaults>=2.3",
     "coverage<8.0,>=7.6",
     "pytest>=8.0",
-    "pytest-cov>=7.0",
     "pytest-mock>=3.14",
   ]
   typeChecking = [
