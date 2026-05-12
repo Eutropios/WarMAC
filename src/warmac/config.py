@@ -27,4 +27,4 @@ DEFAULT_TIME = 5
 # The default number of digits to round to
 DEFAULT_NDIGITS = 1
 # The current version of WarMAC
-VERSION = "0.0.5"
+VERSION = "0.0.6"

@@ -21,8 +21,8 @@ sys.path.insert(0, python_path)
 project = "WarMAC"
 copyright = "2023–2026, Noah Jenner"  # noqa: A001, RUF001
 author = "Noah Jenner"
-release = "0.0.5"
-version = "0.0.5"
+release = "0.0.6"
+version = "0.0.6"
 language = "en"
 
 # -- General Config ----------------------------------------------------

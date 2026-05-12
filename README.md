@@ -1,6 +1,6 @@
 <div align="center">
 
-# WarMAC Version 0.0.5
+# WarMAC Version 0.0.6
 
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Eutropios/WarMAC/main)](https://github.com/Eutropios/WarMAC/commits/main/)
 [![Documentation Status](https://readthedocs.org/projects/warmac/badge/?version=latest)](https://warmac.readthedocs.io/en/latest/?badge=latest)\
