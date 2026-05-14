@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.7
+
+* Fix up documentation
+* Decrease maximum timerange
+
 ## 0.0.6
 
 * Implement Trusted Publisher on PyPI
