@@ -255,7 +255,7 @@ def create_parser() -> WarMACParser:
     # The minimum time that str_to_int_bounds_check checks against
     min_time_range: Final = 1
     # The maximum time that str_to_int_bounds_check checks against
-    max_time_range: Final = 60
+    max_time_range: Final = 7
     # The minimum ndigits to round the statistic to
     min_ndigits: Final = 0
     # The maximum ndigits to round the statistic to

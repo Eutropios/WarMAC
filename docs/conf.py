@@ -36,7 +36,6 @@ extensions = [
     "sphinx_last_updated_by_git",
     "notfound.extension",
     "sphinx_inline_tabs",
-    # install this https://github.com/readthedocs/sphinx-hoverxref
 ]
 
 master_doc = "index"
@@ -56,7 +55,6 @@ autodoc_default_options = {
     "private-members": True,
 }
 autodoc_class_signature = "separated"
-# autodoc_type_aliases = {str, str}
 nitpicky = True
 autodoc_typehints = "signature"
 autodoc_preserve_defaults = True

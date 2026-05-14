@@ -38,6 +38,7 @@
 
    internal/index
    contributing
+   license
 
 .. toctree::
    :hidden:
@@ -52,35 +53,6 @@
 
 |  Need help using WarMAC?
 |  :doc:`Using WarMAC <cli/index>`
-
-Indices and tables
-==================
-
--  :ref:`genindex`
--  :ref:`search`
-
-Acknowledgements
-================
-
-|  This project uses the tools listed in `.pre-commit-config.yaml
-   <https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml>`_ and
-   `pyproject.toml
-   <https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml>`_ in its
-   development.
-
-Licensing
-=========
-
-|  **This project is NOT affiliated with Warframe, Digital Extremes, or Warframe
-   Market.**
-
-|  Copyright (C) 2023-2026 Noah Jenner under GNU GPL version 3.0-or-later
-
-|  For additional licensing information, please see `LICENSE.txt
-   <https://github.com/Eutropios/WarMAC/blob/main/LICENSE.txt>`_
-
-|  For licensing regarding dependencies, please see the `LICENSES
-   <https://github.com/Eutropios/WarMAC/blob/main/LICENSES>`_ directory.
 
 Authors
 =======

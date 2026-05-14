@@ -279,16 +279,3 @@ def process_data(
     plat_list = filtered_plat_list(order_data.data, item_data.data, current_time, args)
     stat = calculate_average(plat_list, args.statistic, args.ndigits)
     return format_output(stat, plat_list, args)
-
-
-# (WarMAC) $ warmac average foo
-# b'{"apiVersion":"0.20.0","data":null,"error":{"request":[
-# "app.item.notFound"]}}\n'
-# This item does not exist on Warframe Market. Please check your
-# spelling and remember to use quotations if the item is multiple words.
-
-# Maybe use these errors instead of urllib3's to do error checking
-# Use if statement before second call to determine if needed. Do order
-# request first, check for None fields, then check if args want anything
-# special, and only then make second request.
-# Maybe change the in_time_range to age_limit or something

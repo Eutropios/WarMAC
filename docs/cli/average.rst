@@ -59,7 +59,7 @@
 
    Specifies the number of days to consider for calculating the average. The
    value passed indicates how far back to start the statistic calculation. The
-   value given must be within the range of 1 to 60. By default, only orders up
+   value given must be within the range of 1 to 7. By default, only orders up
    to 5 days old are taken into account.
 
 .. option:: -m, --maxrank
