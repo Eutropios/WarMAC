@@ -390,7 +390,7 @@ wheels = [
 
 [[package]]
 name = "docstrfmt"
-version = "2.0.2"
+version = "2.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "black" },
@@ -406,9 +406,9 @@ dependencies = [
     { name = "tabulate" },
     { name = "types-docutils" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/02/81/94fa7aee5d6e1cbb66d0c5eb2c12ca21db8a5f39f55bb192683f14538e61/docstrfmt-2.0.2.tar.gz", hash = "sha256:086e74b03c337c9a932b2f8216aa8c93bb6576b525edfb5d754b6bac841d4166", size = 40169, upload-time = "2026-02-07T20:18:16.867Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/5b/d5a11792a63c1c136be94672f63fe141699366480686ab096a180a815656/docstrfmt-2.2.0.tar.gz", hash = "sha256:372b850cb557cd2ba99433f7e2497de56ae19386de497eed624334938647db72", size = 43398, upload-time = "2026-06-21T13:44:59.351Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/be/d0/d8b1ac9e6cfa3d1df0a88d45364b37f582d4b02a39cb16b5161801021e7f/docstrfmt-2.0.2-py3-none-any.whl", hash = "sha256:acbff3cb00ea85a5c153355b43aeb6d40e0775cfcdbaa1dea42b333b9c8c233d", size = 39604, upload-time = "2026-02-07T20:18:14.79Z" },
+    { url = "https://files.pythonhosted.org/packages/7a/9e/07309bb9bf761388d833fba31df715b14c375919dbeafbe7f981fb8d8b6a/docstrfmt-2.2.0-py3-none-any.whl", hash = "sha256:757055934c48a287c151d155acb755031d8924105fbdca28cbd77499b838647d", size = 42936, upload-time = "2026-06-21T13:44:58.02Z" },
 ]
 
 [[package]]
@@ -1404,11 +1404,11 @@ wheels = [
 
 [[package]]
 name = "types-docutils"
-version = "0.22.3.20251115"
+version = "0.22.3.20260518"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/eb/d7/576ec24bf61a280f571e1f22284793adc321610b9bcfba1bf468cf7b334f/types_docutils-0.22.3.20251115.tar.gz", hash = "sha256:0f79ea6a7bd4d12d56c9f824a0090ffae0ea4204203eb0006392906850913e16", size = 56828, upload-time = "2025-11-15T02:59:57.371Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fd/91/81b520d0869a41aa0d86e713417b63e8604b4280c304bc09b02d74c7efd4/types_docutils-0.22.3.20260518.tar.gz", hash = "sha256:2c45ba63a9ac64246335359b68fe9c27602926499c9b67caec3780745f6aadee", size = 57504, upload-time = "2026-05-18T06:03:53.325Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9c/01/61ac9eb38f1f978b47443dc6fd2e0a3b0f647c2da741ddad30771f1b2b6f/types_docutils-0.22.3.20251115-py3-none-any.whl", hash = "sha256:c6e53715b65395d00a75a3a8a74e352c669bc63959e65a207dffaa22f4a2ad6e", size = 91951, upload-time = "2025-11-15T02:59:56.413Z" },
+    { url = "https://files.pythonhosted.org/packages/01/9b/243fb84ede4f987f303a89e734c5def35ead2f8bd962ad301c1e99680958/types_docutils-0.22.3.20260518-py3-none-any.whl", hash = "sha256:9c4cbc37d9e37f47dfe971ac09e9880380dc948ff1f23956892e810d0bf08676", size = 91970, upload-time = "2026-05-18T06:03:52.388Z" },
 ]
 
 [[package]]
