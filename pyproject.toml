@@ -67,7 +67,7 @@
     "mypy",
     "pytest",
     "pytest-mock",
-    "urllib3",
+    "urllib3>=2.0.4",
   ]
 
 [build-system]
