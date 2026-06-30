@@ -21,8 +21,8 @@ sys.path.insert(0, python_path)
 project = "WarMAC"
 copyright = "2023–2026, Noah Jenner"  # noqa: A001, RUF001
 author = "Noah Jenner"
-release = "0.0.7"
-version = "0.0.7"
+release = "0.0.8"
+version = "0.0.8"
 language = "en"
 
 # -- General Config ----------------------------------------------------
@@ -46,7 +46,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "urllib3": ("https://urllib3.readthedocs.io/en/stable/", None),
-    "msgspec": ("https://jcristharif.com/msgspec/", None),
+    "msgspec": ("https://msgspec.dev/", None),
 }
 
 autodoc_default_options = {

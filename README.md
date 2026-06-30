@@ -1,6 +1,6 @@
 <div align="center">
 
-# WarMAC Version 0.0.7
+# WarMAC Version 0.0.8
 
 [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Eutropios/WarMAC/main)](https://github.com/Eutropios/WarMAC/commits/main/)
 [![Documentation Status](https://readthedocs.org/projects/warmac/badge/?version=latest)](https://warmac.readthedocs.io/en/latest/?badge=latest)\
@@ -22,12 +22,12 @@ mods, and arcane enhancements.
 
 ## Features
 
-- 🎮Target PC, PlayStation, XBOX, or Nintendo Switch platforms.
-- 📈Calculate the median, mean, mode, harmonic mean, or geometric means of items.
-- 🕜Restrict orders to specific time ranges.
-- 💰Utilize either seller or buyer orders.
-- ⛏️Find averages for intact or radiant relics.
-- ✨Find averages for unranked or max-ranked mods and arcane enhancements.
+- Target PC, PlayStation, XBOX, or Nintendo Switch platforms.
+- Calculate the median, mean, mode, harmonic mean, or geometric means of items.
+- Restrict orders to specific time ranges.
+- Utilize either seller or buyer orders.
+- Find averages for intact or radiant relics.
+- Find averages for unranked or max-ranked mods and arcane enhancements.
 
 ## Table of Contents
 

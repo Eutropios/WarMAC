@@ -22,9 +22,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
-# The default time to collect orders until
-DEFAULT_TIME = 5
-# The default number of digits to round to
-DEFAULT_NDIGITS = 1
 # The current version of WarMAC
-VERSION = "0.0.7"
+VERSION = "0.0.8"

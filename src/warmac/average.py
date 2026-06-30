@@ -26,7 +26,7 @@ import datetime
 import statistics
 from typing import TYPE_CHECKING
 
-from warmac import config, errors, fetch_data, schema
+from warmac import errors, fetch_data, schema
 
 if TYPE_CHECKING:
     import argparse
@@ -43,11 +43,17 @@ AVERAGE_FUNCTIONS: Mapping[AverageType, Callable[[Sequence[int]], float]] = {
     "mode": statistics.mode,
 }
 
+# The default number of digits to round to
+DEFAULT_NDIGITS = 1
+
+# The default time to collect orders until
+DEFAULT_TIME = 3
+
 
 def calculate_average(
     plat_list: list[int],
     statistic: AverageType,
-    ndigits: int = config.DEFAULT_NDIGITS,
+    ndigits: int = DEFAULT_NDIGITS,
 ) -> float:
     """
     Calculate the specified statistic for a list of prices.
@@ -59,7 +65,7 @@ def calculate_average(
     :param plat_list: Prices in platinum of each order.
     :param statistic: Statistic to be calculated.
     :param ndigits: Number of decimals to which the calculated
-        statistic should be rounded, defaults to config.DEFAULT_NDIGITS.
+        statistic should be rounded, defaults to 1.
     :raises errors.NoListingsFoundError: If ``plat_list`` has no
         contents.
     :return: Desired statistic of the specified item.
@@ -72,7 +78,7 @@ def calculate_average(
 def in_time_range(
     last_updated: str,
     current_time: datetime.datetime,
-    time_range: int = config.DEFAULT_TIME,
+    time_range: int = DEFAULT_TIME,
 ) -> bool:
     """
     Check if order is younger than ``time_range`` days.
@@ -84,7 +90,7 @@ def in_time_range(
         last updated.
     :param current_time: Current UTC time.
     :param time_range: Maximum age, in days, that an order can be to
-        be accepted, defaults to config.DEFAULT_TIME.
+        be accepted, defaults to DEFAULT_TIME.
     :return: ``True`` if ``last_updated ≤ time_range``, ``False`` if
         ``last_updated > time_range``.
     """

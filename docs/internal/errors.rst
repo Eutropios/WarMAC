@@ -46,11 +46,11 @@ HTTP Errors
    :show-inheritance:
    :exclude-members: __init__
 
-.. autoexception:: errors.InternalServerError
+.. autoexception:: errors.RateLimitError
    :show-inheritance:
    :exclude-members: __init__
 
-.. autoexception:: errors.RateLimitError
+.. autoexception:: errors.InternalServerError
    :show-inheritance:
    :exclude-members: __init__
 

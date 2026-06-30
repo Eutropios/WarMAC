@@ -31,7 +31,7 @@ from typing import TYPE_CHECKING
 from warmac import average, config
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Generator, Iterable
     from typing import Final, NoReturn
 
 
@@ -178,80 +178,16 @@ class WarMACParser(argparse.ArgumentParser):
         # stdout, then exit with code 1
 
 
-def create_parser() -> WarMACParser:
+def configure_avg_parser(avg_parser: WarMACParser, platforms: Iterable[str]) -> None:
     """
-    Create the command-line parser for the program.
+    Configure the average subparser.
 
-    Create a :class:`.WarMACParser` object that includes global
-    --help and --version options. Create subparsers for multiple
-    commands to be used within the program.
+    Configure in-place the subparser for the average subcommand by
+    adding options and flags to be used.
 
-    :return: Constructed :class:`.WarMACParser` object.
+    :param avg_parser: Average subparser to be configured.
+    :param platforms: Specific platforms to request orders for.
     """
-    # Min width that help text should take up in usage
-    help_min_width: Final = 34
-    # Min value of help_min_width and terminal's width
-    default_width = min(help_min_width, shutil.get_terminal_size().columns - 2)
-    # Platforms the user can choose from
-    platforms: Final = ("pc", "ps4", "xbox", "switch", "mobile")
-
-    parser = WarMACParser(
-        usage="warmac <command> [options]",
-        description=(
-            "A program to fetch the average market cost of an item in Warframe."
-        ),
-        epilog=(
-            "More help can be found at: "
-            "https://warmac.readthedocs.io/en/latest/usage/warmac.html"
-        ),
-        formatter_class=lambda prog: CustomHelpFormat(
-            prog=prog,  # first arg in CL, which is the file's name
-            max_help_position=default_width,
-        ),
-        add_help=False,  # don't add default help msg
-    )
-
-    parser._positionals.title = "commands"  # changing positional header
-
-    # ------- Main Parser Arguments -------
-    parser.add_argument(
-        "-h",
-        "--help",
-        action="help",
-        help="Show this message and exit.",
-    )
-
-    parser.add_argument(
-        "-V",
-        "--version",
-        action="version",
-        help="Show the program's version number and exit.",
-        version=f"warmac {config.VERSION}",
-    )
-
-    # ======= Sub-Commands =======
-    subparsers = parser.add_subparsers(dest="subparser", metavar="")
-
-    # ------- Average Subcommand -------
-    avg_parser = subparsers.add_parser(
-        "average",
-        help="Calculate the average platinum price of an item.",
-        description=(
-            "Calculate the average platinum price of an item. Able to find the median,"
-            " mean, mode, and geometric mean of the specified item."
-        ),
-        formatter_class=lambda prog: CustomHelpFormat(
-            prog=prog,
-            max_help_position=default_width,
-        ),
-        add_help=False,
-        usage=(
-            "warmac average [-s <stat>] [-p <platform>] [-t <days>] [-m | -r] [-b] "
-            "[-v] item"
-        ),
-    )
-    # ---- Average default settings ----
-
     # The minimum time that str_to_int_bounds_check checks against
     min_time_range: Final = 1
     # The maximum time that str_to_int_bounds_check checks against
@@ -318,13 +254,13 @@ def create_parser() -> WarMACParser:
     avg_parser.add_argument(
         "-t",
         "--timerange",
-        default=config.DEFAULT_TIME,
+        default=average.DEFAULT_TIME,
         type=lambda x: str_to_int_bounds_check(x, min_time_range, max_time_range),
         help=(
             "Number of days to consider for calculating the average. Value given "
             "indicates how far back to start the statistic's calculation. Must be in "
             f"range [{min_time_range}, {max_time_range}). (Default: "
-            f"{config.DEFAULT_TIME})"
+            f"{average.DEFAULT_TIME})"
         ),
         metavar="<days>",
         dest="timerange",
@@ -374,11 +310,11 @@ def create_parser() -> WarMACParser:
     avg_parser.add_argument(
         "-n",
         "--ndigits",
-        default=config.DEFAULT_NDIGITS,
+        default=average.DEFAULT_NDIGITS,
         type=lambda x: str_to_int_bounds_check(x, min_ndigits, max_ndigits),
         help=(
             "Number of decimals to round the statistic to. Must be in range "
-            f"[{min_ndigits}, {max_ndigits}). (Default: {config.DEFAULT_NDIGITS})"
+            f"[{min_ndigits}, {max_ndigits}). (Default: {average.DEFAULT_NDIGITS})"
         ),
         metavar="<ndigits>",
         dest="ndigits",
@@ -416,6 +352,82 @@ def create_parser() -> WarMACParser:
         help="Show this message and exit.",
     )
 
+
+def create_parser() -> WarMACParser:
+    """
+    Create the command-line parser for the program.
+
+    Create a :class:`.WarMACParser` object that includes global
+    --help and --version options. Create subparsers for multiple
+    commands to be used within the program.
+
+    :return: Constructed :class:`.WarMACParser` object.
+    """
+    # Min width that help text should take up in usage
+    help_min_width: Final = 34
+    # Min value of help_min_width and terminal's width
+    default_width = min(help_min_width, shutil.get_terminal_size().columns - 2)
+    # Platforms the user can choose from
+    platforms = ("pc", "ps4", "xbox", "switch", "mobile")
+    possible_subcommands = ("average", "help")
+
+    parser = WarMACParser(
+        usage="warmac <command> [options]",
+        description=(
+            "A program to fetch the average market cost of an item in Warframe."
+        ),
+        epilog=(
+            "More help can be found at: "
+            "https://warmac.readthedocs.io/en/latest/usage/warmac.html"
+        ),
+        formatter_class=lambda prog: CustomHelpFormat(
+            prog=prog,  # first arg in CL, which is the file's name
+            max_help_position=default_width,
+        ),
+        add_help=False,  # don't add default help msg
+    )
+
+    parser._positionals.title = "commands"  # changing positional header
+
+    # ------- Main Parser Arguments -------
+    parser.add_argument(
+        "-h",
+        "--help",
+        action="help",
+        help="Show this message and exit.",
+    )
+
+    parser.add_argument(
+        "-V",
+        "--version",
+        action="version",
+        help="Show the program's version number and exit.",
+        version=f"warmac {config.VERSION}",
+    )
+
+    # ======= Sub-Commands =======
+    subparsers = parser.add_subparsers(dest="subparser", metavar="")
+
+    # ------- Average Subcommand -------
+    avg_parser = subparsers.add_parser(
+        "average",
+        help="Calculate the average platinum price of an item.",
+        description=(
+            "Calculate the average platinum price of an item. Able to find the median,"
+            " mean, mode, and geometric mean of the specified item."
+        ),
+        formatter_class=lambda prog: CustomHelpFormat(
+            prog=prog,
+            max_help_position=default_width,
+        ),
+        add_help=False,
+        usage=(
+            "warmac average [-s <stat>] [-p <platform>] [-t <days>] [-m | -r] [-b] "
+            "[-v] item"
+        ),
+    )
+    configure_avg_parser(avg_parser, platforms)
+
     # ---- Help Subcommand ----
 
     help_parser = subparsers.add_parser(
@@ -432,7 +444,6 @@ def create_parser() -> WarMACParser:
         add_help=False,
         usage="warmac help subcommand",
     )
-    possible_subcommands = ("average", "help")
 
     help_parser.add_argument(
         "subcommand",

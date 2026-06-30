@@ -22,6 +22,8 @@
    :private-members:
    :special-members: __init__
 
+.. autofunction:: cli_parser.configure_avg_parser
+
 .. autofunction:: cli_parser.create_parser
 
 .. autofunction:: cli_parser.handle_input

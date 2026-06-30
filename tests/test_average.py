@@ -24,7 +24,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from warmac import average, config, errors, schema
+from warmac import average, errors, schema
 
 if TYPE_CHECKING:
     from typing import ClassVar, Literal, TypedDict
@@ -78,7 +78,7 @@ def item_info_kwargs(max_rank: int | None = None) -> ItemKwargs:
 def args_kwargs(
     use_buyers: str = "sell",
     radiant: Literal["intact", "radiant"] = "intact",
-    timerange: int = config.DEFAULT_TIME,
+    timerange: int = average.DEFAULT_TIME,
     *,
     maxrank: bool = False,
 ) -> ArgsKwargs:

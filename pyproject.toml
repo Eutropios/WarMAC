@@ -1,6 +1,6 @@
 [project]
   name            = "WarMAC"
-  version         = "0.0.7"
+  version         = "0.0.8"
   description     = "An average platinum price calculator for tradeable items in Warframe."
   readme          = "README.md"
   requires-python = ">=3.11"
@@ -45,9 +45,8 @@
 [dependency-groups]
   dev          = ["vermin"]
   docs         = [
-    "docstrfmt>=1.10.0",
     "docutils>=0.18.1",
-    "esbonio>=0.16",
+    "esbonio>=2",
     "furo>=2023.9",
     "sphinx>=8.2; python_version >= '3.11' and python_version < '3.12'",
     "sphinx>=9.1; python_version >= '3.12'",
@@ -72,7 +71,7 @@
   ]
 
 [build-system]
-  requires      = ["uv_build>=0.10.9"]
+  requires      = ["uv_build>=0.11.21"]
   build-backend = "uv_build"
 
 [tool.coverage.run]

@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from unittest.mock import MagicMock, Mock
+from unittest.mock import Mock
 
 import msgspec
 import pytest
@@ -271,6 +271,7 @@ class TestGetPage:
             (403, errors.ForbiddenRequestError),
             (404, errors.MalformedURLError),
             (405, errors.MethodNotAllowedError),
+            (429, errors.RateLimitError),
             (500, errors.InternalServerError),
             (418, errors.UnknownError),  # random unmapped code
         ],
