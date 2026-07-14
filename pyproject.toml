@@ -45,7 +45,7 @@
 [dependency-groups]
   dev          = ["vermin"]
   docs         = [
-    "docutils>=0.18.1",
+    "docutils",
     "esbonio>=2",
     "furo>=2023.9",
     "sphinx>=8.2; python_version >= '3.11' and python_version < '3.12'",
