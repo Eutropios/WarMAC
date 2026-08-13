@@ -167,7 +167,7 @@ class TestStdlibMonkeyPatching:
         """Test that argparse subcommand is altered correctly."""
         parser = cli_parser.create_parser()
         expected_title = "commands"
-        assert parser._positionals.title == expected_title  # noqa: SLF001
+        assert parser._positionals.title == expected_title  # ruff: ignore[private-member-access]
 
     @staticmethod
     @pytest.mark.parametrize(

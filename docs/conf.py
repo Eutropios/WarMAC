@@ -19,7 +19,7 @@ python_path = str(Path("../src/warmac").resolve())
 sys.path.insert(0, python_path)
 
 project = "WarMAC"
-copyright = "2023–2026, Noah Jenner"  # noqa: A001, RUF001
+copyright = "2023–2026, Noah Jenner"  # ruff: ignore[builtin-variable-shadowing, ambiguous-unicode-character-string]
 author = "Noah Jenner"
 release = "0.0.8"
 version = "0.0.8"

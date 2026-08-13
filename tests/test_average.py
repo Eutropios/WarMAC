@@ -546,7 +546,7 @@ class TestFormatOutput:
             "precision_gt_two_porcelain",
         ],
     )
-    def test_detailed_output(  # noqa: PLR0913, PLR0917
+    def test_detailed_output(  # ruff: ignore[too-many-arguments, too-many-positional-arguments]
         statistic: AverageType,
         item_name: str,
         stat_value: float,
@@ -628,7 +628,7 @@ class TestGetRequiredData:
         mock_get_data.side_effect = [mock_item_response, mock_order_response]
         item_name = "mock_item"
         item_data, order_data = average.get_required_data(item_name, mock_http_headers)
-        assert mock_get_data.call_count == 2  # noqa: PLR2004
+        assert mock_get_data.call_count == 2  # ruff: ignore[magic-value-comparison]
         mock_get_data.assert_has_calls([
             mocker.call(item_name, schema.ItemResponse, mock_http_headers),
             mocker.call(item_name, schema.OrderResponse, mock_http_headers),
@@ -639,7 +639,7 @@ class TestGetRequiredData:
 
 class TestProcessData:
     @staticmethod
-    def test_process_data_success(  # noqa: PLR0913, PLR0917
+    def test_process_data_success(  # ruff: ignore[too-many-arguments, too-many-positional-arguments]
         mocker: Mock,
         mock_args: argparse.Namespace,
         mock_http_headers: dict[str, str],
@@ -657,7 +657,7 @@ class TestProcessData:
         assert result == "110.0"
 
     @staticmethod
-    def test_process_data_no_listings_found(  # noqa: PLR0913, PLR0917
+    def test_process_data_no_listings_found(  # ruff: ignore[too-many-arguments, too-many-positional-arguments]
         mocker: Mock,
         mock_args: argparse.Namespace,
         mock_http_headers: dict[str, str],
