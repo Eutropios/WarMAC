@@ -6,8 +6,8 @@
  Acknowledgements
 ******************
 
-|  This project uses the tools listed in `.pre-commit-config.yaml
-   <https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml>`_ and
+|  This project uses the tools listed in `prek.toml
+   <https://github.com/Eutropios/WarMAC/blob/main/prek.toml>`_ and
    `pyproject.toml
    <https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml>`_ in its
    development.

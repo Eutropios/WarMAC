@@ -22,7 +22,7 @@ mods, and arcane enhancements.
 
 ## Features
 
-- Target PC, PlayStation, XBOX, or Nintendo Switch platforms.
+- Target PC, PlayStation, XBOX, Nintendo Switch, or mobile platforms.
 - Calculate the median, mean, mode, harmonic mean, or geometric means of items.
 - Restrict orders to specific time ranges.
 - Utilize either seller or buyer orders.
@@ -184,7 +184,7 @@ dependency group.
 
 ## Acknowledgements<a id="acknowledgements"></a>
 
-This project uses the tools listed in [`.pre-commit-config.yaml`](https://github.com/Eutropios/WarMAC/blob/main/.pre-commit-config.yaml)
+This project uses the tools listed in [`prek.toml`](https://github.com/Eutropios/WarMAC/blob/main/prek.toml)
 and [`pyproject.toml`](https://github.com/Eutropios/WarMAC/blob/main/pyproject.toml)
 in its development.
 

@@ -44,9 +44,9 @@
 .. option:: -p, --platform <platform>
 
    Specifies which platform to fetch the item's orders for. It can be one of pc,
-   ps4, xbox, or switch. Cross-play orders are enabled by default. To restrict
-   orders to the specified platform only, use the --same-platform option. By
-   default, the platform that the orders are fetched for is PC.
+   ps4, xbox, switch, or mobile. Cross-play orders are enabled by default. To
+   restrict orders to the specified platform only, use the --same-platform
+   option. By default, the platform that the orders are fetched for is PC.
 
 .. option:: -S, --same-platform
 
