@@ -154,8 +154,8 @@ Handling Output
 Porcelain Output
 ----------------
 
-|  Porcelain output is in the form of colon-separated values adhering together
-   to the following form :
+|  Porcelain output is in the form of colon-separated values adhering to the
+   following form:
 
 |  <name of item>:<timerange>:<price calculated>:<min price in list>:<max price in list>:<number of orders>
 
