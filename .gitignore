@@ -27,6 +27,7 @@
 .svn
 .venv*
 .vscode
+.zed
 __pycache__/
 __pypackages__
 _build

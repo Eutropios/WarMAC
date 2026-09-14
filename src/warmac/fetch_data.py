@@ -77,7 +77,7 @@ def http_code_check(status_code: int) -> None:
     :raises UnknownError: Raised as fallback if HTTP status code is not
         in HTTP_ERROR_DICT.
     """  # noqa: DOC503
-    if status_code == 200:  # noqa: PLR2004
+    if status_code == 200:  # ruff: ignore[magic-value-comparison]
         return
     if err := HTTP_ERROR_DICT.get(status_code):
         raise err

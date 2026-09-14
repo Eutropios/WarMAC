@@ -198,7 +198,7 @@ class TestGetData:
 
         assert isinstance(result.data[0], schema.OrderWithUser)
         assert result.data[0].id == "a"
-        assert result.data[0].platinum == 10  # noqa: PLR2004
+        assert result.data[0].platinum == 10  # ruff: ignore[magic-value-comparison]
         assert result.data[0].order_type == "buy"
 
     def test_get_data_http_error_from_get_page(self, mock_get_page: MagicMock) -> None:

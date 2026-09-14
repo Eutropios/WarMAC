@@ -8,12 +8,7 @@
   license-files   = ["LICENSE"]
   authors         = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
   maintainers     = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
-  keywords        = [
-    "platinum",
-    "warframe",
-    "warframe calculator",
-    "warframe market"
-  ]
+  keywords        = ["platinum", "warframe", "warframe calculator", "warframe market"]
   classifiers     = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
@@ -99,14 +94,7 @@
   buildCommand  = ["sphinx-build", "-M", "html", "docs", "docs/_build"]
 
 [tool.mypy]
-  exclude        = [
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "htmlcov",
-    "LICENSES"
-  ]
+  exclude        = ["_build", "buck-out", "build", "dist", "htmlcov", "LICENSES"]
   python_version = "3.14"
   strict         = true
 
@@ -153,19 +141,19 @@
   explicit-preview-rules = false
   external               = ["DOC5"]
   ignore                 = [
-    "AIR",                           # Apache Airflow unused
-    "COM812",                        # Must be turned off for formatter
-    "DJ",                            # Django rules
-    "DOC",                           # Off until DOC supports sphinx-style
-    "ERA001",                        # Commented out code
-    "FAST",                          # FastAPI rules
-    "FIX",                           # FIXs unused
-    "ISC001",                        # Must be turned off for formatter
-    "ISC002",                        # Must be turned off for formatter
-    "NPY",                           # Numpy rules
-    "PD",                            # Pandas rules
-    "T20",                           # Flags printing, which this program does
-    "TD",                            # TODOs unused
+    "AIR",                                        # Apache Airflow unused
+    "DJ",                                         # Django rules
+    "DOC",                                        # Off until DOC supports sphinx-style
+    "FAST",                                       # FastAPI rules
+    "FIX",                                        # FIXs unused
+    "NPY",                                        # Numpy rules
+    "PD",                                         # Pandas rules
+    "T20",                                        # Flags printing, which this program does
+    "TD",                                         # TODOs unused
+    "commented-out-code",                         # Commented out code
+    "missing-trailing-comma",                     # Must be turned off for formatter
+    "multi-line-implicit-string-concatenation",   # Must be turned off for formatter
+    "single-line-implicit-string-concatenation",  # Must be turned off for formatter
   ]
   preview                = true
   select                 = ["ALL"]
@@ -191,12 +179,26 @@
   max-complexity = 5
 
 [tool.ruff.lint.per-file-ignores]
-  "docs/conf.py"             = ["INP001"]
-  "**/__init__.py"           = ["I002", "D205", "D400"]
-  "**/__main__.py"           = ["I002", "D205", "D400"]
-  "src/warmac/cli_parser.py" = ["SLF001"]
-  "src/warmac/errors.py"     = ["D205", "D209"]
-  "tests/**.py"              = ["D101", "S101", "D205", "D209", "D400"]
+  "docs/conf.py"             = ["implicit-namespace-package"]
+  "**/__init__.py"           = [
+    "missing-blank-line-after-summary",
+    "missing-required-import",
+    "missing-trailing-period"
+  ]
+  "**/__main__.py"           = [
+    "missing-blank-line-after-summary",
+    "missing-required-import",
+    "missing-trailing-period"
+  ]
+  "src/warmac/cli_parser.py" = ["private-member-access"]
+  "src/warmac/errors.py"     = ["missing-blank-line-after-summary", "new-line-after-last-paragraph"]
+  "tests/**.py"              = [
+    "assert",
+    "missing-blank-line-after-summary",
+    "missing-trailing-period",
+    "new-line-after-last-paragraph",
+    "undocumented-public-class",
+  ]
   # *IMPORTANT* - A dirty hack in cli_parser.py uses private components
 
 [tool.ruff.lint.pycodestyle]
@@ -216,6 +218,7 @@
   indent-table-key-value-pairs    = true
   inline-table-brace-space-width  = 0
   key-value-equals-sign-alignment = true
+  line-width                      = 100
   trailing-comment-alignment      = true
 
 [tool.ty.environment]

@@ -27,6 +27,7 @@ from warmac import cli_parser
 
 _EXIT_CODE_ALL_GOOD = 0
 _EXIT_CODE_GENERIC_ERROR = 1
+_EXIT_CODE_COMMAND_ERROR = 2
 
 
 class TestIntCastInputBounds:
@@ -118,10 +119,10 @@ class TestHandleInputInterface:
     @pytest.mark.parametrize(
         ("input_args", "expected_exit_code"),
         [
-            # Exit code 1 scenarios
-            ([], _EXIT_CODE_GENERIC_ERROR),
-            (None, _EXIT_CODE_GENERIC_ERROR),
-            (["average"], _EXIT_CODE_GENERIC_ERROR),
+            # Exit code 2 scenarios
+            ([], _EXIT_CODE_COMMAND_ERROR),
+            (None, _EXIT_CODE_COMMAND_ERROR),
+            (["average"], _EXIT_CODE_COMMAND_ERROR),
             # Exit code 0 scenarios
             (["help"], _EXIT_CODE_ALL_GOOD),
             (["help", "average"], _EXIT_CODE_ALL_GOOD),
@@ -167,7 +168,7 @@ class TestStdlibMonkeyPatching:
         """Test that argparse subcommand is altered correctly."""
         parser = cli_parser.create_parser()
         expected_title = "commands"
-        assert parser._positionals.title == expected_title  # noqa: SLF001
+        assert parser._positionals.title == expected_title  # ruff: ignore[private-member-access]
 
     @staticmethod
     @pytest.mark.parametrize(
