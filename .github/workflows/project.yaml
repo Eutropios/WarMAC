@@ -35,7 +35,7 @@ jobs:
           persist-credentials: false
 
       - name: setup-tombi
-        uses: tombi-toml/setup-tombi@f2ae7247d62521245eb2793d653b9df472b9e090 # v1.2.4
+        uses: tombi-toml/setup-tombi@1791db7d23f16faae781ffe74b21dda3d5fd9ff0 # v1.5.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -48,7 +48,7 @@ jobs:
         run: tombi format --check --diff pyproject.toml
 
       - name: markdownlint-cli2-action
-        uses: DavidAnson/markdownlint-cli2-action@6bf21b07787794f89a243495939cd651942aeabe # v24.1.0
+        uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff # v24.2.0
         with:
           config: ".markdownlint.yaml"
           globs: "**/*.md"
