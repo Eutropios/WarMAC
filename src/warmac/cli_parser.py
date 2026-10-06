@@ -65,7 +65,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         """
         super().__init__(prog, indent_increment, max_help_position, width)
 
-    if (3, 11) <= sys.version_info < (3, 13):
+    if (3, 11) <= sys.version_info < (3, 13):  # pragma: no cover
         # NOTE: when 3.12 EOL, remove this method entirely
         def _format_action_invocation(self, action: argparse.Action) -> str:
             """

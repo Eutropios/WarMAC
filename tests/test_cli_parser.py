@@ -257,6 +257,19 @@ class TestStdlibMonkeyPatching:
         # Assert the formatted help output matches the expected output
         assert target_parser.format_help() == expected_output
 
+    @staticmethod
+    @pytest.mark.skipif(sys.version_info < (3, 13), reason="python3.11 or 3.12 needed")
+    def test_parser_metavar_formatting() -> None:
+        """Verify that _format_action_invocation behaves correctly
+        according to Python version."""
+        # NOTE: Remove when 3.12 EOL
+        parser = argparse.ArgumentParser(formatter_class=cli_parser.CustomHelpFormat)
+        parser.add_argument(
+            "-p", "--platform", metavar="<platform>", help="Target platform."
+        )
+        help_output = parser.format_help()
+        assert "-p, --platform <platform>" in help_output
+
 
 if __name__ == "__main__":
     sys.exit(pytest.main())
