@@ -99,14 +99,16 @@
   strict         = true
 
 [tool.pydoclint]
-  allow-init-docstring                     = true
-  arg-type-hints-in-docstring              = false
-  check-return-types                       = false
-  check-style-mismatch                     = true
-  check-yield-types                        = false
-  exclude                                  = '\.git|\.tox|\.github|\.venv|\.venv-314|\.pytest_cache|dist|docs/_build'
-  should-document-private-class-attributes = true
-  style                                    = "sphinx"
+  allow-init-docstring                    = true
+  arg-type-hints-in-docstring             = false
+  check-return-types                      = false
+  check-style-mismatch                    = true
+  check-yield-types                       = false
+  exclude                                 = '\.git|\.tox|\.github|\.venv|\.venv-314|\.pytest_cache|dist|docs/_build'
+  ignore-private-class-attributes         = false
+  ignore-special-dunder-class-attributes  = false
+  ignore-underscore-only-class-attributes = false
+  style                                   = "sphinx"
 
 [tool.pyright]
   include          = ["src", "tests"]
@@ -207,19 +209,6 @@
 [tool.ruff.lint.pydocstyle]
   # waiting for sphinx convention being added
   convention = "pep257"
-
-[tool.tombi]
-  toml-version = "v1.0.0"
-
-[tool.tombi.files]
-  exclude = ["**/uv.lock"]
-
-[tool.tombi.format.rules]
-  indent-table-key-value-pairs    = true
-  inline-table-brace-space-width  = 0
-  key-value-equals-sign-alignment = true
-  line-width                      = 100
-  trailing-comment-alignment      = true
 
 [tool.ty.environment]
   python          = "./.venv"
