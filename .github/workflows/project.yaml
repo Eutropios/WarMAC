@@ -35,7 +35,7 @@ jobs:
           persist-credentials: false
 
       - name: setup-tombi
-        uses: tombi-toml/setup-tombi@1791db7d23f16faae781ffe74b21dda3d5fd9ff0 # v1.5.2
+        uses: tombi-toml/setup-tombi@b97f2ec7ec25362ecb9f3be1928dd7e007fb3c27 # v1.6.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
