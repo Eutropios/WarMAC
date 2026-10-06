@@ -65,26 +65,29 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         """
         super().__init__(prog, indent_increment, max_help_position, width)
 
-    def _format_action_invocation(self, action: argparse.Action) -> str:
-        """
-        Remove duplicate metavar for options with short and long form.
+    if (3, 11) <= sys.version_info < (3, 13):
+        # NOTE: when 3.12 EOL, remove this method entirely
+        def _format_action_invocation(self, action: argparse.Action) -> str:
+            """
+            Remove second metavar for options with short and long form.
 
-        Override the ``HelpFormatter._format_action_invocation``
-        method to remove the duplicate help metavar for options that
-        have both a short-form and a long-form argument.
+            Override the ``HelpFormatter._format_action_invocation``
+            method to remove the duplicate help metavar for options that
+            have both a short-form and a long-form argument.
 
-        :param action: Action in which to be formatted.
-        :return: Appropriately formatted string.
-        """
-        # Return super's invocation option_string is None or nargs is 0
-        if not action.option_strings or action.nargs == 0:
-            return super()._format_action_invocation(action)
-        # Get the default metavar for optionals
-        default = self._get_default_metavar_for_optional(action)
-        # Return the option strings joined with only one metavar
-        return (
-            f"{', '.join(action.option_strings)} {self._format_args(action, default)}"
-        )
+            :param action: Action in which to be formatted.
+            :return: Appropriately formatted string.
+            """
+            # if option_string is None or if nargs is 0
+            if not action.option_strings or action.nargs == 0:
+                # Return super's invocation
+                return super()._format_action_invocation(action)
+            # Get the default metavar for optionals
+            default = self._get_default_metavar_for_optional(action)
+            # Return the option strings joined with only one metavar
+            option_string = ", ".join(action.option_strings)
+            metavar = self._format_args(action, default)
+            return f"{option_string} {metavar}"
 
     def _format_action(self, action: argparse.Action) -> str:
         """
