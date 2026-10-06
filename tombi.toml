@@ -1,0 +1,11 @@
+toml-version = "v1.0.0"
+
+[files]
+  exclude = ["**/uv.lock"]
+
+[format.rules]
+  indent-table-key-value-pairs    = true
+  inline-table-brace-space-width  = 0
+  key-value-equals-sign-alignment = true
+  line-width                      = 100
+  trailing-comment-alignment      = true
