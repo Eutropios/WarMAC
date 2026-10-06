@@ -28,7 +28,7 @@ import shutil
 import sys
 from typing import TYPE_CHECKING
 
-from warmac import average, config
+from warmac import average, version
 
 if TYPE_CHECKING:
     from collections.abc import Generator, Iterable
@@ -410,7 +410,7 @@ def create_parser() -> WarMACParser:
         "--version",
         action="version",
         help="Show the program's version number and exit.",
-        version=f"warmac {config.VERSION}",
+        version=f"warmac {version.VERSION}",
     )
 
     # ======= Sub-Commands =======
