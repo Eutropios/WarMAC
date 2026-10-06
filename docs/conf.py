@@ -57,7 +57,6 @@ autodoc_default_options = {
 autodoc_class_signature = "separated"
 nitpicky = True
 autodoc_typehints = "signature"
-autodoc_preserve_defaults = True
 copybutton_selector = "div:not(.no-copybutton) > div.highlight > pre"
 copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
 copybutton_prompt_is_regexp = True

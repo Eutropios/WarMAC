@@ -20,6 +20,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from warmac import average, cli_parser, config, fetch_data, main, schema
+from warmac import average, cli_parser, fetch_data, main, schema, version
 
-__all__ = ["average", "cli_parser", "config", "fetch_data", "main", "schema"]
+__all__ = ["average", "cli_parser", "fetch_data", "main", "schema", "version"]
