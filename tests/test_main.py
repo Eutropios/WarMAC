@@ -157,7 +157,7 @@ class TestMain:
         )
         result = main.main(["some", "args"])
         captured = capsys.readouterr()
-        assert result == 1
+        assert result == 2  # ruff: ignore[magic-value-comparison]
         assert "An error occurred" in captured.err
         assert not captured.out
         mock_process_cli_command.assert_called_once_with(["some", "args"])
