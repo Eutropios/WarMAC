@@ -86,7 +86,7 @@ def process_cli_command(args: list[str] | None) -> str:
     return subcmd
 
 
-def main(args: list[str] | None = None) -> Literal[0, 1]:
+def main(args: list[str] | None = None) -> Literal[0, 1, 2]:
     """
     Entry point for WarMAC.
 
@@ -99,7 +99,7 @@ def main(args: list[str] | None = None) -> Literal[0, 1]:
         data = process_cli_command(args)
     except errors.WarMACBaseError as err:
         sys.stderr.write(err.message)
-        return 1
+        return 2
     print(data)
     return 0
 

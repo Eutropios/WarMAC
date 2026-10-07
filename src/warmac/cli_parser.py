@@ -176,7 +176,7 @@ class WarMACParser(argparse.ArgumentParser):
             :class:`argparse.ArgumentParser` class.
         :return: A value is never returned by this function.
         """
-        self.exit(2, f"error: {message}\nUsage: {self.usage}\n")
+        self.exit(2, f"error: {message}\nusage: {self.usage}\n")
         # change above code to print to stderr, then print cli help to
         # stdout, then exit with code 2
 
@@ -500,7 +500,7 @@ def handle_input(args: list[str] | None = None) -> argparse.Namespace:
     # If function is called with nothing and only "warmac" is called,
     # or if an empty list is passed in with `handle_input`
     if (not args and len(sys.argv) == 1) or args == []:
-        parser.print_help(sys.stderr)
+        parser.print_help(sys.stdout)
         sys.exit(2)
 
     # at this point, we know for sure that at least "warmac" is present
@@ -520,5 +520,8 @@ def handle_input(args: list[str] | None = None) -> argparse.Namespace:
         # way to print help text for other subcommands
         parser.parse_args([parsed_args.subcommand, "--help"])
         # Code exits here as per argparse help code
+        # This help parse returns 0
+
     parser.print_help(sys.stdout)
+    # This bare help parse returns 0
     sys.exit(0)
