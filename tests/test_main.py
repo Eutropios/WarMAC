@@ -92,7 +92,7 @@ class TestProcessCliCommand:
         mock_dispatch = {"average": mock_subcommand_handler}
         mocker.patch("warmac.main.SUBCMD_DISPATCH", new=mock_dispatch)
 
-        mock_datetime_module = mocker.patch("warmac.main.datetime")
+        mock_datetime_module = mocker.patch("warmac.main.dt")
         fixed_time = dt.datetime(2024, 7, 25, 12, 0, 0, tzinfo=dt.UTC)
         mock_datetime_module.datetime.now.return_value = fixed_time
 
