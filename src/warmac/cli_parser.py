@@ -39,10 +39,9 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
     """
     Custom help formatter for :class:`cli_parser.WarMACParser`.
 
-    Extend :class:`argparse.RawDescriptionHelpFormatter` to
-    reimplement a few methods. Reimplementations include removing the
-    command metavar tuples, removing the duplicate option metavars,
-    and correcting the over-indentation on the help menu.
+    Extend :class:`argparse.RawDescriptionHelpFormatter` to reimplement
+    a couple methods. Reimplementations include removing the command
+    metavar tuples and correcting the over-indentation on the help menu.
     """
 
     def __init__(

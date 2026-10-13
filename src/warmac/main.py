@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 import sys
 from typing import TYPE_CHECKING
 
@@ -78,7 +78,7 @@ def process_cli_command(args: list[str] | None) -> str:
     }
     cli_args = cli_parser.handle_input(args)
     fix_http_headers(headers, cli_args.platform, crossplay=cli_args.crossplay)
-    current_time = datetime.datetime.now(datetime.UTC)
+    current_time = dt.datetime.now(dt.UTC)
     try:
         subcmd = SUBCMD_DISPATCH[cli_args.subparser](cli_args, headers, current_time)
     except KeyError as err:
@@ -86,14 +86,14 @@ def process_cli_command(args: list[str] | None) -> str:
     return subcmd
 
 
-def main(args: list[str] | None = None) -> Literal[0, 1, 2]:
+def main(args: list[str] | None = None) -> Literal[0, 2]:
     """
     Entry point for WarMAC.
 
     Orchestrate core logic and handle errors for WarMAC.
 
     :param args: Optional cli args used for testing.
-    :return: 0 if execution is successful, 1 otherwise.
+    :return: 0 if execution is successful, 2 if an error is encountered.
     """
     try:
         data = process_cli_command(args)

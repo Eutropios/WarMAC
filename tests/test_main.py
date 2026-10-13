@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
@@ -72,7 +72,7 @@ class TestProcessCliCommand:
     @pytest.fixture
     def mock_dependencies(
         mocker: Mock,
-    ) -> tuple[MagicMock, MagicMock, datetime.datetime]:
+    ) -> tuple[MagicMock, MagicMock, dt.datetime]:
         """Fixture that mocks cli_parser and average.process_data to
         avoid making any HTTP requests."""
         mock_cli_args = MagicMock()
@@ -93,14 +93,14 @@ class TestProcessCliCommand:
         mocker.patch("warmac.main.SUBCMD_DISPATCH", new=mock_dispatch)
 
         mock_datetime_module = mocker.patch("warmac.main.datetime")
-        fixed_time = datetime.datetime(2024, 7, 25, 12, 0, 0, tzinfo=datetime.UTC)
+        fixed_time = dt.datetime(2024, 7, 25, 12, 0, 0, tzinfo=dt.UTC)
         mock_datetime_module.datetime.now.return_value = fixed_time
 
         return mock_cli_args, mock_subcommand_handler, fixed_time
 
     @staticmethod
     def test_process_cli_command_success(
-        mock_dependencies: tuple[MagicMock, MagicMock, datetime.datetime],
+        mock_dependencies: tuple[MagicMock, MagicMock, dt.datetime],
     ) -> None:
         """Test the successful execution of ``process_cli_command``."""
         mock_cli_args, mock_subcommand_handler, fixed_time = mock_dependencies

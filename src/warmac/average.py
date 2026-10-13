@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 import statistics
 from typing import TYPE_CHECKING
 
@@ -77,7 +77,7 @@ def calculate_average(
 
 def in_time_range(
     last_updated: str,
-    current_time: datetime.datetime,
+    current_time: dt.datetime,
     time_range: int = DEFAULT_TIME,
 ) -> bool:
     """
@@ -94,7 +94,7 @@ def in_time_range(
     :return: ``True`` if ``last_updated ≤ time_range``, ``False`` if
         ``last_updated > time_range``.
     """
-    timestamp = datetime.datetime.fromisoformat(last_updated)
+    timestamp = dt.datetime.fromisoformat(last_updated)
     return 0 <= (current_time - timestamp).days <= time_range
 
 
@@ -150,7 +150,7 @@ def check_relic_subtype(
 def filter_order(
     order: schema.OrderWithUser,
     item_info: schema.Item,
-    current_time: datetime.datetime,
+    current_time: dt.datetime,
     args: argparse.Namespace,
 ) -> bool:
     """
@@ -189,7 +189,7 @@ def filter_order(
 def filtered_plat_list(
     order_data: list[schema.OrderWithUser],
     item_info: schema.Item,
-    current_time: datetime.datetime,
+    current_time: dt.datetime,
     args: argparse.Namespace,
 ) -> list[int]:
     """
@@ -269,7 +269,7 @@ def get_required_data(
 def process_data(
     args: argparse.Namespace,
     http_headers: dict[str, str],
-    current_time: datetime.datetime,
+    current_time: dt.datetime,
 ) -> str:
     """
     Calculate average price of an item from warframe.market.

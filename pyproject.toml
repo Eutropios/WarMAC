@@ -3,7 +3,7 @@
   version         = "0.0.8"
   description     = "An average platinum price calculator for tradeable items in Warframe."
   readme          = "README.md"
-  requires-python = ">=3.11"
+  requires-python = ">=3.12"
   license         = "GPL-3.0-or-later"
   license-files   = ["LICENSE"]
   authors         = [{name = "Noah Jenner", email = "noah.jenner@proton.me"}]
@@ -16,10 +16,10 @@
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Utilities",
     "Typing :: Typed",
@@ -43,7 +43,6 @@
     "docutils",
     "esbonio>=2",
     "furo>=2023.9",
-    "sphinx>=8.2; python_version >= '3.11' and python_version < '3.12'",
     "sphinx>=9.1; python_version >= '3.12'",
     "sphinx-copybutton>=0.5.2",
     "sphinx-inline-tabs>=2023.4.21",
@@ -129,7 +128,7 @@
   line-length    = 88
   preview        = true
   show-fixes     = true
-  target-version = "py311"
+  target-version = "py312"
 
 [tool.ruff.format]
   docstring-code-format     = true
@@ -139,7 +138,7 @@
   skip-magic-trailing-comma = false
 
 [tool.ruff.lint]
-  # NOTE: Some rules are turned off by Ruff due to `target-version` being set to Py 3.11
+  # NOTE: Some rules are turned off by Ruff due to `target-version` being set to Py 3.12
   explicit-preview-rules = false
   external               = ["DOC5"]
   ignore                 = [

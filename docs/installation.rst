@@ -4,7 +4,7 @@
 
 .. attention::
 
-   WarMAC supports Python versions 3.11 to 3.14.
+   WarMAC supports Python versions 3.12 to 3.15.
 
 
 |  The primary method of installing WarMAC is by installing it through `uv

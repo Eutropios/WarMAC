@@ -22,22 +22,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import msgspec
 import urllib3
 
 from warmac import errors, schema
 
-if TYPE_CHECKING:
-    from collections.abc import Mapping
-    from typing import Final, TypeVar
-
-    ResponseType = type[schema.OrderResponse | schema.ItemResponse]
-    T = TypeVar("T", schema.OrderResponse, schema.ItemResponse)
-
-
-HTTP_ERROR_DICT: Final[Mapping[int, type[errors.WarMACHTTPError]]] = {
+HTTP_ERROR_DICT = {
     401: errors.UnauthorizedAccessError,
     403: errors.ForbiddenRequestError,
     404: errors.MalformedURLError,
@@ -48,7 +38,7 @@ HTTP_ERROR_DICT: Final[Mapping[int, type[errors.WarMACHTTPError]]] = {
 
 API_ROOT = "https://api.warframe.market/v2/"
 
-SCHEMA_TO_URL: Mapping[ResponseType, str] = {
+SCHEMA_TO_URL = {
     schema.OrderResponse: "orders/item/",
     schema.ItemResponse: "item/",
 }
@@ -107,7 +97,9 @@ def get_page(url: str, http_headers: dict[str, str]) -> urllib3.BaseHTTPResponse
     return page
 
 
-def get_data(item: str, request_schema: type[T], http_headers: dict[str, str]) -> T:
+def get_data[T: (schema.OrderResponse, schema.ItemResponse)](
+    item: str, request_schema: type[T], http_headers: dict[str, str]
+) -> T:
     """
     Fetch provided item's data from API and decode it using the schema.
 

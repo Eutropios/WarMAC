@@ -258,7 +258,7 @@ class TestStdlibMonkeyPatching:
         assert target_parser.format_help() == expected_output
 
     @staticmethod
-    @pytest.mark.skipif(sys.version_info < (3, 13), reason="python3.11 or 3.12 needed")
+    @pytest.mark.skipif(sys.version_info < (3, 13), reason="3.12 needed")
     def test_parser_metavar_formatting() -> None:
         """Verify that _format_action_invocation behaves correctly
         according to Python version."""

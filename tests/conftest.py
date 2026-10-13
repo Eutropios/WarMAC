@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from __future__ import annotations
 
 import argparse
-import datetime
+import datetime as dt
 from typing import TYPE_CHECKING
 
 import pytest
@@ -46,9 +46,9 @@ def mock_get_page(mocker: MagicMock) -> object:
 
 
 @pytest.fixture
-def fixed_current_time() -> datetime.datetime:
+def fixed_current_time() -> dt.datetime:
     """Fixture that returns a set datetime object."""
-    return datetime.datetime(2025, 7, 23, 10, 0, 0, 0, datetime.UTC)
+    return dt.datetime(2025, 7, 23, 10, 0, 0, 0, dt.UTC)
 
 
 @pytest.fixture

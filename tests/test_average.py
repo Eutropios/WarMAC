@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from __future__ import annotations
 
 import argparse
-import datetime
+import datetime as dt
 from typing import TYPE_CHECKING
 
 import pytest
@@ -141,7 +141,7 @@ class TestCalcAvg:
 
 
 class TestInTimeRange:
-    TEST_CURRENT_TIME = datetime.datetime(2023, 1, 10, 12, 0, 0, tzinfo=datetime.UTC)
+    TEST_CURRENT_TIME = dt.datetime(2023, 1, 10, 12, 0, 0, tzinfo=dt.UTC)
 
     @pytest.mark.parametrize(
         ("last_updated", "time_range", "expected_result"),
@@ -346,7 +346,7 @@ class TestFilterOrderProgrammatic:
         order_kwargs: OrderKwargs,
         item_info_kwargs: ItemKwargs,
         args_kwargs: ArgsKwargs,
-        fixed_current_time: datetime.datetime,
+        fixed_current_time: dt.datetime,
         *,
         expected_result: bool,
     ) -> None:
@@ -464,7 +464,7 @@ class TestGetPlatList:
         order_data_params: list[OrderKwargs],
         item_info_params: ItemKwargs,
         args_params: ArgsKwargs,
-        fixed_current_time: datetime.datetime,
+        fixed_current_time: dt.datetime,
         expected_plat_list: list[int],
     ) -> None:
         """Test filtered_plat_list with various filtering scenarios."""
@@ -643,7 +643,7 @@ class TestProcessData:
         mocker: Mock,
         mock_args: argparse.Namespace,
         mock_http_headers: dict[str, str],
-        fixed_current_time: datetime.datetime,
+        fixed_current_time: dt.datetime,
         mock_item_response: schema.ItemResponse,
         mock_order_response: schema.OrderResponse,
     ) -> None:
@@ -661,7 +661,7 @@ class TestProcessData:
         mocker: Mock,
         mock_args: argparse.Namespace,
         mock_http_headers: dict[str, str],
-        fixed_current_time: datetime.datetime,
+        fixed_current_time: dt.datetime,
         mock_item_response: schema.ItemResponse,
         mock_order_response: schema.OrderResponse,
     ) -> None:
