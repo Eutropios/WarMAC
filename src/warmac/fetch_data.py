@@ -22,10 +22,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import msgspec
 import urllib3
 
 from warmac import errors, schema
+
+if TYPE_CHECKING:
+    from typing import TypeVar
+
+    ResponseType = TypeVar("ResponseType", schema.OrderResponse, schema.ItemResponse)
+
 
 HTTP_ERROR_DICT = {
     401: errors.UnauthorizedAccessError,
@@ -97,9 +105,9 @@ def get_page(url: str, http_headers: dict[str, str]) -> urllib3.BaseHTTPResponse
     return page
 
 
-def get_data[T: (schema.OrderResponse, schema.ItemResponse)](
-    item: str, request_schema: type[T], http_headers: dict[str, str]
-) -> T:
+def get_data(  # ruff: ignore[non-pep695-generic-function]
+    item: str, request_schema: type[ResponseType], http_headers: dict[str, str]
+) -> ResponseType:
     """
     Fetch provided item's data from API and decode it using the schema.
 

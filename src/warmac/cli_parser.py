@@ -387,8 +387,9 @@ def create_parser() -> WarMACParser:
             "A program to fetch the average market cost of an item in Warframe."
         ),
         epilog=(
-            "More help can be found at: "
-            "https://warmac.readthedocs.io/en/latest/usage/warmac.html"
+            "To remove color from the help text, please set the environment variable "
+            "NO_COLOR to 1 like so: `export NO_COLOR=1`\nAdditional help can be found "
+            "at: https://warmac.readthedocs.io/en/latest/usage/warmac.html"
         ),
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,  # first arg in CL, which is the file's name
@@ -431,10 +432,9 @@ def create_parser() -> WarMACParser:
             max_help_position=default_width,
         ),
         add_help=False,
-        usage=(
-            "warmac average [-s <stat>] [-p <platform>] [-t <days>] [-m | -r] [-b] "
-            "[-v] item"
-        ),
+        epilog="To remove color from the help text, please set the environment variable"
+        " NO_COLOR to 1 like so: `export NO_COLOR=1`\nAdditional help can be found "
+        "at: https://warmac.readthedocs.io/en/latest/usage/warmac.html",
     )
     configure_avg_parser(avg_parser, platforms)
 
@@ -452,7 +452,9 @@ def create_parser() -> WarMACParser:
             max_help_position=default_width,
         ),
         add_help=False,
-        usage="warmac help subcommand",
+        epilog="To remove color from the help text, please set the environment variable"
+        " NO_COLOR to 1 like so: `export NO_COLOR=1`\nAdditional help can be found "
+        "at: https://warmac.readthedocs.io/en/latest/usage/warmac.html",
     )
 
     help_parser.add_argument(
