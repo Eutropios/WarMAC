@@ -1,11 +1,13 @@
+:no-search:
+
 ############
  Fetch Data
 ############
 
 |  Makes HTTP requests given a particular WarMAC schema.
 
-.. py:type:: fetch_data.T
-   :canonical: ~typing.TypeVar(T, schema.OrderResponse, schema.ItemResponse)
+.. py:type:: fetch_data.ResponseType
+   :canonical: ~typing.TypeVar(ResponseType, schema.OrderResponse, schema.ItemResponse)
 
    Invariant TypeVar constrained to ``schema.OrderResponse`` and ``schema.ItemResponse``.
 

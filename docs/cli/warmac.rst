@@ -36,14 +36,14 @@
 
 .. option:: -h, --help
 
-   Print the command line usage and then exit. Providing this option is
-   identical to calling ``warmac`` without any command. WarMAC will ignore
-   all other options if ``-h`` or ``--help`` is given.
-
+   Prints the command line usage and exits. WarMAC will ignore all other
+   options if ``-h`` or ``--help`` is given. To remove color from the help
+   text, please set the environment variable NO_COLOR to 1 like so:
+   ``export NO_COLOR=1``
 
 .. option:: -V, --version
 
-   Print the current version of WarMAC and exit. WarMAC will ignore all other
+   Prints the current version of WarMAC and exits. WarMAC will ignore all other
    options if ``-V`` or ``--version`` is given.
 
 *************

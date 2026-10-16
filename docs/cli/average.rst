@@ -106,7 +106,8 @@
 .. option:: -h, --help
 
    Prints the command line usage and then exits. If used, WarMAC will ignore
-   all other options.
+   all other options. To remove color from the help text, please set the
+   environment variable NO_COLOR to 1 like so: ``export NO_COLOR=1``
 
 ***********
  Examples

@@ -389,7 +389,7 @@ def create_parser() -> WarMACParser:
         epilog=(
             "To remove color from the help text, please set the environment variable "
             "NO_COLOR to 1 like so: `export NO_COLOR=1`\nAdditional help can be found "
-            "at: https://warmac.readthedocs.io/en/latest/usage/warmac.html"
+            f"at: https://warmac.readthedocs.io/en/v{version.VERSION}/usage/warmac.html"
         ),
         formatter_class=lambda prog: CustomHelpFormat(
             prog=prog,  # first arg in CL, which is the file's name
@@ -432,9 +432,12 @@ def create_parser() -> WarMACParser:
             max_help_position=default_width,
         ),
         add_help=False,
-        epilog="To remove color from the help text, please set the environment variable"
-        " NO_COLOR to 1 like so: `export NO_COLOR=1`\nAdditional help can be found "
-        "at: https://warmac.readthedocs.io/en/latest/usage/warmac.html",
+        epilog=(
+            "To remove color from the help text, please set the environment variable "
+            "NO_COLOR to 1 like so: `export NO_COLOR=1`\nAdditional help can be found "
+            f"at: https://warmac.readthedocs.io/en/v{version.VERSION}/usage/average.html"
+        ),
+        usage="warmac average [options] item",
     )
     configure_avg_parser(avg_parser, platforms)
 
@@ -452,9 +455,12 @@ def create_parser() -> WarMACParser:
             max_help_position=default_width,
         ),
         add_help=False,
-        epilog="To remove color from the help text, please set the environment variable"
-        " NO_COLOR to 1 like so: `export NO_COLOR=1`\nAdditional help can be found "
-        "at: https://warmac.readthedocs.io/en/latest/usage/warmac.html",
+        usage="warmac help subcommand",
+        epilog=(
+            "To remove color from the help text, please set the environment variable "
+            "NO_COLOR to 1 like so: `export NO_COLOR=1`\nAdditional help can be found "
+            f"at: https://warmac.readthedocs.io/en/v{version.VERSION}/usage/warmac.html"
+        ),
     )
 
     help_parser.add_argument(
@@ -483,10 +489,11 @@ def handle_input(args: list[str] | None = None) -> argparse.Namespace:
     Create :class:`.WarMACParser` object, parse command-line
     arguments, and return the parsed arguments as an
     :class:`argparse.Namespace` object. Exits early if only "warmac"
-    is called or if the subcommand "help" is used. Print to stderr if
-    only "warmac" or a bare subcommand (ex: "warmac average") is called
-    (excluding "help" subcommand). Print to stdout if "--help" option is
-    used, or if the help subcommand is called (even if it's bare).
+    is called or if the subcommand "help" is used. Print to stdout if
+    only "warmac" is called. Print to stderr if a bare subcommand
+    (ex: "warmac average") is called (excluding "help" subcommand).
+    Print to stdout if "--help" option is used, or if the help
+    subcommand is called (even if it's bare).
 
     When calling as a function, omit leading "warmac" and supply the
     remaining arguments accordingly.
