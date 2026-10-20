@@ -41,8 +41,8 @@
   dev          = ["vermin"]
   docs         = [
     "docstrfmt",
-    "docutils",
     "esbonio>=2",
+    "format-docstring",
     "furo>=2023.9",
     "sphinx>=9.1; python_version >= '3.12'",
     "sphinx-copybutton>=0.5.2",
@@ -80,18 +80,24 @@
   ]
   precision    = 2
 
-[tool.docformatter]
-  black               = true
-  pre-summary-newline = true
-  recursive           = true
-  style               = "pep257"
-  wrap-descriptions   = 72
-  wrap-summaries      = 72
+[tool.docstrfmt]
+  center-section-titles = true
+  indent-width          = 3
+  line-length           = 80
+  exclude               = ["**.py"]
 
-# Awaiting Sphinx v9 support in esbonio
 [tool.esbonio.sphinx]
   pythonCommand = ["uv", "run", "--group", "docs", "python"]
   buildCommand  = ["sphinx-build", "-M", "html", "docs", "docs/_build"]
+
+[tool.format_docstring]
+  docstring-style                = "google"
+  exclude                        = "\\.git|\\.venv|__pycache__|\\.tox|\\.pytest_cache|\\.mypy_cache|\\.ruff_cache"
+  fix-rst-bacticks               = true
+  include-arg-defaults           = false
+  include-arg-types              = false
+  include-return-and-yield-types = false
+  line-length                    = 72
 
 [tool.mypy]
   exclude        = ["_build", "buck-out", "build", "dist", "htmlcov", "LICENSES"]
@@ -144,6 +150,7 @@
   external               = ["DOC5"]
   ignore                 = [
     "AIR",                                        # Apache Airflow unused
+    "CPY",                                        # Conflcts with GNU license header
     "DJ",                                         # Django rules
     "FAST",                                       # FastAPI rules
     "FIX",                                        # FIXs unused
@@ -155,7 +162,6 @@
     "missing-trailing-comma",                     # Must be turned off for formatter
     "multi-line-implicit-string-concatenation",   # Must be turned off for formatter
     "single-line-implicit-string-concatenation",  # Must be turned off for formatter
-    "multi-line-summary-first-line",              # I do this lol
   ]
   preview                = true
   select                 = ["ALL"]
@@ -182,27 +188,15 @@
 
 [tool.ruff.lint.per-file-ignores]
   "docs/conf.py"             = ["implicit-namespace-package"]
-  "**/__init__.py"           = [
-    "missing-blank-line-after-summary",
-    "missing-required-import",
-    "missing-terminal-punctuation",
-    "missing-trailing-period",
-  ]
-  "**/__main__.py"           = [
-    "missing-blank-line-after-summary",
-    "missing-required-import",
-    "missing-trailing-period"
-  ]
+  "**/__init__.py"           = ["missing-terminal-punctuation", "missing-required-import"]
+  "**/__main__.py"           = ["missing-required-import"]
   "src/warmac/cli_parser.py" = ["private-member-access"]
   "src/warmac/errors.py"     = ["missing-blank-line-after-summary", "new-line-after-last-paragraph"]
   "tests/**.py"              = [
     "assert",
     "docstring-missing-returns",
     "missing-blank-line-after-summary",
-    "missing-terminal-punctuation",
-    "missing-trailing-period",
-    "new-line-after-last-paragraph",
-    "undocumented-public-class",
+    "undocumented-public-class"
   ]
   # *IMPORTANT* - A dirty hack in cli_parser.py uses private components
 

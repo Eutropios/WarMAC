@@ -1,20 +1,19 @@
-"""
-WarMAC — https://github.com/Eutropios/WarMAC
-Copyright (C) 2024  Noah Jenner
+"""WarMAC — https://github.com/Eutropios/WarMAC Copyright (C) 2024 Noah
+Jenner
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""  # ruff: ignore[missing-terminal-punctuation]
 
 from __future__ import annotations
 
@@ -59,7 +58,8 @@ def order_kwargs(
     subtype: str | None = "intact",
 ) -> OrderKwargs:
     """Construct a dictionary to be used in creating a
-    schema.OrderWithUser object."""
+    schema.OrderWithUser object.
+    """
     return {
         "platinum": platinum,
         "order_type": order_type,
@@ -71,7 +71,8 @@ def order_kwargs(
 
 def item_info_kwargs(max_rank: int | None = None) -> ItemKwargs:
     """Construct a dictionary to be used in creating a schema.Item
-    object."""
+    object.
+    """
     return {"max_rank": max_rank}
 
 
@@ -174,7 +175,8 @@ class TestInTimeRange:
         expected_result: bool,
     ) -> None:
         """Test cases where the last_updated timestamp is either inside
-        or outside the time_range limit."""
+        or outside the time_range limit.
+        """
         assert (
             average.in_time_range(last_updated, self.TEST_CURRENT_TIME, time_range)
             is expected_result
@@ -182,7 +184,8 @@ class TestInTimeRange:
 
     def test_invalid_isoformat_raises_value_error(self) -> None:
         """Test that ValueError is raised for completely malformed
-        ISO-8601 timestamps."""
+        ISO-8601 timestamps.
+        """
         match_string = (
             r"Invalid isoformat string: 'not-a-valid-timestamp'|Unknown string format:"
             r" not-a-valid-timestamp"
@@ -565,8 +568,8 @@ class TestFormatOutput:
 
     @staticmethod
     def test_empty_plat_list_raises_error(mock_args: argparse.Namespace) -> None:
-        """
-        Test that error is raised if format_output is given empty list.
+        """Test that error is raised if format_output is given empty
+        list.
 
         It should be noted that format_output should not be called with
         an empty plat_list, as calculate_average would raise an error
@@ -589,7 +592,8 @@ class TestFormatOutput:
     @staticmethod
     def test_format_non_detailed_report(mock_args: argparse.Namespace) -> None:
         """Test that format_output only returns the calculated statistic
-        if args.detailed_report is False."""
+        if args.detailed_report is False.
+        """
         mock_args.detailed_report = False
         statistic_value = 20
         plat_list = [10, 20, 30]
@@ -607,7 +611,8 @@ class TestGetRequiredData:
         mock_http_headers: dict[str, str],
     ) -> None:
         """Test that get_required_data successfully calls fetch_data
-        twice and returns the expected tuple of data."""
+        twice and returns the expected tuple of data.
+        """
         mock_get_data = mocker.patch("warmac.fetch_data.get_data")
         mock_get_data.side_effect = [mock_item_response, mock_order_response]
         item_name = "mock_item"
@@ -632,7 +637,8 @@ class TestProcessData:
         mock_order_response: schema.OrderResponse,
     ) -> None:
         """Test that process_data correctly calculates and formats the
-        output with valid data."""
+        output with valid data.
+        """
         mocker.patch(
             "warmac.average.get_required_data",
             return_value=(mock_item_response, mock_order_response),
@@ -650,7 +656,8 @@ class TestProcessData:
         mock_order_response: schema.OrderResponse,
     ) -> None:
         """Test that process_data raises NoListingsFoundError when
-        filtered platinum list is empty."""
+        filtered platinum list is empty.
+        """
         mocker.patch(
             "warmac.average.get_required_data",
             return_value=(mock_item_response, mock_order_response),

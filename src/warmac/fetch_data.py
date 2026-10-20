@@ -1,23 +1,22 @@
-"""
-Logic for http requests, including error checks.
+"""Logic for http requests, including error checks.
 
 -----------------------------------------------------------------------
 
-WarMAC — https://github.com/Eutropios/WarMAC
-Copyright (C) 2024  Noah Jenner
+WarMAC — https://github.com/Eutropios/WarMAC Copyright (C) 2024  Noah
+Jenner
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from __future__ import annotations
@@ -53,8 +52,7 @@ SCHEMA_TO_URL = {
 
 
 def item_url(item: str) -> str:
-    """
-    Replace spaces with underscores and ampersands with "and".
+    """Replace spaces with underscores and ampersands with "and".
 
     Args:
         item: String to manipulate.
@@ -66,8 +64,7 @@ def item_url(item: str) -> str:
 
 
 def http_code_check(status_code: int) -> None:  # noqa: DOC503
-    """
-    Check an HTTP status code and raise the appropriate WarMACHTTPError.
+    """Check an HTTP status code and raise appropriate WarMACHTTPError.
 
     Check if an HTTP status code is 200 and raise the corresponding
     WarMACHTTPError if not.
@@ -89,8 +86,7 @@ def http_code_check(status_code: int) -> None:  # noqa: DOC503
 
 
 def get_page(url: str, http_headers: dict[str, str]) -> urllib3.BaseHTTPResponse:
-    """
-    Make an HTTP request to warframe.market.
+    """Make an HTTP request to warframe.market.
 
     Make an HTTP request to warframe.market using the appropriate
     formatted URL, along with the appropriate http headers. Raise an
@@ -119,8 +115,7 @@ def get_page(url: str, http_headers: dict[str, str]) -> urllib3.BaseHTTPResponse
 def get_data(  # ruff: ignore[non-pep695-generic-function]
     item: str, request_schema: type[ResponseType], http_headers: dict[str, str]
 ) -> ResponseType:
-    """
-    Fetch provided item's data from API and decode it using the schema.
+    """Fetch item's data from API and decode it using the schema.
 
     Make a request to the API using the given item. Decode the raw JSON
     response into the WarMAC Struct associated with the provided schema.

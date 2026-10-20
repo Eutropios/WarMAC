@@ -1,23 +1,22 @@
-"""
-Main logic of warmac.
+"""Main logic of warmac.
 
 -----------------------------------------------------------------------
 
-WarMAC — https://github.com/Eutropios/WarMAC
-Copyright (C) 2024  Noah Jenner
+WarMAC — https://github.com/Eutropios/WarMAC Copyright (C) 2024  Noah
+Jenner
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from __future__ import annotations
@@ -43,8 +42,7 @@ def fix_http_headers(
     *,
     crossplay: bool = True,
 ) -> None:
-    """
-    Append the platform name and crossplay status to HTTP headers dict.
+    """Append platform name and crossplay status to HTTP headers dict.
 
     Append the platform name and crossplay status to a dictionary
     containing HTTP headers.
@@ -59,8 +57,7 @@ def fix_http_headers(
 
 
 def process_cli_command(args: list[str] | None) -> str:
-    """
-    Parse cli args, set up headers, and execute appropriate subcommand.
+    """Process the command line arguments and execute command.
 
     Call cli_parser.handle_input to create and parse a
     cli_parser.WarMACParser, create http headers for the http request,
@@ -91,8 +88,7 @@ def process_cli_command(args: list[str] | None) -> str:
 
 
 def main(args: list[str] | None = None) -> Literal[0, 2]:
-    """
-    Entry point for WarMAC.
+    """Entry point for WarMAC.
 
     Orchestrate core logic and handle errors for WarMAC.
 

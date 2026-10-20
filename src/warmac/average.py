@@ -1,23 +1,22 @@
-"""
-Logic for average subcommand.
+"""Logic for average subcommand.
 
 -----------------------------------------------------------------------
 
-WarMAC — https://github.com/Eutropios/WarMAC
-Copyright (C) 2024  Noah Jenner
+WarMAC — https://github.com/Eutropios/WarMAC Copyright (C) 2024  Noah
+Jenner
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from __future__ import annotations
@@ -55,8 +54,7 @@ def calculate_average(
     statistic: AverageType,
     ndigits: int = DEFAULT_NDIGITS,
 ) -> float:
-    """
-    Calculate the specified statistic for a list of prices.
+    """Calculate the specified statistic for a list of prices.
 
     Given a list of integers of prices associated with an item,
     calculate and return the desired statistic, rounded to the specified
@@ -72,7 +70,7 @@ def calculate_average(
         Desired statistic of the specified item.
 
     Raises:
-        errors.NoListingsFoundError: If plat_list has no contents.
+        errors.NoListingsFoundError: If ``plat_list`` has no contents.
     """
     if not plat_list:
         raise errors.NoListingsFoundError from None
@@ -84,11 +82,10 @@ def in_time_range(
     current_time: dt.datetime,
     time_range: int = DEFAULT_TIME,
 ) -> bool:
-    """
-    Check if order is younger than time_range days.
+    """Check if order is younger than time_range days.
 
-    Subtract last_updated field from current_time to check if the
-    difference in days is less than or equal to time_range.
+    Subtract ``last_updated`` field from ``current_time`` to check if
+    the difference in days is less than or equal to ``time_range``.
 
     Args:
         last_updated: ISO-8601 timestamp of when the order was last
@@ -98,8 +95,8 @@ def in_time_range(
             accepted, defaults to 3.
 
     Returns:
-        True if 0 <= last_updated ≤ time_range, False if
-        last_updated > time_range or last_updated < 0.
+        True if ``0 <= last_updated ≤ time_range``, False if
+        ``last_updated > time_range`` or if ``last_updated < 0``.
     """
     timestamp = dt.datetime.fromisoformat(last_updated)
     return 0 <= (current_time - timestamp).days <= time_range
@@ -111,13 +108,12 @@ def check_mod_arcane_rank(
     *,
     use_maxrank: bool,
 ) -> bool:
-    """
-    Check if an order's rank matches user-specified rank level.
+    """Check if an order's rank matches user-specified rank level.
 
     Check if an order's rank equals the rank specified by the user. If
-    the item isn't a mod or arcane, order_rank and item_max_rank should
-    both be None. If either order_rank or item_max_rank is None, then
-    True will be returned.
+    the item isn't a mod or arcane, ``order_rank`` and ``item_max_rank``
+    should both be None. If either ``order_rank`` or ``item_max_rank``
+    is None, then True will be returned.
 
     Args:
         order_rank: Rank of the order.
@@ -127,8 +123,9 @@ def check_mod_arcane_rank(
             the unranked item will be used.
 
     Returns:
-        True if the order_rank is None, if item_max_rank is None, or if
-        order_rank matches item_max_rank * use_maxrank, False otherwise.
+        True if the ``order_rank`` is None, if ``item_max_rank`` is
+        None, or if ``order_rank`` matches
+        ``item_max_rank * use_maxrank``, False otherwise.
     """
     if order_rank is None or item_max_rank is None:
         # If there's a mismatch, we'll eval as if unranked
@@ -139,8 +136,7 @@ def check_mod_arcane_rank(
 def check_relic_subtype(
     subtype: str | None, use_radiant: Literal["intact", "radiant"]
 ) -> bool:
-    """
-    Check if an order's subtype matches user-specified refinement level.
+    """Check if an order's subtype matches user-specified refinement.
 
     Check if an order's subtype equals the refinement level specified by
     the user. If the item isn't a relic, subtype should be None.
@@ -151,7 +147,6 @@ def check_relic_subtype(
             Can be either "radiant" or "intact".
 
     Returns:
-        True if the order's subtype matches use_radiant or if subtype is
         None, False otherwise.
     """
     if subtype is None:
@@ -165,25 +160,25 @@ def filter_order(
     current_time: dt.datetime,
     args: argparse.Namespace,
 ) -> bool:
-    """
-    Check if an order meets all user-specified criteria.
+    """Check if an order meets all user-specified criteria.
 
     Check if an order meets all user-defined conditions:
 
-    - Whether the order's last update is within args.timerange days.
+    - Whether the order's last update is within ``args.timerange`` days.
     - Whether the order is of "buy" or "sell" type, depending on
-        args.use_buyers.
+        ``args.use_buyers``.
     - If the item is a mod or arcane, whether its rank is unranked or
-        the maximum rank, based on args.maxrank.
+        the maximum rank, based on ``args.maxrank``.
     - If the item is a relic, whether its refinement is intact or
-        radiant, based on args.radiant.
+        radiant, based on ``args.radiant``.
 
     Args:
         order: Order to be checked.
         item_info: Details about the item.
         current_time: Current time.
         args: Command-line arguments provided by the user. Must have the
-            fields use_buyers, maxrank, radiant, and timerange.
+            fields ``use_buyers``, ``maxrank``, ``radiant``, and
+            ``timerange``.
 
     Returns:
         True if all specified conditions are met, False otherwise.
@@ -205,20 +200,19 @@ def filtered_plat_list(
     current_time: dt.datetime,
     args: argparse.Namespace,
 ) -> list[int]:
-    """
-    Construct a list of prices using a filter.
+    """Construct a list of prices using a filter.
 
     Return a filtered list of platinum prices given a list of
-    schema.OrderWithUser, a schema.Item, and the user's command-line
-    arguments.
+    ``schema.OrderWithUser``, a ``schema.Item``, and the user's
+    command-line arguments.
 
     Args:
-        order_data: List of schema.OrderWithUser containing information
-            about each individual order.
+        order_data: List of ``schema.OrderWithUser`` containing
+            information about each individual order.
         item_info: Object containing information about the item.
         current_time: Current time.
         args: User-given command line arguments. Must have the fields
-            statistic, item, porcelain, and timerange.
+            ``statistic``, ``item``, ``porcelain``, and ``timerange``.
 
     Returns:
         List of the platinum prices from the filtered listings.
@@ -229,19 +223,18 @@ def filtered_plat_list(
 
 
 def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -> str:
-    """
-    Format the calculated statistic along with additional information.
+    """Format calculated statistic along with additional information.
 
     Format the calculated statistic, along with the maximum and minimum
     prices of the orders, and the total number of orders that match the
-    search criteria. If args.porcelain is True, separate the
-    fields with a single colon.
+    search criteria. If ``args.porcelain`` is True, separate the fields
+    with a single colon.
 
     Args:
         stat: Statistic of the item that was found.
         plat_list: List of prices of the item.
         args: User-given command line arguments. Must have the fields
-            statistic, item, porcelain, and timerange.
+            ``statistic``, ``item``, ``porcelain``, and ``timerange``.
 
     Returns:
         Return appropriately formatted string.
@@ -271,8 +264,7 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
 def get_required_data(
     item: str, http_headers: dict[str, str]
 ) -> tuple[schema.ItemResponse, schema.OrderResponse]:
-    """
-    Retrieve the orders and metadata for an item.
+    """Retrieve the orders and metadata for an item.
 
     Args:
         item: Item to retrieve.
@@ -291,13 +283,12 @@ def process_data(
     http_headers: dict[str, str],
     current_time: dt.datetime,
 ) -> str:
-    """
-    Calculate average price of an item from warframe.market.
+    """Calculate average price of an item from warframe.market.
 
     Args:
-        args: Parsed command-line args. Must have the fields statistic,
-            item, porcelain, radiant, use_buyers, maxrank, and
-            timerange.
+        args: Parsed command-line args. Must have the fields
+            ``statistic``, ``item``, ``porcelain``, ``radiant``,
+            ``use_buyers``, ``maxrank``, and ``timerange``.
         http_headers: Headers to be used in the HTTP request.
         current_time: Current time.
 

@@ -5,13 +5,13 @@
 ##############
 
 |  WarMAC has a variety of commands for users to select from. Each command has
-   its own unique options and arguments. Wherever possible, options that
-   perform similar functions for different commands will share the same name.
+   its own unique options and arguments. Wherever possible, options that perform
+   similar functions for different commands will share the same name.
 
 .. note::
 
-   WarMAC currently only has the Average command. More commands will be added
-   in the future.
+   WarMAC currently only has the Average command. More commands will be added in
+   the future.
 
 ****************
  Running WarMAC
@@ -32,7 +32,8 @@
 *********
 
 |  When determining whether to display the program's help or to display the
-   current program's version, WarMAC will use whichever of the two options is given first.
+   current program's version, WarMAC will use whichever of the two options is
+   given first.
 
 .. option:: -h, --help
 

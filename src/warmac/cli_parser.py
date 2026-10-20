@@ -1,23 +1,22 @@
-"""
-Command line interface logic for warmac.
+"""Command line interface logic for warmac.
 
 -----------------------------------------------------------------------
 
-WarMAC — https://github.com/Eutropios/WarMAC
-Copyright (C) 2024  Noah Jenner
+WarMAC — https://github.com/Eutropios/WarMAC Copyright (C) 2024  Noah
+Jenner
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from __future__ import annotations
@@ -37,8 +36,7 @@ if TYPE_CHECKING:
 
 
 class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
-    """
-    Custom help formatter for cli_parser.WarMACParser.
+    """Custom help formatter for cli_parser.WarMACParser.
 
     Extend argparse.RawDescriptionHelpFormatter to reimplement a couple
     methods. Reimplementations include removing the command metavar
@@ -52,15 +50,14 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         max_help_position: int = 24,
         width: int | None = None,
     ) -> None:
-        """
-        Construct a CustomHelpFormat object.
+        """Construct a CustomHelpFormat object.
 
         Args:
             prog: Name of the program.
             indent_increment: How much space should come before the
                 options on the help screen, defaults to 2.
-            max_help_position: Width between indent_increment and the
-                help text, defaults to 24.
+            max_help_position: Width between ``indent_increment`` and
+                the help text, defaults to 24.
             width: Maximum width that the help screen is able to occupy
                 in the terminal, defaults to None.
         """
@@ -69,19 +66,19 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
     if (3, 11) <= sys.version_info < (3, 13):  # pragma: no cover
         # NOTE: when 3.12 EOL, remove this method entirely
         def _format_action_invocation(self, action: argparse.Action) -> str:
-            """
-            Remove second metavar for options with short and long form.
+            """Remove second metavar for options with both short and
+            long forms.
 
-            Override the HelpFormatter._format_action_invocation
-            method to remove the duplicate help metavar for options that
-            have both a short-form and a long-form argument.
+            Override the HelpFormatter._format_action_invocation method
+            to remove the duplicate help metavar for options that have
+            both a short-form and a long-form argument.
 
             Args:
                 action: Action in which to be formatted.
 
             Returns:
                 Appropriately formatted string.
-            """
+            """  # ruff: ignore[missing-blank-line-after-summary]
             # if option_string is None or if nargs is 0
             if not action.option_strings or action.nargs == 0:
                 # Return super's invocation
@@ -94,8 +91,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
             return f"{option_string} {metavar}"
 
     def _format_action(self, action: argparse.Action) -> str:
-        """
-        Remove command metavar tuple.
+        """Remove command metavar tuple.
 
         Override the HelpFormatter._format_action method to remove the
         command metavar tuple and fix the spacings between the option
@@ -105,7 +101,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
             action: Action in which to be formatted.
 
         Returns:
-            HelpFormatter._format_action(action). If the action is a
+            ``HelpFormatter._format_action(action)``. If the action is a
             _SubParsersAction, the metavar tuple will be excluded, and
             the leading indentation will be corrected.
         """
@@ -119,8 +115,7 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
         self,
         action: argparse.Action,
     ) -> Generator[argparse.Action]:
-        """
-        Fix leading indentation for command names in the help menu.
+        """Fix leading indentation for command names in the help menu.
 
         Override the HelpFormatter._iter_indented_subactions method to
         fix the leading indentation for command names in the help menu.
@@ -143,24 +138,23 @@ class CustomHelpFormat(argparse.RawDescriptionHelpFormatter):
 
 
 def str_to_int_bounds_check(inp_val: str, min_val: int, max_val: int) -> int:
-    """
-    Return inp_val as an int if min_val <= inp_val <  max_val.
+    """Return ``inp_val`` as an int if ``min_val <= inp_val < max_val``.
 
-    Cast inp_val to an integer. If inp_val is not an integer or is not
-    min_val <= inp_val < max_val, then raise an
+    Cast ``inp_val`` to an integer. If ``inp_val`` is not an integer or
+    is not ``min_val <= inp_val < max_val``, then raise an
     argparse.ArgumentTypeError.
 
     Args:
         inp_val: User's input as a string.
-        min_val: Minimum value that int(inp_val) can be.
-        max_val: Maximum value that int(inp_val) can be.
+        min_val: Minimum value that ``int(inp_val)`` can be.
+        max_val: Maximum value that ``int(inp_val)`` can be.
 
     Returns:
-        Return inp_val as an integer.
+        Return ``inp_val`` as an integer.
 
     Raises:
-        argparse.ArgumentTypeError: Raised if inp_val is not an integer
-            or is not min_val <= int(inp_val) < max_val.
+        argparse.ArgumentTypeError: Raised if ``inp_val`` is not an
+            integer or is not ``min_val <= int(inp_val) < max_val``.
     """
     try:
         casted_int = int(inp_val)
@@ -179,8 +173,7 @@ class WarMACParser(argparse.ArgumentParser):
     """Extend argparse.ArgumentParser to reimplement method."""
 
     def error(self, message: str) -> NoReturn:
-        """
-        Modify content of error message printed to stderr.
+        """Modify content of error message printed to stderr.
 
         Modify exit message for argparse.ArgumentError occurrences to
         print to stderr and return an exit code of 1.
@@ -193,8 +186,7 @@ class WarMACParser(argparse.ArgumentParser):
 
 
 def configure_avg_parser(avg_parser: WarMACParser, platforms: Iterable[str]) -> None:
-    """
-    Configure the average subparser.
+    """Configure the average subparser.
 
     Configure in-place the subparser for the average subcommand by
     adding options and flags to be used.
@@ -369,15 +361,14 @@ def configure_avg_parser(avg_parser: WarMACParser, platforms: Iterable[str]) -> 
 
 
 def create_parser() -> WarMACParser:
-    """
-    Create the command-line parser for the program.
+    """Create the command-line parser for the program.
 
-    Create a WarMACParser object that includes global
-    --help and --version options. Create subparsers for multiple
-    commands to be used within the program.
+    Create a WarMACParser object that includes global "--help" and
+    "--version" options. Create subparsers for multiple commands to be
+    used within the program.
 
     Returns:
-        Constructed WarMACParser object.
+        Constructed and configured WarMACParser object.
     """
     # Min width that help text should take up in usage
     help_min_width: Final = 34
@@ -489,22 +480,21 @@ def create_parser() -> WarMACParser:
 
 
 def handle_input(args: list[str] | None = None) -> argparse.Namespace:
-    """
-    Create a WarMACParser and parse arguments.
+    """Create a WarMACParser and parse command-line arguments.
 
-    Create WarMACParser object, parse command-line arguments, and return
-    the parsed arguments as an argparse.Namespace object. Exits early if
-    only "warmac" is called or if the subcommand "help" is used. Print
-    to stdout if only "warmac" is called. Print to stderr if a bare
-    subcommand (ex: "warmac average") is called (excluding "help"
+    Create a WarMACParser object, parse command-line arguments, and
+    return the parsed arguments as an argparse.Namespace object. Exits
+    early if only "warmac" is called or if the subcommand "help" is
+    used. Print to stdout if only "warmac" is called. Print to stderr if
+    a bare subcommand (ex: "warmac average") is called (excluding "help"
     subcommand). Print to stdout if "--help" option is used, or if the
     help subcommand is called (even if it's bare).
 
     When calling as a function, omit leading "warmac" and supply the
     remaining arguments accordingly.
 
-    Ex:
-    ``handle_input(["average", "bite"])``
+    Examples:
+        handle_input(["average", "bite"])
 
     Args:
         args: Substituted command line arguments, defaults to None.

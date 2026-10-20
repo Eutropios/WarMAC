@@ -1,23 +1,22 @@
-"""
-Schemas used for msgspec validation against http requests.
+"""Schemas used for msgspec validation against http requests.
 
 -----------------------------------------------------------------------
 
-WarMAC — https://github.com/Eutropios/WarMAC
-Copyright (C) 2024  Noah Jenner
+WarMAC — https://github.com/Eutropios/WarMAC Copyright (C) 2024  Noah
+Jenner
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from __future__ import annotations
@@ -29,8 +28,7 @@ import msgspec
 
 
 class Base(msgspec.Struct):
-    """
-    The base struct for all structs to inherit from.
+    """The base struct for all structs to inherit from.
 
     The base struct for all structs to inherit from. Not actually used
     programmatically. Only exists for typing purposes.
@@ -38,8 +36,7 @@ class Base(msgspec.Struct):
 
 
 class ResponseBase(Base, rename="camel"):
-    """
-    The base struct for all Response structs to inherit from.
+    """The base struct for all Response structs to inherit from.
 
     The base struct for all Response structs to inherit from. Not
     actually used programmatically. Only exists for typing purposes.
@@ -47,8 +44,7 @@ class ResponseBase(Base, rename="camel"):
 
 
 class UserShort(Base, rename="camel"):
-    """
-    Shortened model of a user excluding irrelevant information.
+    """Shortened model of a user excluding irrelevant information.
 
     Attributes:
         id: WFM user id.
@@ -66,8 +62,7 @@ class UserShort(Base, rename="camel"):
 
 
 class Order(Base, rename="camel"):
-    """
-    An order on WFM.
+    """An order on WFM.
 
     Attributes:
         id: Unique id of order.
@@ -103,8 +98,7 @@ class Order(Base, rename="camel"):
 
 
 class OrderWithUser(Base, rename="camel"):
-    """
-    Order with user info.
+    """Order with user info.
 
     Attributes:
         id: Unique id of order.
@@ -142,8 +136,7 @@ class OrderWithUser(Base, rename="camel"):
 
 
 class OrderResponse(ResponseBase, rename="camel"):
-    """
-    Response received from making the HTTP request to the API.
+    """Response received from making the HTTP request to the API.
 
     Attributes:
         api_version: Version of the API.
@@ -157,8 +150,7 @@ class OrderResponse(ResponseBase, rename="camel"):
 
 
 class Item(Base, rename="camel"):
-    """
-    Full item model containing information about item.
+    """Full item model containing information about item.
 
     Attributes:
         id: Unique identifier of the item.
@@ -209,8 +201,7 @@ class Item(Base, rename="camel"):
 
 
 class ItemResponse(ResponseBase, rename="camel"):
-    """
-    Response received from making the HTTP request to the API.
+    """Response received from making the HTTP request to the API.
 
     Attributes:
         api_version: Version of the API.

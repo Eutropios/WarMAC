@@ -19,7 +19,8 @@
 
    For item names with multiple words, please use one of the following options:
 
-   1. Enclose the item's name within quotation marks. Example: ``"condition overload"``
+   1. Enclose the item's name within quotation marks. Example: ``"condition
+      overload"``
    2. Replace spaces with underscore characters. Example: ``condition_overload``
 
 .. option:: item
@@ -109,12 +110,12 @@
    all other options. To remove color from the help text, please set the
    environment variable NO_COLOR to 1 like so: ``export NO_COLOR=1``
 
-***********
+**********
  Examples
-***********
+**********
 
-|  Calculating the median price of the mod "Primed Continuity" on PS4.
-   Note that the median is calculated as it's the default.
+|  Calculating the median price of the mod "Primed Continuity" on PS4. Note that
+   the median is calculated as it's the default.
 
 .. code-block:: console
 
@@ -158,7 +159,8 @@ Porcelain Output
 |  Porcelain output is in the form of colon-separated values adhering to the
    following form:
 
-|  <name of item>:<timerange>:<price calculated>:<min price in list>:<max price in list>:<number of orders>
+|  <name of item>:<timerange>:<price calculated>:<min price in list>:<max price
+   in list>:<number of orders>
 
 |  For example:
 
@@ -168,6 +170,6 @@ Porcelain Output
    Vengeful Revenant:2:5.0:3:20:42
 
 |  In this example, an inquiry is made about the median price of Vengeful
-   Revenant over the past two days on PC. With 42 matching orders identified,
-   it is shown to have a median price of 5.0 platinum, have a minimum price of 3
+   Revenant over the past two days on PC. With 42 matching orders identified, it
+   is shown to have a median price of 5.0 platinum, have a minimum price of 3
    platinum, and a maximum price of 20 platinum.

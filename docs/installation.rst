@@ -6,7 +6,6 @@
 
    WarMAC supports Python versions 3.12 to 3.15.
 
-
 |  The primary method of installing WarMAC is by installing it through `uv
    <https://docs.astral.sh/uv/guides/tools/>`_, though `pipx
    <https://pypa.github.io/pipx/>`_ may be used as well. This keeps WarMAC and
@@ -60,7 +59,6 @@
 
 |  Using pip alone to install WarMAC will work just as well, though dependencies
    will not be isolated. Installation can be done using the following command:
-
 
 .. tab:: Unix/macOS
 

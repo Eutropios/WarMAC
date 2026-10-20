@@ -1,23 +1,22 @@
-"""
-Errors used within warmac.
+"""Errors used within warmac.
 
 -----------------------------------------------------------------------
 
-WarMAC — https://github.com/Eutropios/WarMAC
-Copyright (C) 2024  Noah Jenner
+WarMAC — https://github.com/Eutropios/WarMAC Copyright (C) 2024  Noah
+Jenner
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from __future__ import annotations
@@ -27,8 +26,7 @@ class WarMACBaseError(Exception):
     """Base error raised in WarMAC."""
 
     def __init__(self, msg: str = "WarMAC Error.") -> None:
-        """
-        Construct a WarMACBaseError.
+        """Construct a WarMACBaseError.
 
         Args:
             msg: Error's message, defaults to the phrase "WarMAC Error."
@@ -38,8 +36,9 @@ class WarMACBaseError(Exception):
 
 
 class CommandError(WarMACBaseError):
-    """Raised if the subparser field of argparse.Namespace does
-    not exist in main.SUBCMD_DISPATCH."""
+    """Raised if the subparser field of argparse.Namespace does not does
+    not correspond to an entry in main.SUBCMD_DISPATCH.
+    """
 
     def __init__(self) -> None:
         """Construct a CommandError."""
@@ -48,7 +47,8 @@ class CommandError(WarMACBaseError):
 
 class NoListingsFoundError(WarMACBaseError):
     """Raised if no order listings are found given the set of parameters
-    that the user gives the program."""
+    that the user gives the program.
+    """
 
     def __init__(self) -> None:
         """Construct a NoListingsFoundError."""
@@ -60,7 +60,8 @@ class NoListingsFoundError(WarMACBaseError):
 
 class WarMACHTTPError(WarMACBaseError):
     """Raised if the request made by the user returned an HTTP Status
-    code that was not 200."""
+    code that was not 200.
+    """
 
     def __init__(self, message: str) -> None:
         """Construct a WarMACHTTPError error."""
@@ -70,7 +71,8 @@ class WarMACHTTPError(WarMACBaseError):
 class InternalServerError(WarMACHTTPError):
     """Raised on HTTP status code 500, which indicates that the server
     has encountered an internal error that prevents it from fulfilling
-    the user's request."""
+    the user's request.
+    """
 
     def __init__(self) -> None:
         """Construct an InternalServerError."""
@@ -83,7 +85,8 @@ class InternalServerError(WarMACHTTPError):
 class RateLimitError(WarMACHTTPError):
     """Raised on HTTP status code 429, which indicates that the an
     excessive number of requests per second have been made to the WFM
-    server."""
+    server.
+    """
 
     def __init__(self) -> None:
         """Construct a RateLimitError."""
@@ -97,7 +100,8 @@ class RateLimitError(WarMACHTTPError):
 
 class MethodNotAllowedError(WarMACHTTPError):
     """Raised on HTTP status code 405, which indicates that the server
-    knows the method, but the target resource doesn't support it."""
+    knows the method, but the target resource doesn't support it.
+    """
 
     def __init__(self) -> None:
         """Construct a MethodNotAllowedError."""
@@ -108,7 +112,8 @@ class MethodNotAllowedError(WarMACHTTPError):
 
 class MalformedURLError(WarMACHTTPError):
     """Raised on HTTP status code 404, which indicates that the resource
-    in question does not exist."""
+    in question does not exist.
+    """
 
     def __init__(self) -> None:
         """Construct a MalformedURLError."""
@@ -120,7 +125,8 @@ class MalformedURLError(WarMACHTTPError):
 
 class ForbiddenRequestError(WarMACHTTPError):
     """Raised on HTTP status code 403, which indicates that access to
-    the desired resource is forbidden."""
+    the desired resource is forbidden.
+    """
 
     def __init__(self) -> None:
         """Construct a ForbiddenRequestError."""
@@ -133,7 +139,8 @@ class ForbiddenRequestError(WarMACHTTPError):
 class UnauthorizedAccessError(WarMACHTTPError):
     """Raised on HTTP status code 401, which indicates that
     authorization via proper user credentials is needed to access this
-    resource."""
+    resource.
+    """
 
     def __init__(self) -> None:
         """Construct an UnauthorizedAccessError."""
@@ -145,7 +152,8 @@ class UnauthorizedAccessError(WarMACHTTPError):
 
 class UnknownError(WarMACHTTPError):
     """Raised if the HTTP Response Code is not covered by any other
-    error previously stated."""
+    error previously stated.
+    """
 
     def __init__(self, status_code: int) -> None:
         """Construct an UnknownError."""
