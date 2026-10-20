@@ -1,20 +1,19 @@
-"""
-WarMAC — https://github.com/Eutropios/WarMAC
-Copyright (C) 2024  Noah Jenner
+"""WarMAC — https://github.com/Eutropios/WarMAC Copyright (C) 2024 Noah
+Jenner
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""  # ruff: ignore[missing-terminal-punctuation]
 
 from __future__ import annotations
 
@@ -59,7 +58,8 @@ def order_kwargs(
     subtype: str | None = "intact",
 ) -> OrderKwargs:
     """Construct a dictionary to be used in creating a
-    schema.OrderWithUser object."""
+    schema.OrderWithUser object.
+    """
     return {
         "platinum": platinum,
         "order_type": order_type,
@@ -71,7 +71,8 @@ def order_kwargs(
 
 def item_info_kwargs(max_rank: int | None = None) -> ItemKwargs:
     """Construct a dictionary to be used in creating a schema.Item
-    object."""
+    object.
+    """
     return {"max_rank": max_rank}
 
 
@@ -174,7 +175,8 @@ class TestInTimeRange:
         expected_result: bool,
     ) -> None:
         """Test cases where the last_updated timestamp is either inside
-        or outside the time_range limit."""
+        or outside the time_range limit.
+        """
         assert (
             average.in_time_range(last_updated, self.TEST_CURRENT_TIME, time_range)
             is expected_result
@@ -182,7 +184,8 @@ class TestInTimeRange:
 
     def test_invalid_isoformat_raises_value_error(self) -> None:
         """Test that ValueError is raised for completely malformed
-        ISO-8601 timestamps."""
+        ISO-8601 timestamps.
+        """
         match_string = (
             r"Invalid isoformat string: 'not-a-valid-timestamp'|Unknown string format:"
             r" not-a-valid-timestamp"
@@ -196,38 +199,22 @@ class TestModArcaneRank:
     @pytest.mark.parametrize(
         ("order_rank", "item_max_rank", "use_maxrank", "expected"),
         [
-            (None, None, True, True),
-            (None, None, False, True),
-            (None, 5, True, True),
-            (None, 10, False, True),
-            (0, None, True, True),
-            (5, None, False, True),
+            pytest.param(None, None, True, True, id="both_none_maxrank"),
+            pytest.param(None, None, False, True, id="both_none_unranked"),
+            pytest.param(None, 5, True, True, id="order_rank_none_maxrank"),
+            pytest.param(None, 10, False, True, id="order_rank_none_unranked"),
+            pytest.param(0, None, True, True, id="item_max_rank_none_maxrank"),
+            pytest.param(5, None, False, True, id="item_max_rank_none_unranked"),
             # use_maxrank is True
-            (5, 5, True, True),
-            (4, 5, True, False),
-            (0, 5, True, False),
-            (0, 0, True, True),
+            pytest.param(5, 5, True, True, id="order_eq_item_max_w_maxrank"),
+            pytest.param(4, 5, True, False, id="order_lt_item_max_w_maxrank"),
+            pytest.param(0, 5, True, False, id="order_0_w_maxrank"),
+            pytest.param(0, 0, True, True, id="both_0_w_maxrank"),
             # use_maxrank is False
-            (5, 5, False, False),
-            (4, 5, False, False),
-            (0, 1, False, True),
-            (0, 0, False, True),
-        ],
-        ids=[
-            "both_none_maxrank",
-            "both_none_unranked",
-            "order_rank_none_maxrank",
-            "order_rank_none_unranked",
-            "item_max_rank_none_maxrank",
-            "item_max_rank_none_unranked",
-            "order_eq_item_max_w_maxrank",
-            "order_lt_item_max_w_maxrank",
-            "order_0_w_maxrank",
-            "both_0_w_maxrank",
-            "order_eq_item_max_unranked",
-            "order_non-zero_unranked",
-            "order_0_w_unranked",
-            "both_0_w_unranked",
+            pytest.param(5, 5, False, False, id="order_eq_item_max_unranked"),
+            pytest.param(4, 5, False, False, id="order_non-zero_unranked"),
+            pytest.param(0, 1, False, True, id="order_0_w_unranked"),
+            pytest.param(0, 0, False, True, id="both_0_w_unranked"),
         ],
     )
     def test_various_combinations(
@@ -581,8 +568,8 @@ class TestFormatOutput:
 
     @staticmethod
     def test_empty_plat_list_raises_error(mock_args: argparse.Namespace) -> None:
-        """
-        Test that error is raised if format_output is given empty list.
+        """Test that error is raised if format_output is given empty
+        list.
 
         It should be noted that format_output should not be called with
         an empty plat_list, as calculate_average would raise an error
@@ -605,7 +592,8 @@ class TestFormatOutput:
     @staticmethod
     def test_format_non_detailed_report(mock_args: argparse.Namespace) -> None:
         """Test that format_output only returns the calculated statistic
-        if args.detailed_report is False."""
+        if args.detailed_report is False.
+        """
         mock_args.detailed_report = False
         statistic_value = 20
         plat_list = [10, 20, 30]
@@ -623,7 +611,8 @@ class TestGetRequiredData:
         mock_http_headers: dict[str, str],
     ) -> None:
         """Test that get_required_data successfully calls fetch_data
-        twice and returns the expected tuple of data."""
+        twice and returns the expected tuple of data.
+        """
         mock_get_data = mocker.patch("warmac.fetch_data.get_data")
         mock_get_data.side_effect = [mock_item_response, mock_order_response]
         item_name = "mock_item"
@@ -648,7 +637,8 @@ class TestProcessData:
         mock_order_response: schema.OrderResponse,
     ) -> None:
         """Test that process_data correctly calculates and formats the
-        output with valid data."""
+        output with valid data.
+        """
         mocker.patch(
             "warmac.average.get_required_data",
             return_value=(mock_item_response, mock_order_response),
@@ -666,7 +656,8 @@ class TestProcessData:
         mock_order_response: schema.OrderResponse,
     ) -> None:
         """Test that process_data raises NoListingsFoundError when
-        filtered platinum list is empty."""
+        filtered platinum list is empty.
+        """
         mocker.patch(
             "warmac.average.get_required_data",
             return_value=(mock_item_response, mock_order_response),

@@ -1,20 +1,19 @@
-"""
-WarMAC — https://github.com/Eutropios/WarMAC
-Copyright (C) 2024  Noah Jenner
+"""WarMAC — https://github.com/Eutropios/WarMAC Copyright (C) 2024 Noah
+Jenner
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""  # ruff: ignore[missing-terminal-punctuation]
 
 from __future__ import annotations
 
@@ -74,7 +73,8 @@ class TestProcessCliCommand:
         mocker: Mock,
     ) -> tuple[MagicMock, MagicMock, dt.datetime]:
         """Fixture that mocks cli_parser and average.process_data to
-        avoid making any HTTP requests."""
+        avoid making any HTTP requests.
+        """
         mock_cli_args = MagicMock()
         mock_cli_args.subparser = "average"
         mock_cli_args.platform = "ps4"
@@ -123,7 +123,8 @@ class TestProcessCliCommand:
     @staticmethod
     def test_process_cli_command_invalid_subcommand(mocker: Mock) -> None:
         """Test that errors.CommandError is raised when an invalid
-        subcommand is given to dictionary."""
+        subcommand is given to dictionary.
+        """
         mock_cli_args = MagicMock()
         mock_cli_args.subparser = "nonexistent_subcommand"
         mocker.patch.object(cli_parser, "handle_input", return_value=mock_cli_args)
@@ -150,7 +151,8 @@ class TestMain:
         mocker: Mock, capsys: pytest.CaptureFixture[str]
     ) -> None:
         """Test that main returns 1 and prints the error to stderr when
-        a WarMACBaseError is raised."""
+        a WarMACBaseError is raised.
+        """
         mock_process_cli_command = mocker.patch(
             "warmac.main.process_cli_command",
             side_effect=errors.WarMACBaseError("An error occurred"),

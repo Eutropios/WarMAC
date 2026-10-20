@@ -1,10 +1,9 @@
-"""
-Configuration file for Sphinx.
+"""Configuration file for Sphinx.
 
 ------------------------------------------------------------------------
 
-Copyright (C) 2024 Noah Jenner under CC BY-SA 4.0.
-To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/
+Copyright (C) 2024 Noah Jenner under CC BY-SA 4.0. To view a copy of
+this license, visit https://creativecommons.org/licenses/by-sa/4.0/
 """
 
 from __future__ import annotations
@@ -30,8 +29,6 @@ os.environ["SPHINX_AUTODOC_RELOAD_MODULES"] = "1"
 
 extensions = [
     "sphinx.ext.duration",
-    "sphinx.ext.autodoc",
-    "sphinx.ext.intersphinx",
     "sphinx_copybutton",
     "sphinx_last_updated_by_git",
     "notfound.extension",

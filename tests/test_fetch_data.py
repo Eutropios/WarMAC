@@ -1,20 +1,19 @@
-"""
-WarMAC — https://github.com/Eutropios/WarMAC
-Copyright (C) 2024  Noah Jenner
+"""WarMAC — https://github.com/Eutropios/WarMAC Copyright (C) 2024 Noah
+Jenner
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""  # ruff: ignore[missing-terminal-punctuation]
 
 from __future__ import annotations
 
@@ -66,7 +65,8 @@ class TestItemUrl:
     def test_item_url_transformations(input_item: str, expected_output: str) -> None:
         """Test that function strips preceding and succeeding
         whitespace, makes characters lowercase, replaces spaces with
-        underscores, and replaces ampersands with "and"."""
+        underscores, and replaces ampersands with "and".
+        """
         assert fetch_data.item_url(input_item) == expected_output
 
 
@@ -93,7 +93,8 @@ class TestGetData:
 
     def test_get_data_success_item_response(self, mock_get_page: MagicMock) -> None:
         """Verify get_data successfully fetches and decodes requested
-        data for an ItemResponse."""
+        data for an ItemResponse.
+        """
         test_item_name = "rhino_prime_set"
         mock_raw_data = b"""
             {
@@ -126,7 +127,8 @@ class TestGetData:
 
     def test_get_data_success_order_response(self, mock_get_page: MagicMock) -> None:
         """Verify get_data successfully fetches and decodes requested
-        data for an OrderResponse."""
+        data for an OrderResponse.
+        """
         test_item_name = "prime_fissure_orders"
         mock_raw_data = b"""
             {
@@ -203,7 +205,8 @@ class TestGetData:
 
     def test_get_data_http_error_from_get_page(self, mock_get_page: MagicMock) -> None:
         """Test that get_data correctly propagates a MalformedURLError
-        raised by get_page."""
+        raised by get_page.
+        """
         test_item_name = "non_existent_item"
         mock_get_page.side_effect = errors.MalformedURLError
         with pytest.raises(errors.MalformedURLError):
@@ -214,7 +217,8 @@ class TestGetData:
     def test_get_data_malformed_data_error(self, mock_get_page: MagicMock) -> None:
         """Test that get_data raises a msgspec.ValidationError if raw
         response data is a valid JSON, but does not conform to the
-        expected schema."""
+        expected schema.
+        """
         test_item_name = "missing_api_version_item"
         # missing api_version field to induce error
         mock_raw_data = b"""
@@ -282,7 +286,8 @@ class TestGetPage:
         expected_error_type: type[errors.WarMACHTTPError],
     ) -> None:
         """Test that get_page correctly propagates various HTTP errors
-        based on the status code returned by urllib3.request."""
+        based on the status code returned by urllib3.request.
+        """
         mock_response = mocker.MagicMock(spec=urllib3.BaseHTTPResponse)
         mock_response.status = status_code
         mocker.patch("urllib3.request", return_value=mock_response)
@@ -308,6 +313,7 @@ class TestHTTPCodeCheck:
             (403, errors.ForbiddenRequestError),
             (404, errors.MalformedURLError),
             (405, errors.MethodNotAllowedError),
+            (429, errors.RateLimitError),
             (500, errors.InternalServerError),
         ],
     )
@@ -321,7 +327,8 @@ class TestHTTPCodeCheck:
     @staticmethod
     def test_http_code_check_raises_unknown_error_for_unmapped_code() -> None:
         """Verify http_code_check raises UnknownError for unmapped
-        codes."""
+        codes.
+        """
         with pytest.raises(errors.UnknownError) as exc_info:
             fetch_data.http_code_check(499)
         assert str(exc_info.value) == (

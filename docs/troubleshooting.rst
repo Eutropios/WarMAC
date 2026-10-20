@@ -14,9 +14,8 @@
    about the item itself, and a second to collect relevant orders. This means
    that you, the end-user, can run WarMAC twice per second.
 
-======================================
- I'm still rate-limited after waiting
-======================================
+I'm still rate-limited after waiting
+====================================
 
 |  If you are still rate-limited after waiting for minutes on end to make
    another request, please file an issue on `GitHub

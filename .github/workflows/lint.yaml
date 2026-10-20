@@ -42,10 +42,6 @@ jobs:
       - name: Install the project
         run: uv sync --locked --no-dev
 
-      #- name: Format docstrings
-      #  run: uvx --managed-python docformatter . --black --pre-summary-newline -r -s
-      #    sphinx --wrap-summaries 72 --wrap-descriptions 72
-
       - name: Ruff lint
         run: uvx ruff check . --exit-non-zero-on-fix
 

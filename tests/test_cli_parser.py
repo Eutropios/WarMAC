@@ -1,20 +1,19 @@
-"""
-WarMAC — https://github.com/Eutropios/WarMAC
-Copyright (C) 2024  Noah Jenner
+"""WarMAC — https://github.com/Eutropios/WarMAC Copyright (C) 2024 Noah
+Jenner
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""  # ruff: ignore[missing-terminal-punctuation]
 
 from __future__ import annotations
 
@@ -69,7 +68,8 @@ class TestIntCastInputBounds:
     ) -> None:
         """Test str_to_int_bounds_check for edge-case integers wrt
         bounds, asserting either correct conversion or
-        ArgumentTypeError."""
+        ArgumentTypeError.
+        """
         if should_raise_error:
             with pytest.raises(argparse.ArgumentTypeError):
                 cli_parser.str_to_int_bounds_check(input_str, min_bound, max_bound)
@@ -105,7 +105,8 @@ class TestIntCastInputParamTypes:
         invalid_input_string: str,
     ) -> None:
         """Test invalid string inputs for str_to_int_bounds_check to
-        ensure argparse.ArgumentTypeError is raised."""
+        ensure argparse.ArgumentTypeError is raised.
+        """
         min_bound = 1
         max_bound = 10
         with pytest.raises(argparse.ArgumentTypeError):
@@ -152,7 +153,8 @@ class TestHandleInputInterface:
     @staticmethod
     def test_valid_command_returns_parsed_args() -> None:
         """Test valid command to ensure it returns expected
-        argparse.Namespace object."""
+        argparse.Namespace object.
+        """
         parsed_args = cli_parser.handle_input(["average", "bite"])
         assert isinstance(parsed_args, argparse.Namespace)
         assert parsed_args.subparser == "average"
@@ -220,7 +222,8 @@ class TestStdlibMonkeyPatching:
         terminal_width: int, expected_output: str, *, test_subparser: bool
     ) -> None:
         """Test finished output for metavar tuples, poor leading
-        indents, and incorrect help text spacing."""
+        indents, and incorrect help text spacing.
+        """
         help_min_width = 34
         # Uses mocked terminal_width
         default_width = min(help_min_width, terminal_width)
@@ -261,7 +264,8 @@ class TestStdlibMonkeyPatching:
     @pytest.mark.skipif(sys.version_info < (3, 13), reason="3.12 needed")
     def test_parser_metavar_formatting() -> None:
         """Verify that _format_action_invocation behaves correctly
-        according to Python version."""
+        according to Python version.
+        """
         # NOTE: Remove when 3.12 EOL
         parser = argparse.ArgumentParser(formatter_class=cli_parser.CustomHelpFormat)
         parser.add_argument(

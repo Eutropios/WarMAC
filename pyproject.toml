@@ -38,9 +38,9 @@
   warmac = "warmac.main:main"
 
 [dependency-groups]
-  dev          = ["vermin"]
+  dev          = ["format-docstring", "pydoclint", "vermin"]
   docs         = [
-    "docutils",
+    "docstrfmt",
     "esbonio>=2",
     "furo>=2023.9",
     "sphinx>=9.1; python_version >= '3.12'",
@@ -79,18 +79,24 @@
   ]
   precision    = 2
 
-[tool.docformatter]
-  black               = true
-  pre-summary-newline = true
-  recursive           = true
-  style               = "sphinx"
-  wrap-descriptions   = 72
-  wrap-summaries      = 72
+[tool.docstrfmt]
+  center-section-titles = true
+  indent-width          = 3
+  line-length           = 80
+  exclude               = ["**.py"]
 
-# Awaiting Sphinx v9 support in esbonio
 [tool.esbonio.sphinx]
   pythonCommand = ["uv", "run", "--group", "docs", "python"]
   buildCommand  = ["sphinx-build", "-M", "html", "docs", "docs/_build"]
+
+[tool.format_docstring]
+  docstring-style                = "google"
+  exclude                        = "\\.git|\\.venv|__pycache__|\\.tox|\\.pytest_cache|\\.mypy_cache|\\.ruff_cache"
+  fix-rst-bacticks               = true
+  include-arg-defaults           = false
+  include-arg-types              = false
+  include-return-and-yield-types = false
+  line-length                    = 72
 
 [tool.mypy]
   exclude        = ["_build", "buck-out", "build", "dist", "htmlcov", "LICENSES"]
@@ -107,7 +113,7 @@
   ignore-private-class-attributes         = false
   ignore-special-dunder-class-attributes  = false
   ignore-underscore-only-class-attributes = false
-  style                                   = "sphinx"
+  style                                   = "google"
 
 [tool.pyright]
   include          = ["src", "tests"]
@@ -143,8 +149,8 @@
   external               = ["DOC5"]
   ignore                 = [
     "AIR",                                        # Apache Airflow unused
+    "CPY",                                        # Conflcts with GNU license header
     "DJ",                                         # Django rules
-    "DOC",                                        # Off until DOC supports sphinx-style
     "FAST",                                       # FastAPI rules
     "FIX",                                        # FIXs unused
     "NPY",                                        # Numpy rules
@@ -181,24 +187,15 @@
 
 [tool.ruff.lint.per-file-ignores]
   "docs/conf.py"             = ["implicit-namespace-package"]
-  "**/__init__.py"           = [
-    "missing-blank-line-after-summary",
-    "missing-required-import",
-    "missing-trailing-period"
-  ]
-  "**/__main__.py"           = [
-    "missing-blank-line-after-summary",
-    "missing-required-import",
-    "missing-trailing-period"
-  ]
+  "**/__init__.py"           = ["missing-terminal-punctuation", "missing-required-import"]
+  "**/__main__.py"           = ["missing-required-import"]
   "src/warmac/cli_parser.py" = ["private-member-access"]
   "src/warmac/errors.py"     = ["missing-blank-line-after-summary", "new-line-after-last-paragraph"]
   "tests/**.py"              = [
     "assert",
+    "docstring-missing-returns",
     "missing-blank-line-after-summary",
-    "missing-trailing-period",
-    "new-line-after-last-paragraph",
-    "undocumented-public-class",
+    "undocumented-public-class"
   ]
   # *IMPORTANT* - A dirty hack in cli_parser.py uses private components
 
@@ -206,8 +203,7 @@
   max-doc-length = 72
 
 [tool.ruff.lint.pydocstyle]
-  # waiting for sphinx convention being added
-  convention = "pep257"
+  convention = "google"
 
 [tool.ty.environment]
   python          = "./.venv"
