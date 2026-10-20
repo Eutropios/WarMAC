@@ -30,8 +30,6 @@ os.environ["SPHINX_AUTODOC_RELOAD_MODULES"] = "1"
 
 extensions = [
     "sphinx.ext.duration",
-    "sphinx.ext.autodoc",
-    "sphinx.ext.intersphinx",
     "sphinx_copybutton",
     "sphinx_last_updated_by_git",
     "notfound.extension",
