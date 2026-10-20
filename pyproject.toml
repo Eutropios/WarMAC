@@ -38,11 +38,10 @@
   warmac = "warmac.main:main"
 
 [dependency-groups]
-  dev          = ["vermin"]
+  dev          = ["format-docstring", "pydoclint", "vermin"]
   docs         = [
     "docstrfmt",
     "esbonio>=2",
-    "format-docstring",
     "furo>=2023.9",
     "sphinx>=9.1; python_version >= '3.12'",
     "sphinx-copybutton>=0.5.2",

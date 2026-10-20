@@ -470,6 +470,15 @@ wheels = [
 ]
 
 [[package]]
+name = "docstring-parser-fork"
+version = "0.0.16"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/04/ce/48b17c6c24d0af112f73721a90fac245450e548b82b53169260720f60d07/docstring_parser_fork-0.0.16.tar.gz", hash = "sha256:9ecf861ceab8b87d1297a71001c15a1956ad02e87434ee6473643a5988094f7c", size = 36360, upload-time = "2026-07-03T07:27:46.668Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c1/69/427c34e61827818942b48ececd7c892b8f58ba4ce4cfc89ba9fd8dbe8a8d/docstring_parser_fork-0.0.16-py3-none-any.whl", hash = "sha256:c024c97af582d6acf85a14f0b332b3a2ab08626648d251c25e47191f33064386", size = 25253, upload-time = "2026-07-03T07:27:45.591Z" },
+]
+
+[[package]]
 name = "docutils"
 version = "0.22.4"
 source = { registry = "https://pypi.org/simple" }
@@ -1042,6 +1051,19 @@ wheels = [
 ]
 
 [[package]]
+name = "pydoclint"
+version = "0.11.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "docstring-parser-fork" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/3b/e4/55ec2c30da84f284a8e8361da896de63df5f9610533d21c08c6297dab68b/pydoclint-0.11.1.tar.gz", hash = "sha256:eab39580102312241ec71ef9fc4d7994b225e65ad71205c511557c4b928ed13e", size = 248799, upload-time = "2026-10-11T19:43:50.478Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/07/2f/c4366b086f7c55dfbc56c2c89a1d78b5d028e69513313fffe075a27d50ae/pydoclint-0.11.1-py3-none-any.whl", hash = "sha256:d3e44a09deb631d0910982b70c614d1c54d0809d2116d58114abe9d24f7c6cf6", size = 98303, upload-time = "2026-10-11T19:43:49.204Z" },
+]
+
+[[package]]
 name = "pygls"
 version = "2.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1557,12 +1579,13 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "format-docstring" },
+    { name = "pydoclint" },
     { name = "vermin" },
 ]
 docs = [
     { name = "docstrfmt" },
     { name = "esbonio" },
-    { name = "format-docstring" },
     { name = "furo" },
     { name = "sphinx" },
     { name = "sphinx-copybutton" },
@@ -1592,11 +1615,14 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-dev = [{ name = "vermin" }]
+dev = [
+    { name = "format-docstring" },
+    { name = "pydoclint" },
+    { name = "vermin" },
+]
 docs = [
     { name = "docstrfmt" },
     { name = "esbonio", specifier = ">=2" },
-    { name = "format-docstring" },
     { name = "furo", specifier = ">=2023.9" },
     { name = "sphinx", marker = "python_full_version >= '3.12'", specifier = ">=9.1" },
     { name = "sphinx-copybutton", specifier = ">=0.5.2" },
