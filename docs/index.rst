@@ -36,7 +36,6 @@
    :maxdepth: 2
    :caption: Development
 
-   internal/index
    contributing
    license
 

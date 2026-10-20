@@ -40,6 +40,7 @@
 [dependency-groups]
   dev          = ["vermin"]
   docs         = [
+    "docstrfmt",
     "docutils",
     "esbonio>=2",
     "furo>=2023.9",
@@ -83,7 +84,7 @@
   black               = true
   pre-summary-newline = true
   recursive           = true
-  style               = "sphinx"
+  style               = "pep257"
   wrap-descriptions   = 72
   wrap-summaries      = 72
 
@@ -107,7 +108,7 @@
   ignore-private-class-attributes         = false
   ignore-special-dunder-class-attributes  = false
   ignore-underscore-only-class-attributes = false
-  style                                   = "sphinx"
+  style                                   = "google"
 
 [tool.pyright]
   include          = ["src", "tests"]
@@ -144,7 +145,6 @@
   ignore                 = [
     "AIR",                                        # Apache Airflow unused
     "DJ",                                         # Django rules
-    "DOC",                                        # Off until DOC supports sphinx-style
     "FAST",                                       # FastAPI rules
     "FIX",                                        # FIXs unused
     "NPY",                                        # Numpy rules
@@ -155,6 +155,7 @@
     "missing-trailing-comma",                     # Must be turned off for formatter
     "multi-line-implicit-string-concatenation",   # Must be turned off for formatter
     "single-line-implicit-string-concatenation",  # Must be turned off for formatter
+    "multi-line-summary-first-line",              # I do this lol
   ]
   preview                = true
   select                 = ["ALL"]
@@ -184,7 +185,8 @@
   "**/__init__.py"           = [
     "missing-blank-line-after-summary",
     "missing-required-import",
-    "missing-trailing-period"
+    "missing-terminal-punctuation",
+    "missing-trailing-period",
   ]
   "**/__main__.py"           = [
     "missing-blank-line-after-summary",
@@ -195,7 +197,9 @@
   "src/warmac/errors.py"     = ["missing-blank-line-after-summary", "new-line-after-last-paragraph"]
   "tests/**.py"              = [
     "assert",
+    "docstring-missing-returns",
     "missing-blank-line-after-summary",
+    "missing-terminal-punctuation",
     "missing-trailing-period",
     "new-line-after-last-paragraph",
     "undocumented-public-class",
@@ -206,8 +210,7 @@
   max-doc-length = 72
 
 [tool.ruff.lint.pydocstyle]
-  # waiting for sphinx convention being added
-  convention = "pep257"
+  convention = "google"
 
 [tool.ty.environment]
   python          = "./.venv"

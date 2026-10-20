@@ -50,11 +50,12 @@ class UserShort(Base, rename="camel"):
     """
     Shortened model of a user excluding irrelevant information.
 
-    :var id: WFM user id
-    :var ingame_name: In-game name of user
-    :var reputation: Reputation score
-    :var platform: Gaming platform used by the user
-    :var crossplay: Indicates if the user has crossplay trade enabled
+    Attributes:
+        id: WFM user id.
+        ingame_name: In-game name of user.
+        reputation: Reputation score.
+        platform: Gaming platform used by the user.
+        crossplay: Indicates if the user has crossplay trade enabled.
     """
 
     id: str
@@ -68,20 +69,21 @@ class Order(Base, rename="camel"):
     """
     An order on WFM.
 
-    :var id: Unique id of order
-    :var order_type: Specifies whether the order is a 'buy' or 'sell'.
-    :var platinum: Total platinum currency involved in the order.
-    :var quantity: Number of items included in the order.
-    :var created_at: Creation time of the order.
-    :var updated_at: Last modification time of the order.
-    :var per_trade: (optional) Quantity per transaction.
-    :var rank: (optional) Rank or level of the item in the order.
-    :var charges: (optional) Number of charges left (requiem mods).
-    :var subtype: (optional) Subtype or category of the item.
-    :var amber_stars: (optional) Amber stars in a sculpture order.
-    :var cyan_stars: (optional) Cyan stars in a sculpture order.
-    :var item_id: (optional) Unique identifier of the item.
-    :var vosfor: (optional) Vosfor associated with arcane item.
+    Attributes:
+        id: Unique id of order.
+        order_type: Specifies whether the order is a 'buy' or 'sell'.
+        platinum: Total platinum currency involved in the order.
+        quantity: Number of items included in the order.
+        created_at: Creation time of the order.
+        updated_at: Last modification time of the order.
+        item_id: (optional) Unique identifier of the item.
+        per_trade: (optional) Quantity per transaction.
+        rank: (optional) Rank or level of the item in the order.
+        charges: (optional) Number of charges left (requiem mods).
+        subtype: (optional) Subtype or category of the item.
+        amber_stars: (optional) Amber stars in a sculpture order.
+        cyan_stars: (optional) Cyan stars in a sculpture order.
+        vosfor: (optional) Vosfor associated with arcane item.
     """
 
     id: str
@@ -104,21 +106,22 @@ class OrderWithUser(Base, rename="camel"):
     """
     Order with user info.
 
-    :var id: Unique id of order
-    :var order_type: Specifies whether the order is a 'buy' or 'sell'.
-    :var platinum: Total platinum currency involved in the order.
-    :var quantity: Number of items included in the order.
-    :var created_at: Creation time of the order.
-    :var updated_at: Last modification time of the order.
-    :var user: User who created the order, with basic profile info.
-    :var item_id: Unique identifier of the item.
-    :var per_trade: (optional) Quantity per transaction.
-    :var rank: (optional) Rank or level of the item in the order.
-    :var charges: (optional) Number of charges left (requiem mods).
-    :var subtype: (optional) Subtype or category of the item.
-    :var amber_stars: (optional) Amber stars in a sculpture order.
-    :var cyan_stars: (optional) Cyan stars in a sculpture order.
-    :var vosfor: (optional) Vosfor associated with arcane item.
+    Attributes:
+        id: Unique id of order.
+        order_type: Specifies whether the order is a 'buy' or 'sell'.
+        platinum: Total platinum currency involved in the order.
+        quantity: Number of items included in the order.
+        created_at: Creation time of the order.
+        updated_at: Last modification time of the order.
+        item_id: Unique identifier of the item.
+        user: User who created the order, with basic profile info.
+        per_trade: (optional) Quantity per transaction.
+        rank: (optional) Rank or level of the item in the order.
+        charges: (optional) Number of charges left (requiem mods).
+        subtype: (optional) Subtype or category of the item.
+        amber_stars: (optional) Amber stars in a sculpture order.
+        cyan_stars: (optional) Cyan stars in a sculpture order.
+        vosfor: (optional) Vosfor associated with arcane item.
     """
 
     id: str
@@ -142,9 +145,10 @@ class OrderResponse(ResponseBase, rename="camel"):
     """
     Response received from making the HTTP request to the API.
 
-    :var api_version: Version of the API.
-    :var data: List of orders associated with item request.
-    :var error: (optional) Error message.
+    Attributes:
+        api_version: Version of the API.
+        data: List of orders associated with item request.
+        error: (optional) Error message.
     """
 
     api_version: str
@@ -156,30 +160,31 @@ class Item(Base, rename="camel"):
     """
     Full item model containing information about item.
 
-    :var id: Unique identifier of the item.
-    :var slug: URL-friendly name of the item.
-    :var tags: Info tags associated with item.
-    :var set_root: (optional) Indicates if the item is the set root.
-    :var set_parts: (optional) Parts associated with item set.
-    :var quantity_in_set: (optional) Number of items in set.
-    :var rarity: (optional) Rarity of item if mod or arcane.
-    :var max_rank: (optional) Maximum rank the item can achieve.
-    :var max_charges: (optional) Maximum charges of item, used for
-        requiem mods.
-    :var vaulted: (optional) Indicates if the item is vaulted.
-    :var bulk_tradable: (optional) Indicates if the item is bulk-
-        tradable.
-    :var ducats: (optional) Ducats value of the item.
-    :var max_amber_stars: (optional) Number of amber stars associated
-        with the item.
-    :var max_cyan_stars: (optional) Number of cyan stars associated with
-        the item.
-    :var base_endo: (optional) Base endo value of the item.
-    :var endo_multiplier: (optional) Multiplier for the endo value.
-    :var subtypes: (optional) Subtype or category of the item.
-    :var trading_tax: (optional) Trading tax of item.
-    :var req_mastery_rank: (optional) Mastery rank needed to trade the
-        particular item.
+    Attributes:
+        id: Unique identifier of the item.
+        slug: URL-friendly name of the item.
+        tags: Info tags associated with item.
+        set_root: (optional) Indicates if the item is the set root.
+        set_parts: (optional) Parts associated with item set.
+        quantity_in_set: (optional) Number of items in set.
+        rarity: (optional) Rarity of item if mod or arcane.
+        max_rank: (optional) Maximum rank the item can achieve.
+        max_charges: (optional) Maximum charges of item, used for
+            requiem mods.
+        bulk_tradable: (optional) Indicates if the item is bulk-
+            tradable.
+        subtypes: (optional) Subtype or category of the item.
+        max_amber_stars: (optional) Number of amber stars associated
+            with the item.
+        max_cyan_stars: (optional) Number of cyan stars associated with
+            the item.
+        base_endo: (optional) Base endo value of the item.
+        endo_multiplier: (optional) Multiplier for the endo value.
+        ducats: (optional) Ducats value of the item.
+        req_mastery_rank: (optional) Mastery rank needed to trade the
+            particular item.
+        vaulted: (optional) Indicates if the item is vaulted.
+        trading_tax: (optional) Trading tax of item.
     """
 
     id: str
@@ -207,9 +212,10 @@ class ItemResponse(ResponseBase, rename="camel"):
     """
     Response received from making the HTTP request to the API.
 
-    :var api_version: Version of the API.
-    :var data: Item information associated with request.
-    :var error: (optional) Error message.
+    Attributes:
+        api_version: Version of the API.
+        data: Item information associated with request.
+        error: (optional) Error message.
     """
 
     api_version: str

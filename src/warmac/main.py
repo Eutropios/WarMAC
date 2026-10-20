@@ -49,9 +49,10 @@ def fix_http_headers(
     Append the platform name and crossplay status to a dictionary
     containing HTTP headers.
 
-    :param http_headers: HTTP headers dictionary.
-    :param platform: Desired platform, defaults to "pc".
-    :param crossplay: Crossplay status, defaults to True.
+    Args:
+        http_headers: HTTP headers dictionary.
+        platform: Desired platform, defaults to "pc".
+        crossplay: Crossplay status, defaults to True.
     """
     http_headers["Platform"] = platform
     http_headers["Crossplay"] = str(crossplay).lower()
@@ -61,16 +62,19 @@ def process_cli_command(args: list[str] | None) -> str:
     """
     Parse cli args, set up headers, and execute appropriate subcommand.
 
-    Call :func:`cli_parser.handle_input` to create and parse a
-    :class:`cli_parser.WarMACParser`, create http headers for the http
-    request, and execute the function associated with the specified
-    subcommand.
+    Call cli_parser.handle_input to create and parse a
+    cli_parser.WarMACParser, create http headers for the http request,
+    and execute the function associated with the specified subcommand.
 
-    :param args: Optional cli args used for testing.
-    :raises errors.CommandError: Raised if the ``subparser`` field of
-        ``argparse.Namespace`` does not exist in
-        :py:data:`main.SUBCMD_DISPATCH`.
-    :return: The data returned from the subcommand handler.
+    Args:
+        args: Optional cli args used for testing.
+
+    Returns:
+        The data returned from the subcommand handler.
+
+    Raises:
+        errors.CommandError: Raised if the subparser field of
+            argparse.Namespace does not exist in main.SUBCMD_DISPATCH.
     """
     headers = {
         "Accept": "application/json",
@@ -92,8 +96,11 @@ def main(args: list[str] | None = None) -> Literal[0, 2]:
 
     Orchestrate core logic and handle errors for WarMAC.
 
-    :param args: Optional cli args used for testing.
-    :return: 0 if execution is successful, 2 if an error is encountered.
+    Args:
+        args: Optional cli args used for testing.
+
+    Returns:
+        0 if execution is successful, 2 if an error is encountered.
     """
     try:
         data = process_cli_command(args)

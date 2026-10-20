@@ -308,6 +308,7 @@ class TestHTTPCodeCheck:
             (403, errors.ForbiddenRequestError),
             (404, errors.MalformedURLError),
             (405, errors.MethodNotAllowedError),
+            (429, errors.RateLimitError),
             (500, errors.InternalServerError),
         ],
     )
