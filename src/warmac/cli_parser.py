@@ -28,6 +28,8 @@ import shutil
 import sys
 from typing import TYPE_CHECKING
 
+import shtab
+
 from warmac import average, version
 
 if TYPE_CHECKING:
@@ -475,6 +477,19 @@ def create_parser() -> WarMACParser:
         action="help",
         help="Show this message and exit.",
     )
+
+    shtab.add_argument_to(
+        parser,
+        ["-c", "--completions"],
+        help=(
+            "Print shell completion script for desired shell. One of "
+            "[bash, zsh, tcsh, fish, powershell]."
+        ),
+    )
+
+    for action in parser._actions:
+        if "--completions" in action.option_strings:
+            action.metavar = "<shell>"
 
     return parser
 

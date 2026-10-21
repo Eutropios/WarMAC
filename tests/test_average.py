@@ -41,6 +41,11 @@ if TYPE_CHECKING:
         subtype: str | None
 
     class ArgsKwargs(TypedDict):
+        item: str
+        statistic: AverageType
+        ndigits: int
+        detailed_report: bool
+        porcelain: bool
         use_buyers: str
         maxrank: bool
         radiant: Literal["intact", "radiant"]
@@ -77,14 +82,24 @@ def item_info_kwargs(max_rank: int | None = None) -> ItemKwargs:
 
 
 def args_kwargs(
+    item: str = "Boar Prime",
+    statistic: AverageType = "median",
+    ndigits: int = 3,
     use_buyers: str = "sell",
     radiant: Literal["intact", "radiant"] = "intact",
     timerange: int = average.DEFAULT_TIME,
     *,
+    detailed_report: bool = False,
+    porcelain: bool = False,
     maxrank: bool = False,
 ) -> ArgsKwargs:
     """Construct a dictionary to be used in-place of CLI arguments."""
     return {
+        "item": item,
+        "statistic": statistic,
+        "ndigits": ndigits,
+        "detailed_report": detailed_report,
+        "porcelain": porcelain,
         "use_buyers": use_buyers,
         "maxrank": maxrank,
         "radiant": radiant,
@@ -224,7 +239,7 @@ class TestModArcaneRank:
         use_maxrank: bool,
         expected: bool,
     ) -> None:
-        """Test that various inputs."""
+        """Test various inputs."""
         assert (
             average.check_mod_arcane_rank(
                 order_rank, item_max_rank, use_maxrank=use_maxrank
@@ -347,7 +362,8 @@ class TestFilterOrderProgrammatic:
             **order_kwargs,
         )
         item_info = schema.Item(id="gary", slug="foo", tags=[], **item_info_kwargs)
-        args = argparse.Namespace(**args_kwargs)
+        temp_args = argparse.Namespace(**args_kwargs)
+        args = average.AverageNamespace.from_namespace(temp_args)
 
         result = average.filter_order(order, item_info, fixed_current_time, args)
         assert result == expected_result
@@ -470,7 +486,8 @@ class TestGetPlatList:
         item_info = schema.Item(
             id="item_id", slug="item_slug", tags=[], **item_info_params
         )
-        args = argparse.Namespace(**args_params)
+        temp_args = argparse.Namespace(**args_params)
+        args = average.AverageNamespace.from_namespace(temp_args)
         result = average.filtered_plat_list(orders, item_info, fixed_current_time, args)
         assert result == expected_plat_list
 
@@ -533,7 +550,7 @@ class TestFormatOutput:
             "precision_gt_two_porcelain",
         ],
     )
-    def test_detailed_output(  # ruff: ignore[too-many-arguments, too-many-positional-arguments]
+    def test_detailed_output(
         statistic: AverageType,
         item_name: str,
         stat_value: float,
@@ -549,7 +566,8 @@ class TestFormatOutput:
         mock_args.item = item_name
         mock_args.timerange = 5
         mock_args.porcelain = porcelain
-        actual_output = average.format_output(stat_value, plat_list, mock_args)
+        args = average.AverageNamespace.from_namespace(mock_args)
+        actual_output = average.format_output(stat_value, plat_list, args)
         if porcelain:
             assert actual_output == expected
         else:
@@ -579,6 +597,7 @@ class TestFormatOutput:
         plat_list: list[int] = []
         mock_args.item = "Nonexistent Item"
         mock_args.detailed_report = True
+        args = average.AverageNamespace.from_namespace(mock_args)
 
         with pytest.raises(
             ValueError,
@@ -587,7 +606,7 @@ class TestFormatOutput:
                 r"sequence)"
             ),
         ):
-            average.format_output(stat, plat_list, mock_args)
+            average.format_output(stat, plat_list, args)
 
     @staticmethod
     def test_format_non_detailed_report(mock_args: argparse.Namespace) -> None:
@@ -597,7 +616,8 @@ class TestFormatOutput:
         mock_args.detailed_report = False
         statistic_value = 20
         plat_list = [10, 20, 30]
-        actual_output = average.format_output(statistic_value, plat_list, mock_args)
+        args = average.AverageNamespace.from_namespace(mock_args)
+        actual_output = average.format_output(statistic_value, plat_list, args)
         expected_output = "20"
         assert actual_output == expected_output
 
@@ -628,7 +648,7 @@ class TestGetRequiredData:
 
 class TestProcessData:
     @staticmethod
-    def test_process_data_success(  # ruff: ignore[too-many-arguments, too-many-positional-arguments]
+    def test_process_data_success(
         mocker: Mock,
         mock_args: argparse.Namespace,
         mock_http_headers: dict[str, str],
@@ -647,7 +667,7 @@ class TestProcessData:
         assert result == "110.0"
 
     @staticmethod
-    def test_process_data_no_listings_found(  # ruff: ignore[too-many-arguments, too-many-positional-arguments]
+    def test_process_data_no_listings_found(
         mocker: Mock,
         mock_args: argparse.Namespace,
         mock_http_headers: dict[str, str],
