@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import datetime as dt
 import statistics
+from dataclasses import dataclass, fields
 from typing import TYPE_CHECKING
 
 from warmac import errors, fetch_data, schema
@@ -30,7 +31,7 @@ from warmac import errors, fetch_data, schema
 if TYPE_CHECKING:
     import argparse
     from collections.abc import Callable, Mapping, Sequence
-    from typing import Literal
+    from typing import Literal, Self
 
     AverageType = Literal["geometric", "mean", "median", "mode"]
 
@@ -47,6 +48,57 @@ DEFAULT_NDIGITS = 1
 
 # The default time to collect orders until
 DEFAULT_TIME = 3
+
+
+@dataclass
+class AverageNamespace:
+    """Store parsed command-line arguments for average calculations.
+
+    Provide a type-aware configuration container for arguments passed
+    through the command-line interface, ensuring strict typing.
+
+    Attributes:
+        item: Target item for the calculation.
+        statistic: Statistical metric to compute.
+        timerange: Time range window for the calculation.
+        maxrank: Flag or threshold for maximum rank consideration.
+        radiant: Radiant status configuration.
+        use_buyers: Use buyers instead of sellers.
+        ndigits: Number of decimal digits for rounding.
+        detailed_report: Flag to enable comprehensive reporting.
+        porcelain: Flag to output results in a cleaner format.
+    """
+
+    item: str
+    statistic: AverageType
+    timerange: int
+    maxrank: bool
+    radiant: Literal["intact", "radiant"]
+    use_buyers: Literal["buy", "sell"]
+    ndigits: int
+    detailed_report: bool
+    porcelain: bool
+
+    @classmethod
+    def from_namespace(cls, args: argparse.Namespace) -> Self:
+        """Transform generic argparse.Namespace into type-aware object.
+
+        Transform the generic argparse.Namespace object into a
+        type-aware object. argparse.parse_args creates a type-unaware
+        argparse.Namespace object. This loss of type information causes
+        function contracts to be less type-safe.
+
+        Args:
+            args: Namespace to transform. Must contain all fields
+                present in AverageNamespace.
+
+        Returns:
+            Fully qualified type-aware object.
+        """
+        # Filter keys to match only fields defined in the dataclass.
+        field_names = {f.name for f in fields(cls)}
+        filtered_args = {k: v for k, v in vars(args).items() if k in field_names}
+        return cls(**filtered_args)
 
 
 def calculate_average(
@@ -134,7 +186,7 @@ def check_mod_arcane_rank(
 
 
 def check_relic_subtype(
-    subtype: str | None, use_radiant: Literal["intact", "radiant"]
+    subtype: str | None, refinement: Literal["intact", "radiant"]
 ) -> bool:
     """Check if an order's subtype matches user-specified refinement.
 
@@ -143,7 +195,7 @@ def check_relic_subtype(
 
     Args:
         subtype: Subtype of the order.
-        use_radiant: User-specified refinement level to compare against.
+        refinement: User-specified refinement level to compare against.
             Can be either "radiant" or "intact".
 
     Returns:
@@ -151,14 +203,14 @@ def check_relic_subtype(
     """
     if subtype is None:
         return True
-    return subtype == use_radiant
+    return subtype == refinement
 
 
 def filter_order(
     order: schema.OrderWithUser,
     item_info: schema.Item,
     current_time: dt.datetime,
-    args: argparse.Namespace,
+    args: AverageNamespace,
 ) -> bool:
     """Check if an order meets all user-specified criteria.
 
@@ -176,9 +228,7 @@ def filter_order(
         order: Order to be checked.
         item_info: Details about the item.
         current_time: Current time.
-        args: Command-line arguments provided by the user. Must have the
-            fields ``use_buyers``, ``maxrank``, ``radiant``, and
-            ``timerange``.
+        args: Type-aware, user-given command line arguments.
 
     Returns:
         True if all specified conditions are met, False otherwise.
@@ -198,7 +248,7 @@ def filtered_plat_list(
     order_data: list[schema.OrderWithUser],
     item_info: schema.Item,
     current_time: dt.datetime,
-    args: argparse.Namespace,
+    args: AverageNamespace,
 ) -> list[int]:
     """Construct a list of prices using a filter.
 
@@ -211,8 +261,7 @@ def filtered_plat_list(
             information about each individual order.
         item_info: Object containing information about the item.
         current_time: Current time.
-        args: User-given command line arguments. Must have the fields
-            ``statistic``, ``item``, ``porcelain``, and ``timerange``.
+        args: Type-aware, user-given command line arguments.
 
     Returns:
         List of the platinum prices from the filtered listings.
@@ -222,7 +271,7 @@ def filtered_plat_list(
     ]
 
 
-def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -> str:
+def format_output(stat: float, plat_list: list[int], args: AverageNamespace) -> str:
     """Format calculated statistic along with additional information.
 
     Format the calculated statistic, along with the maximum and minimum
@@ -233,8 +282,7 @@ def format_output(stat: float, plat_list: list[int], args: argparse.Namespace) -
     Args:
         stat: Statistic of the item that was found.
         plat_list: List of prices of the item.
-        args: User-given command line arguments. Must have the fields
-            ``statistic``, ``item``, ``porcelain``, and ``timerange``.
+        args: Type-aware, user-given command line arguments.
 
     Returns:
         Return appropriately formatted string.
@@ -295,7 +343,12 @@ def process_data(
     Returns:
         Calculated statistic.
     """
-    item_data, order_data = get_required_data(args.item, http_headers)
-    plat_list = filtered_plat_list(order_data.data, item_data.data, current_time, args)
-    stat = calculate_average(plat_list, args.statistic, args.ndigits)
-    return format_output(stat, plat_list, args)
+    valid_namespace = AverageNamespace.from_namespace(args)
+    item_data, order_data = get_required_data(valid_namespace.item, http_headers)
+    plat_list = filtered_plat_list(
+        order_data.data, item_data.data, current_time, valid_namespace
+    )
+    stat = calculate_average(
+        plat_list, valid_namespace.statistic, valid_namespace.ndigits
+    )
+    return format_output(stat, plat_list, valid_namespace)
