@@ -33,7 +33,7 @@ import shtab
 from warmac import average, version
 
 if TYPE_CHECKING:
-    from collections.abc import Generator, Iterable
+    from collections.abc import Generator, Iterable, Sequence
     from typing import Final, NoReturn
 
 
@@ -494,7 +494,7 @@ def create_parser() -> WarMACParser:
     return parser
 
 
-def handle_input(args: list[str] | None = None) -> argparse.Namespace:
+def handle_input(args: Sequence[str] | None = None) -> argparse.Namespace:
     """Create a WarMACParser and parse command-line arguments.
 
     Create a WarMACParser object, parse command-line arguments, and

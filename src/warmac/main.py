@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING
 from warmac import average, cli_parser, errors
 
 if TYPE_CHECKING:
+    from collections.abc import MutableMapping, Sequence
     from typing import Literal
 
 # A dictionary of all commands that can be executed by the user.
@@ -37,7 +38,7 @@ SUBCMD_DISPATCH = {
 
 
 def fix_http_headers(
-    http_headers: dict[str, str],
+    http_headers: MutableMapping[str, str],
     platform: Literal["pc", "ps4", "xbox", "switch", "mobile"] = "pc",
     *,
     crossplay: bool = True,
@@ -56,7 +57,7 @@ def fix_http_headers(
     http_headers["Crossplay"] = str(crossplay).lower()
 
 
-def process_cli_command(args: list[str] | None) -> str:
+def process_cli_command(args: Sequence[str] | None) -> str:
     """Process the command line arguments and execute command.
 
     Call cli_parser.handle_input to create and parse a
@@ -87,7 +88,7 @@ def process_cli_command(args: list[str] | None) -> str:
     return subcmd
 
 
-def main(args: list[str] | None = None) -> Literal[0, 2]:
+def main(args: Sequence[str] | None = None) -> Literal[0, 2]:
     """Entry point for WarMAC.
 
     Orchestrate core logic and handle errors for WarMAC.

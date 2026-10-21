@@ -27,12 +27,13 @@ import urllib3
 from warmac import errors, fetch_data, schema
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
     from unittest.mock import MagicMock
 
     type ResponseType = type[schema.OrderResponse | schema.ItemResponse]
 
 
-http_headers: dict[str, str] = {
+http_headers: Mapping[str, str] = {
     "Accept": "application/json",
     "Accept-Language": "en",
     "Platform": "ps4",

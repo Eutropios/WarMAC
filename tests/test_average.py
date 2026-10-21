@@ -26,6 +26,7 @@ import pytest
 from warmac import average, errors, schema
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence
     from typing import ClassVar, Literal, TypedDict
     from unittest.mock import Mock
 
@@ -144,7 +145,7 @@ class TestCalcAvg:
         ],
     )
     def test_calculate_average_parameterized(
-        plat_list: list[int], statistic: AverageType, decimals: int, expected: float
+        plat_list: Sequence[int], statistic: AverageType, decimals: int, expected: float
     ) -> None:
         """Test calculate_average with various inputs."""
         assert average.calculate_average(plat_list, statistic, decimals) == expected
@@ -463,14 +464,14 @@ class TestGetPlatList:
             ),
         ],
     )
-    def test_filtered_plat_list(
-        order_data_params: list[OrderKwargs],
+    def test_filter_plat_list(
+        order_data_params: Sequence[OrderKwargs],
         item_info_params: ItemKwargs,
         args_params: ArgsKwargs,
         fixed_current_time: dt.datetime,
-        expected_plat_list: list[int],
+        expected_plat_list: Sequence[int],
     ) -> None:
-        """Test filtered_plat_list with various filtering scenarios."""
+        """Test filter_plat_list with various filtering scenarios."""
         orders = [
             schema.OrderWithUser(
                 id="some_id",
@@ -488,7 +489,7 @@ class TestGetPlatList:
         )
         temp_args = argparse.Namespace(**args_params)
         args = average.AverageNamespace.from_namespace(temp_args)
-        result = average.filtered_plat_list(orders, item_info, fixed_current_time, args)
+        result = average.filter_plat_list(orders, item_info, fixed_current_time, args)
         assert result == expected_plat_list
 
 
@@ -554,7 +555,7 @@ class TestFormatOutput:
         statistic: AverageType,
         item_name: str,
         stat_value: float,
-        plat_list: list[int],
+        plat_list: Sequence[int],
         expected: str,
         mock_args: argparse.Namespace,
         *,
@@ -628,7 +629,7 @@ class TestGetRequiredData:
         mocker: Mock,
         mock_item_response: schema.ItemResponse,
         mock_order_response: schema.OrderResponse,
-        mock_http_headers: dict[str, str],
+        mock_http_headers: Mapping[str, str],
     ) -> None:
         """Test that get_required_data successfully calls fetch_data
         twice and returns the expected tuple of data.
@@ -651,7 +652,7 @@ class TestProcessData:
     def test_process_data_success(
         mocker: Mock,
         mock_args: argparse.Namespace,
-        mock_http_headers: dict[str, str],
+        mock_http_headers: Mapping[str, str],
         fixed_current_time: dt.datetime,
         mock_item_response: schema.ItemResponse,
         mock_order_response: schema.OrderResponse,
@@ -670,7 +671,7 @@ class TestProcessData:
     def test_process_data_no_listings_found(
         mocker: Mock,
         mock_args: argparse.Namespace,
-        mock_http_headers: dict[str, str],
+        mock_http_headers: Mapping[str, str],
         fixed_current_time: dt.datetime,
         mock_item_response: schema.ItemResponse,
         mock_order_response: schema.OrderResponse,
@@ -682,7 +683,7 @@ class TestProcessData:
             "warmac.average.get_required_data",
             return_value=(mock_item_response, mock_order_response),
         )
-        mocker.patch("warmac.average.filtered_plat_list", return_value=[])
+        mocker.patch("warmac.average.filter_plat_list", return_value=[])
 
         with pytest.raises(errors.NoListingsFoundError):
             average.process_data(mock_args, mock_http_headers, fixed_current_time)

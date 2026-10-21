@@ -29,6 +29,7 @@ import urllib3
 from warmac import errors, schema
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
     from typing import TypeVar
 
     ResponseType = TypeVar("ResponseType", schema.OrderResponse, schema.ItemResponse)
@@ -85,7 +86,7 @@ def http_code_check(status_code: int) -> None:  # noqa: DOC503
     raise errors.UnknownError(status_code)
 
 
-def get_page(url: str, http_headers: dict[str, str]) -> urllib3.BaseHTTPResponse:
+def get_page(url: str, http_headers: Mapping[str, str]) -> urllib3.BaseHTTPResponse:
     """Make an HTTP request to warframe.market.
 
     Make an HTTP request to warframe.market using the appropriate
@@ -113,7 +114,7 @@ def get_page(url: str, http_headers: dict[str, str]) -> urllib3.BaseHTTPResponse
 
 
 def get_data(  # ruff: ignore[non-pep695-generic-function]
-    item: str, request_schema: type[ResponseType], http_headers: dict[str, str]
+    item: str, request_schema: type[ResponseType], http_headers: Mapping[str, str]
 ) -> ResponseType:
     """Fetch item's data from API and decode it using the schema.
 

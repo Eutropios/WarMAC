@@ -102,7 +102,7 @@ class AverageNamespace:
 
 
 def calculate_average(
-    plat_list: list[int],
+    plat_list: Sequence[int],
     statistic: AverageType,
     ndigits: int = DEFAULT_NDIGITS,
 ) -> float:
@@ -244,8 +244,8 @@ def filter_order(
     return in_time_range(order.updated_at, current_time, args.timerange)
 
 
-def filtered_plat_list(
-    order_data: list[schema.OrderWithUser],
+def filter_plat_list(
+    order_data: Sequence[schema.OrderWithUser],
     item_info: schema.Item,
     current_time: dt.datetime,
     args: AverageNamespace,
@@ -271,7 +271,7 @@ def filtered_plat_list(
     ]
 
 
-def format_output(stat: float, plat_list: list[int], args: AverageNamespace) -> str:
+def format_output(stat: float, plat_list: Sequence[int], args: AverageNamespace) -> str:
     """Format calculated statistic along with additional information.
 
     Format the calculated statistic, along with the maximum and minimum
@@ -310,7 +310,7 @@ def format_output(stat: float, plat_list: list[int], args: AverageNamespace) -> 
 
 
 def get_required_data(
-    item: str, http_headers: dict[str, str]
+    item: str, http_headers: Mapping[str, str]
 ) -> tuple[schema.ItemResponse, schema.OrderResponse]:
     """Retrieve the orders and metadata for an item.
 
@@ -328,7 +328,7 @@ def get_required_data(
 
 def process_data(
     args: argparse.Namespace,
-    http_headers: dict[str, str],
+    http_headers: Mapping[str, str],
     current_time: dt.datetime,
 ) -> str:
     """Calculate average price of an item from warframe.market.
@@ -345,7 +345,7 @@ def process_data(
     """
     valid_namespace = AverageNamespace.from_namespace(args)
     item_data, order_data = get_required_data(valid_namespace.item, http_headers)
-    plat_list = filtered_plat_list(
+    plat_list = filter_plat_list(
         order_data.data, item_data.data, current_time, valid_namespace
     )
     stat = calculate_average(

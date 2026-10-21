@@ -19,10 +19,14 @@ from __future__ import annotations
 
 import argparse
 import sys
+from typing import TYPE_CHECKING
 
 import pytest
 
 from warmac import cli_parser
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 _EXIT_CODE_ALL_GOOD = 0
 _EXIT_CODE_GENERIC_ERROR = 1
@@ -139,7 +143,7 @@ class TestHandleInputInterface:
         ],
     )
     def test_cli_exit_codes(
-        input_args: list[str] | None, expected_exit_code: int
+        input_args: Sequence[str] | None, expected_exit_code: int
     ) -> None:
         """Test command-line inputs to ensure correct exit code."""
         with pytest.raises(SystemExit) as exc_info:

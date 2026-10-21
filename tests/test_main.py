@@ -26,6 +26,7 @@ import pytest
 from warmac import average, cli_parser, errors, main
 
 if TYPE_CHECKING:
+    from collections.abc import MutableMapping
     from typing import Literal
     from unittest.mock import Mock
 
@@ -56,7 +57,7 @@ class TestFixHttpHeaders:
         platform: Literal["pc", "ps4", "xbox", "switch", "mobile"],
         expected_platform: str,
         expected_crossplay: str,
-        mock_http_headers: dict[str, str],
+        mock_http_headers: MutableMapping[str, str],
         *,
         crossplay: bool,
     ) -> None:
