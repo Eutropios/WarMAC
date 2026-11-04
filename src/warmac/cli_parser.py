@@ -382,6 +382,7 @@ def create_parser() -> WarMACParser:
 
     parser = WarMACParser(
         usage="warmac <command> [options]",
+        prog="warmac",
         description=(
             "A program to fetch the average market cost of an item in Warframe."
         ),

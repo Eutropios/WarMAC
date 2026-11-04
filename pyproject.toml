@@ -32,8 +32,8 @@
 
 [project.urls]
   "Bug Tracker" = "https://github.com/Eutropios/WarMAC/issues"
-  documentation = "https://warmac.readthedocs.io/en/"
-  repository    = "https://github.com/Eutropios/WarMAC"
+  Documentation = "https://warmac.readthedocs.io/en/"
+  Repository    = "https://github.com/Eutropios/WarMAC"
 
 [project.scripts]
   warmac = "warmac.main:main"
